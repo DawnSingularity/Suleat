@@ -6,7 +6,7 @@ export const profileRouter = createTRPCRouter({
     getUserProfile: publicProcedure.query(async () => {
         // TODO: Match route name with username and replace hard coded values
         const user = {
-          firstName: 'Test',
+          firstName: 'Gordon',
           lastName: 'Ramsay',
           username: 'gordonramsay',
           postsCount: 16, // Can be array of posts

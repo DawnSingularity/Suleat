@@ -5,6 +5,11 @@ import { headers } from "next/headers";
 
 import { TRPCReactProvider } from "~/trpc/react";
 
+// Import Font Awesome
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false;
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",

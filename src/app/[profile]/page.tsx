@@ -1,44 +1,15 @@
 import Head from "next/head";
 import { api } from "~/trpc/server";
+import styles from './profile.module.css';
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLocationDot  } from "@fortawesome/free-solid-svg-icons";
 
 export default async function Profile() {
   const data = await api.profile.getUserProfile.query();
 
   return (
-    <div className="h-full">
-      <Head>
-        <title>User Profile</title>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
-          rel="stylesheet"
-        />
-        <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-        />
-        <style>
-          {`
-          :root {
-            --font-family: 'Lato', sans-serif;
-            --text-color: #333333;
-            --suleat: #fc571a;
-          }
-
-          body {
-            font-family: var(--font-family);
-            color: var(--text-color);
-          }
-
-          .suleat {
-            color: var(--suleat);
-            background-color: var(--suleat);
-          }
-          `}
-        </style>
-      </Head>
-
+    <main className={`h-full ${styles.body}`}>
       <div className="container px-5 mx-auto mt-5 flex justify-center flex-col md:flex-row w-full max-w-screen-lg relative h-[450px] md:h-[330px] items-start">
         <img className="absolute top-0 inset-0 w-full max-w-screen h-60 rounded-lg z-0 object-cover" src={data.banner} alt="" />
         <img className="w-48 h-48 rounded-full absolute object-cover z-10 border-4 border-white-1000 bottom-22 md:bottom-0 md:left-20 left-1/2 transform -translate-x-1/2 md:transform-none" src={data.profilePic} alt="" />
@@ -79,7 +50,7 @@ export default async function Profile() {
             {data.flavorProfile.map((flavor, index) => (
               <button
                 key={index}
-                className="my-1 mx-2 text-xs hover:bg-orange-700 text-white py-1 px-2 rounded-full suleat"
+                className={`my-1 mx-2 text-xs hover:bg-orange-700 text-white py-1 px-2 rounded-full h-full ${styles.suleat}`}
               >
                 {flavor}
               </button>
@@ -96,13 +67,13 @@ export default async function Profile() {
         <div className="w-full md:w-3/12 order-2 md:order-3 mt-6 md:mt-1">
           <h2 className="text-base font-semibold">About {data.firstName} </h2>
           <h3 className="mt-2 font-light">
-            <i className="mr-2 fa-sharp fa-solid fa-location-dot" style={{ color: 'red' }}></i> {data.location} 
+          <FontAwesomeIcon icon={faLocationDot} className="mr-2" style={{ color: 'red' }} /> {data.location}
           </h3>
           <p className="mt-2">
             { data.bio }
           </p>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
