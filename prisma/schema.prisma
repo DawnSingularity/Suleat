@@ -30,6 +30,7 @@ model User {
     location    String
     coverURL    String
     flavors     Flavor[]
+    createdAt   DateTime @default(now())
 
     followers       Follower[]  @relation("Follower")
     myFollowerObj   Follower?   @relation ("MyUser")
