@@ -18,3 +18,45 @@ model Post {
 
     @@index([name])
 }
+
+model User {
+    id          Int     @id @default(autoincrement())
+    bio         String
+    firstName   String
+    lastName    String
+    userName    String
+    email       String
+    pfpURL      String
+    location    String
+    coverURL    String
+    flavors     Flavor[]
+
+    followers       Follower[]  @relation("Follower")
+    myFollowerObj   Follower?   @relation ("MyUser")
+    following       Following[] @relation("Following")
+    myFollowingObj  Following?  @relation("MyUser")
+}
+
+model Flavor {
+    id          Int         @id @default(autoincrement())
+    name        String
+    color       String
+    user        User        @relation(fields: [userId], references: [id])
+    userId      Int
+}
+
+model Follower {
+    id               Int        @id @default(autoincrement())
+    followedUser     User       @relation("Follower", fields: [followedUserId], references: [id])
+    followedUserId   Int     
+    myUser           User       @relation("MyUser", fields: [myUserId], references: [id])
+    myUserId         Int        @unique
+}
+
+model Following {
+    id               Int         @id @default(autoincrement())
+    userFollowing    User        @relation("Following", fields: [userFollowingId], references: [id])
+    userFollowingId  Int   
+    myUser           User       @relation("MyUser", fields: [myUserId], references: [id])
+    myUserId         Int        @unique     
+}
