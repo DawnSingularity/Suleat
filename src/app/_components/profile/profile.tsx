@@ -7,6 +7,7 @@ import { faLocationDot, faPlusCircle, faEdit  } from "@fortawesome/free-solid-sv
 
 import { useState } from 'react';
 import { FollowersModal } from "~/app/_components/profile/profile-followers-modal"
+import { FollowingModal } from "~/app/_components/profile/profile-following-modal"
 import { EditProfileModal } from "~/app/_components/profile/edit-profile-modal"
 
 interface ProfileData {
@@ -34,13 +35,16 @@ interface ProfileData {
   export default function UserProfileComponent({ data, followers, following }: { data: ProfileData; followers: User[], following: User[] }) {
   const [showFollowersModal, setShowFollowersModal] = useState(false);
   const [showFollowingModal, setShowFollowingModal] = useState(false); // Add state for modal visibility
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false)
   // Function to handle modal visibility
   const handleFollowersModal = () => {
     setShowFollowersModal(!showFollowersModal);
   };
 
-  const [showEditProfileModal, setShowEditProfileModal] = useState(false)
-  // Function to handle edit profile modal visibility
+  const handleFollowingModal = () => {
+    setShowFollowersModal(!showFollowersModal);
+  };
+
   const handleEditProfileModal = () => {
     setShowEditProfileModal(!showEditProfileModal)
   }
@@ -113,7 +117,8 @@ interface ProfileData {
           </p>
         </div>
       </div>
-      {showFollowersModal && <FollowersModal onClose={handleFollowersModal} />} {/* Show modal based on state */}
+      {showFollowersModal && <FollowersModal onClose={handleFollowersModal} followers = {followers}/>} {/* Show modal based on state */}
+      {showFollowingModal && <FollowingModal onClose={handleFollowingModal} following={following} />} {/* Show modal based on state */}
       {showEditProfileModal && <EditProfileModal onClose={handleEditProfileModal} data={data} />} {/* Show edit profile modal based on state */}
 
     </main>
