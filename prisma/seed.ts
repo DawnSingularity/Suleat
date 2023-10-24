@@ -2,6 +2,21 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
+    const gordon_ramsay = await prisma.user.upsert({
+        where: { id: 1},
+        update: {},
+        create: {
+            id: 1,
+            bio: "Renowned chef & TV personality with a passion for culinary excellence. Known for my fiery persona in the kitchen and commitment to exquisite flavors. Join me on a journey of taste and gastronomic exploration. #CookingWithPassion 🍽️",
+            firstName: "Gordon",
+            lastName: "Ramsay",
+            userName: "gordonramsay",
+            pfpURL: "https://picsum.photos/500/500",
+            location: "Manila, Philippines",
+            coverURL: 'https://picsum.photos/600/600'
+        }
+    })
+
     const sweet = await prisma.flavor.upsert({
         where: { id: 1 }, 
         update: {},
@@ -54,21 +69,6 @@ async function main() {
             name: "bitter",
             color: "#C6B887",
             userId: 1
-        }
-    })
-
-    const gordon_ramsay = await prisma.user.upsert({
-        where: { id: 1},
-        update: {},
-        create: {
-            id: 1,
-            bio: "Renowned chef & TV personality with a passion for culinary excellence. Known for my fiery persona in the kitchen and commitment to exquisite flavors. Join me on a journey of taste and gastronomic exploration. #CookingWithPassion 🍽️",
-            firstName: "Gordon",
-            lastName: "Ramsay",
-            userName: "gordonramsay",
-            pfpURL: "https://picsum.photos/500/500",
-            location: "Manila, Philippines",
-            coverURL: 'https://picsum.photos/600/600'
         }
     })
 }
