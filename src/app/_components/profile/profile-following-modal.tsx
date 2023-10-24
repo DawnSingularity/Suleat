@@ -1,10 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-import { api } from "~/trpc/react";
-
 import UserList from "~/app/_components/profile/profile-user-list"
 import { User } from "@prisma/client";
 
@@ -58,7 +53,5 @@ export function FollowingModal({ onClose, following }: { onClose: () => void; fo
       </div>
     </div>
   );
-  
-  
 }
 
