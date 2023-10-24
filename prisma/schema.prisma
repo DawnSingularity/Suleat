@@ -21,13 +21,13 @@ model Post {
 
 model User {
     id          Int     @id @default(autoincrement())
-    bio         String
-    firstName   String
-    lastName    String
-    userName    String
-    pfpURL      String
-    location    String
-    coverURL    String
+    bio         String  @default("")
+    firstName   String  @default("")
+    lastName    String  @default("")
+    userName    String  @unique
+    pfpURL      String  @default("https://picsum.photos/500/500")
+    location    String  @default("")
+    coverURL    String  @default("https://picsum.photos/600/600")
     flavors     Flavor[]
     createdAt   DateTime @default(now())
 
@@ -39,10 +39,10 @@ model User {
 
 model Flavor {
     id          Int         @id @default(autoincrement())
-    name        String      @unique
-    color       String
+    name        String      @unique @default("")
+    color       String      @default("")
     user        User        @relation(fields: [userId], references: [id])
-    userId      Int
+    userId      Int         
 }
 
 model Follower {
