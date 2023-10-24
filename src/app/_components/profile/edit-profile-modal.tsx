@@ -2,19 +2,12 @@
 
 import { ChangeEvent } from "react";
 
-interface ProfileData {
-    firstName: string;
-    lastName: string;
-    username: string;
-    postsCount: number;
-    followers: number;
-    following: number;
-    location: string;
-    profilePic: string;
-    banner: string;
-    bio: string;
-    flavorProfile: string[];
-}
+import { Prisma, User, Flavor } from "@prisma/client";
+const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
+  include: { flavors: true },
+})
+
+type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
 // Event Listeners
 const changeCover = (event: ChangeEvent) => {
@@ -37,14 +30,14 @@ const changeProfilePhoto = (event: ChangeEvent) => {
   }
 }
 
-export function EditProfileModal({ onClose, data }: { onClose: () => void, data: ProfileData }) {
+export function EditProfileModal({ onClose, data }: { onClose: () => void, data: UserWithFlavors }) {
   /* Current Hack: Function Attached on OnScroll Event 
      Possible Setback: Large screens that do not require scrolling */
   const handleFlavorChecks = () => {
     /* TODO: Get List of Flavors from Database */
     const wholeListOfFlavors = ['sweet', 'sour', 'bitter', 'umami', 'spicy']
     for(var flavor of wholeListOfFlavors) {
-      if (data.flavorProfile.includes(flavor)) {
+      if (data.flavors.some((item) => item.name === flavor)) {
         const checkbox = document.getElementById(flavor) as HTMLInputElement
         if (checkbox && checkbox instanceof HTMLInputElement) {
           checkbox.checked = true;
@@ -87,7 +80,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
               <div className="">
                 <div className="cursor-pointer absolute w-full flex justify-center group">
                   <input onChange={changeCover} className="cursor-pointer z-20 opacity-0 w-full h-40 rounded-lg absolute" id="coverPhoto" type="file" name="coverPhoto" accept="image/*"/>
-                  <img id="newCoverPhoto" className="cursor-pointer w-full h-40 rounded-lg z-0 object-cover" src={data.banner} alt="" />
+                  <img id="newCoverPhoto" className="cursor-pointer w-full h-40 rounded-lg z-0 object-cover" src={data.coverURL} alt="" />
                   <div className="cursor-pointer text-sm text-white fixed mx-auto z-10 self-center opacity-0 group-hover:opacity-100">Choose New</div>
                   <div className="cursor-pointer absolute w-full h-40 rounded-lg bg-black opacity-0 group-hover:opacity-70"></div>
                 </div>
@@ -96,7 +89,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
                   <input onChange={changeProfilePhoto} className="cursor-pointer z-40 opacity-0 absolute w-32 h-32 md:h-36 md:w-36 rounded-full" id="profilePhoto" type="file" name="profilePhoto" accept="image/*"/>
                   <div className="cursor-pointer text-sm text-white mx-auto z-30 self-center opacity-0 group-hover:opacity-100">Choose New</div>
                   <div className="cursor-pointer border-4 border-white-1000 absolute z-20 w-32 h-32 md:h-36 md:w-36 rounded-full bg-black opacity-0 group-hover:opacity-70"></div>
-                  <img id="newProfilePhoto" className="cursor-pointer justify-start w-32 h-32 md:h-36 md:w-36 rounded-full absolute object-cover group-hover:z-0 border-4 border-white-1000 transform md:transform-none" src={data.profilePic} alt="" />
+                  <img id="newProfilePhoto" className="cursor-pointer justify-start w-32 h-32 md:h-36 md:w-36 rounded-full absolute object-cover group-hover:z-0 border-4 border-white-1000 transform md:transform-none" src={data.pfpURL} alt="" />
                 </div>
               </div>
               

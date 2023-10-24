@@ -34,8 +34,6 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
       setShowEditProfileModal(!showEditProfileModal)
     }
 
-
-
   return (
     <main className={`h-full`}>
       <div className="container px-5 mx-auto mt-5 flex justify-center flex-col md:flex-row w-full max-w-screen-lg relative h-[450px] md:h-[330px] items-start">
@@ -80,7 +78,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
             {data.flavors.map((flavor : Flavor, index : Number) => (
               <button
                 key={index.toString()}
-                className={`my-1 mx-2 text-xs hover:bg-orange-700 text-white py-1 px-2 rounded-full h-full ${styles.suleat}`}
+                className={`my-1 mx-2 text-xs hover:bg-orange-700 text-white py-1 px-2 rounded-full h-full ${styles.suleat}`} 
               >
                 {flavor.name}
               </button>
@@ -106,7 +104,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
       </div>
       {showFollowersModal && <FollowersModal onClose={handleFollowersModal} followers = {followers}/>} {/* Show modal based on state */}
       {showFollowingModal && <FollowingModal onClose={handleFollowingModal} following={following} />} {/* Show modal based on state */}
-      {showEditProfileModal && <EditProfileModal onClose={handleEditProfileModal} data={data} />} {/* Show edit profile modal based on state */}
+      {showEditProfileModal && <EditProfileModal onClose={handleEditProfileModal} data={data} />} Show edit profile modal based on state
 
     </main>
   );
