@@ -3,7 +3,7 @@
 import styles from './profile.module.css';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faLocationDot, faPlusCircle  } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot, faPlusCircle, faEdit  } from "@fortawesome/free-solid-svg-icons";
 
 import { useState } from 'react';
 import { FollowersModal } from "~/app/_components/profile/profile-followers-modal"
@@ -36,7 +36,7 @@ export default function UserProfileComponent( { data } : { data: ProfileData }) 
         <img className="w-48 h-48 rounded-full absolute object-cover z-10 border-4 border-white-1000 bottom-22 md:bottom-0 md:left-20 left-1/2 transform -translate-x-1/2 md:transform-none" src={data.profilePic} alt="" />
         <div className="absolute left-1/2 transform -translate-x-1/2 md:transform-none container flex flex-col md:flex-row md:w-7/12 md:full bottom-7 md:left-[35%]">
           <div className="w-full max-w-screen md:w-5/12 flex-col flex justify-center items-center md:flex-none md:justify-normal md:items-start">
-            <p className="text-xl font-extrabold"> {data.firstName} {data.lastName} <FontAwesomeIcon icon={faPlusCircle} className="hover:color-blue-700" style={{ color: '#24a0ed' }} /></p>
+            <p className="text-xl font-extrabold"> {data.firstName} {data.lastName} <FontAwesomeIcon icon={faPlusCircle} className="hover:color-blue-700" style={{ color: '#24a0ed' }} /> <FontAwesomeIcon icon={faEdit} /></p>
             <p className="text-base font-font-medium color-gray"> @{data.username} </p>
           </div>
           <div className="w-full max-w-screen flex flex-row">
