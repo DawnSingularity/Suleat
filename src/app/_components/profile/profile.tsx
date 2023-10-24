@@ -42,7 +42,7 @@ interface ProfileData {
   };
 
   const handleFollowingModal = () => {
-    setShowFollowersModal(!showFollowersModal);
+    setShowFollowingModal(!showFollowingModal);
   };
 
   const handleEditProfileModal = () => {
