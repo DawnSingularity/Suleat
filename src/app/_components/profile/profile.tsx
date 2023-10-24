@@ -11,43 +11,45 @@ import { FollowingModal } from "~/app/_components/profile/profile-following-moda
 import { EditProfileModal } from "~/app/_components/profile/edit-profile-modal"
 
 interface ProfileData {
-    firstName: string;
-    lastName: string;
-    username: string;
-    postsCount: number;
-    followers: number;
-    following: number;
-    location: string;
-    profilePic: string;
-    banner: string;
-    bio: string;
-    flavorProfile: string[];
-  }
+  firstName: string;
+  lastName: string;
+  username: string;
+  postsCount: number;
+  followers: number;
+  following: number;
+  location: string;
+  profilePic: string;
+  banner: string;
+  bio: string;
+  flavorProfile: string[];
+}
 
-  interface User {
-    firstName: string;
-    lastName: string;
-    username: string;
-    isFollowing: boolean;
-  }
+interface User {
+  firstName: string;
+  lastName: string;
+  username: string;
+  isFollowing: boolean;
+}
 
 
   export default function UserProfileComponent({ data, followers, following }: { data: ProfileData; followers: User[], following: User[] }) {
-  const [showFollowersModal, setShowFollowersModal] = useState(false);
-  const [showFollowingModal, setShowFollowingModal] = useState(false); // Add state for modal visibility
-  const [showEditProfileModal, setShowEditProfileModal] = useState(false)
-  // Function to handle modal visibility
-  const handleFollowersModal = () => {
-    setShowFollowersModal(!showFollowersModal);
-  };
+    const [showFollowersModal, setShowFollowersModal] = useState(false);
+    const [showFollowingModal, setShowFollowingModal] = useState(false); // Add state for modal visibility
+    const [showEditProfileModal, setShowEditProfileModal] = useState(false)
+    // Function to handle modal visibility
+    const handleFollowersModal = () => {
+      setShowFollowersModal(!showFollowersModal);
+    };
 
-  const handleFollowingModal = () => {
-    setShowFollowingModal(!showFollowingModal);
-  };
+    const handleFollowingModal = () => {
+      setShowFollowingModal(!showFollowingModal);
+    };
 
-  const handleEditProfileModal = () => {
-    setShowEditProfileModal(!showEditProfileModal)
-  }
+    const handleEditProfileModal = () => {
+      setShowEditProfileModal(!showEditProfileModal)
+    }
+
+
 
   return (
     <main className={`h-full`}>
@@ -56,7 +58,7 @@ interface ProfileData {
         <img className="w-48 h-48 rounded-full absolute object-cover z-10 border-4 border-white-1000 bottom-22 md:bottom-0 md:left-20 left-1/2 transform -translate-x-1/2 md:transform-none" src={data.profilePic} alt="" />
         <div className="absolute left-1/2 transform -translate-x-1/2 md:transform-none container flex flex-col md:flex-row md:w-7/12 md:full md:bottom-7 bottom-3 md:left-[35%]">
           <div className="w-full max-w-screen md:w-5/12 flex-col flex justify-center items-center md:flex-none md:justify-normal md:items-start">
-            <p className="text-xl font-extrabold"> {data.firstName} {data.lastName} <FontAwesomeIcon icon={faPlusCircle} className="hover:cursor-pointer hover:drop-shadow-md" style={{ color: '#24a0ed' }} /> <FontAwesomeIcon className="hover:cursor-pointer hover:drop-shadow-md" icon={faEdit} onClick={handleEditProfileModal}/></p>
+            <p className="text-xl font-extrabold"> {data.firstName} {data.lastName} <FontAwesomeIcon icon={faPlusCircle} className="hover:cursor-pointer hover:drop-shadow-md" style={{ color: '#24a0ed' }} /> <FontAwesomeIcon id="edit-profile-button" className="hover:cursor-pointer hover:drop-shadow-md" icon={faEdit} onClick={handleEditProfileModal}/></p>
             <p className="text-base font-font-medium color-gray"> @{data.username} </p>
           </div>
           <div className="w-full max-w-screen flex flex-row">
