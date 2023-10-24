@@ -53,6 +53,11 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     }
   }
 
+  const saveProfile = () => {
+    // Handle saving information to database here
+    onClose()
+  }
+
   return (  
 
   <div id="defaultModal" tabIndex={-1} aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-50">
@@ -61,14 +66,15 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
       {/* Modal content */}
       <div className="relative">
         {/* Modal header */}
-        <div className="flex items-start justify-between border-b rounded-t">
-          <h3 className="p-4 text-xl font-semibold text-gray-900">Edit Profile</h3>
-          <button onClick={onClose} type="button" className="my-4 mr-1 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center" data-modal-hide="defaultModal">
+        <div className="flex items-start border-b rounded-t">
+          <button onClick={onClose} type="button" className="my-4 mr-1 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center" data-modal-hide="defaultModal">
             <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
               <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
             </svg>
             <span className="sr-only">Close modal</span>
           </button>
+          <h3 className="p-4 text-xl font-semibold text-gray-900">Edit Profile</h3>
+          <button onClick={saveProfile} type="button" className="text-white md:w-20 w-16 p-1 mt-4 mb-4 mr-2 ml-auto bg-[#fc571a] rounded-2xl">Save</button>
         </div>
         {/* Modal body */}
         <div className="m-auto">
@@ -95,7 +101,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
               </div>
               
               {/* Text Edits */}
-              <div className="mt-52 h-64 overflow-y-auto p-2" onScroll={handleFlavorChecks}>
+              <div className="mt-56 h-64 overflow-y-auto p-2 mb-2" onScroll={handleFlavorChecks}>
                 <div className="">
                   <label htmlFor="firstName" className="pl-2 text-sm text-stone-500">First Name</label>
                   <input id="firstName" name="firstName" className="border-2 border-stone-200 rounded p-2 w-full justify-center" placeholder="Enter your first name." defaultValue={data.firstName} type="text"></input>
