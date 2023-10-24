@@ -13,7 +13,7 @@ interface User {
   isFollowing: boolean;
 }
 
-export function FollowersModal({ onClose, followers }: { onClose: () => void; followers: User[] }) {
+export function FollowingModal({ onClose, following }: { onClose: () => void; following: User[] }) {
   return (
     <div
       id="defaultModal"
@@ -26,7 +26,7 @@ export function FollowersModal({ onClose, followers }: { onClose: () => void; fo
         <div className="relative">
           {/* Modal header */}
           <div className="flex items-start justify-between p-4 border-b rounded-t">
-            <h3 className="text-xl font-semibold text-gray-900">Followers</h3>
+            <h3 className="text-xl font-semibold text-gray-900">Following</h3>
             <button
               onClick={onClose}
               type="button"
@@ -54,8 +54,8 @@ export function FollowersModal({ onClose, followers }: { onClose: () => void; fo
           {/* Modal body */}
           <div className="py-6 px-2">
             <div className="h-96 overflow-y-auto flex flex-col gap-5">
-            {followers.map((follower, index) => (
-              <UserList key={index} follower={follower} />
+            {following.map((following, index) => (
+              <UserList key={index} follower={following} />
             ))}
             </div>
           </div>
