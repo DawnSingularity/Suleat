@@ -62,16 +62,20 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
             <div className="m-auto">
               <div className="h-96 overflow-y-auto">
                 {/* TODO: Edit Profile Content */}
-                <div className="absolute w-full flex justify-center group">
-                  <img className="w-full h-40 rounded-lg z-0 object-cover" src={data.banner} alt="" />
-                  <div className="text-sm text-white fixed mx-auto z-10 self-center opacity-0 group-hover:opacity-100">Change Cover</div>
-                  <div className="absolute w-full h-40 rounded-lg bg-black opacity-0 group-hover:opacity-50"></div>
-                </div>
-                <div className="flex justify-start ml-4 md:ml-7 mt-16 w-32 h-32 md:h-36 md:w-36 rounded-full absolute group bg-green-500">
-                    <div className="text-sm text-white mx-auto z-20 self-center opacity-0 group-hover:opacity-100">Change Profile</div>
-                    <div className="border-4 border-white-1000 absolute z-10 w-32 h-32 md:h-36 md:w-36 rounded-full bg-black opacity-0 group-hover:opacity-50"></div>
-                    <img className="justify-start w-32 h-32 md:h-36 md:w-36 rounded-full absolute object-cover group-hover:z-0 border-4 border-white-1000 transform md:transform-none" src={data.profilePic} alt="" />
-                </div>
+                <form method="PATCH" id="edit-profile-form">
+                  <div className="cursor-pointer absolute w-full flex justify-center group">
+                    <input className="cursor-pointer z-20 opacity-0 w-full h-40 rounded-lg absolute" id="coverPhoto" type="file" name="coverPhoto" accept="image/*"/>
+                    <img className="cursor-pointer w-full h-40 rounded-lg z-0 object-cover" src={data.banner} alt="" />
+                    <div className="text-sm text-white fixed mx-auto z-10 self-center opacity-0 group-hover:opacity-100">Change Cover</div>
+                    <div className="absolute w-full h-40 rounded-lg bg-black opacity-0 group-hover:opacity-50"></div>
+                  </div>
+                  <div className="cursor-pointer flex justify-start ml-4 md:ml-7 mt-16 w-32 h-32 md:h-36 md:w-36 rounded-full absolute group bg-green-500">
+                    <input className="cursor-pointer z-40 opacity-0 absolute w-32 h-32 md:h-36 md:w-36 rounded-full" id="profilePhoto" type="file" name="profilePhoto" accept="image/*"/>
+                    <div className="text-sm text-white mx-auto z-30 self-center opacity-0 group-hover:opacity-100">Change Profile</div>
+                    <div className="border-4 border-white-1000 absolute z-20 w-32 h-32 md:h-36 md:w-36 rounded-full bg-black opacity-0 group-hover:opacity-50"></div>
+                    <img className="cursor-pointer justify-start w-32 h-32 md:h-36 md:w-36 rounded-full absolute object-cover group-hover:z-0 border-4 border-white-1000 transform md:transform-none" src={data.profilePic} alt="" />
+                  </div>
+                </form>
                 
 
                 
