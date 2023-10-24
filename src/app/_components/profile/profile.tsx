@@ -46,7 +46,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
           </div>
           <div className="w-full max-w-screen flex flex-row">
             <div className="w-6/12 flex flex-col justify-center items-center px-0 rounded-full hover:bg-gray-200 transition-colors">
-              <p className="text-xl font-extrabold"> {/* data.postsCount */}</p>
+              <p className="text-xl font-extrabold"> 0 </p>
               <p className="text-base font-medium text-gray-500">posts</p>
             </div>
             <div onClick={handleFollowersModal} className="flex-col w-6/12 flex justify-center items-center px-0 rounded-full hover:bg-gray-200 transition-colors">
@@ -104,8 +104,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
       </div>
       {showFollowersModal && <FollowersModal onClose={handleFollowersModal} followers = {followers}/>} {/* Show modal based on state */}
       {showFollowingModal && <FollowingModal onClose={handleFollowingModal} following={following} />} {/* Show modal based on state */}
-      {showEditProfileModal && <EditProfileModal onClose={handleEditProfileModal} data={data} />} Show edit profile modal based on state
-
+      {showEditProfileModal && <EditProfileModal onClose={handleEditProfileModal} data={data} />} {/* Show edit profile modal based on state */}
     </main>
   );
 }

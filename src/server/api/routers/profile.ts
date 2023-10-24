@@ -13,68 +13,50 @@ export const profileRouter = createTRPCRouter({
           });
       }),
 
-      getFollowers: publicProcedure.query(async () => {
-        // TODO: Get followers from database and replace hardcoded values
-        const followers = [{
-          id: 1,
-          bio: "Lorem ipsum dolor sit amet",
-          firstName: "John",
-          lastName: "Doe",
-          userName: "johndoe",
-          email: "johndoe@example.com",
-          pfpURL: "https://example.com/johndoe_profile.jpg",
-          location: "New York",
-          coverURL: "https://example.com/johndoe_cover.jpg",
-          createdAt: new Date(),
-        },
-        {
-          id: 1,
-          bio: "Lorem ipsum dolor sit amet",
-          firstName: "John",
-          lastName: "Doe",
-          userName: "johndoe",
-          email: "johndoe@example.com",
-          pfpURL: "https://example.com/johndoe_profile.jpg",
-          location: "New York",
-          coverURL: "https://example.com/johndoe_cover.jpg",
-          createdAt: new Date(),
-        },
-      ];
-        return followers;
-      }),
+      getFollowers: publicProcedure
+      .input(z.object({ username: z.string() }))
+      .query(async ({ctx, input}) => {
+        // Get user
+        const user = await ctx.db.user.findFirst({
+          where: { userName: input.username },
+        });
 
-      getFollowing: publicProcedure.query(async () => {
-        // TODO: Get following from database and replace hardcoded values
-        const followers = [
-          {
-            id: 1,
-            bio: "Lorem ipsum dolor sit amet",
-            firstName: "John",
-            lastName: "Doe",
-            userName: "johndoe",
-            email: "johndoe@example.com",
-            pfpURL: "https://example.com/johndoe_profile.jpg",
-            location: "New York",
-            coverURL: "https://example.com/johndoe_cover.jpg",
-            createdAt: new Date(),
-          },
-          {
-            id: 1,
-            bio: "Lorem ipsum dolor sit amet",
-            firstName: "John",
-            lastName: "Doe",
-            userName: "johndoe",
-            email: "johndoe@example.com",
-            pfpURL: "https://example.com/johndoe_profile.jpg",
-            location: "New York",
-            coverURL: "https://example.com/johndoe_cover.jpg",
-            createdAt: new Date(),
-          },
-          
-        ];
-        
-        return followers;
-      }),
+        // If user does not exist
+        if (!user) {
+          throw new Error("User not found");
+        }
+
+        // Get all followers
+        const followers = await ctx.db.follower.findMany({
+          where: { myUserId: user.id },
+          include: { followedUser: true },
+        });
+
+        return followers.map((follower) => follower.followedUser);
+    }),
+
+    getFollowing: publicProcedure
+    .input(z.object({ username: z.string() }))
+    .query(async ({ctx, input}) => {
+      // Get user
+      const user = await ctx.db.user.findFirst({
+        where: { userName: input.username },
+      });
+
+      // If user does not exist
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      // Get all following
+      const following = await ctx.db.following.findMany({
+        where: { myUserId: user.id },
+        include: { userFollowing: true },
+      });
+
+      return following.map((follow) => follow.userFollowing);
+    }),
+
 
 });
 
