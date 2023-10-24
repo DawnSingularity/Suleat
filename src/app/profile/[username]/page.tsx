@@ -7,14 +7,17 @@ import { faLocationDot, faPlusCircle  } from "@fortawesome/free-solid-svg-icons"
 
 import UserProfileComponent from "~/app/_components/profile/profile"
 
-export default async function Profile() {
-  const data = await api.profile.getUserProfile.query();
+export default async function Profile({ params }: { params: { username: string } }) {
+  const data = await api.profile.getUserProfile.query({username: params.username});
   const followers =  await api.profile.getFollowers.query();
   const following = await api.profile.getFollowing.query();
 
-  return (
-    <main>
-      <UserProfileComponent data={data} followers={followers} following={following}/>
-    </main>
-  );
+  if(data != null) {
+    return (
+      <main>
+        <UserProfileComponent data={data} followers={followers} following={following}/>
+      </main>
+    );
+  }
+
 }

@@ -6,12 +6,7 @@ import { useState } from "react";
 import { api } from "~/trpc/react";
 
 import UserList from "~/app/_components/profile/profile-user-list"
-interface User {
-  firstName: string;
-  lastName: string;
-  username: string;
-  isFollowing: boolean;
-}
+import { User } from "@prisma/client";
 
 export function FollowersModal({ onClose, followers }: { onClose: () => void; followers: User[] }) {
   return (

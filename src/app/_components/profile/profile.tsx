@@ -10,29 +10,14 @@ import { FollowersModal } from "~/app/_components/profile/profile-followers-moda
 import { FollowingModal } from "~/app/_components/profile/profile-following-modal"
 import { EditProfileModal } from "~/app/_components/profile/edit-profile-modal"
 
-interface ProfileData {
-  firstName: string;
-  lastName: string;
-  username: string;
-  postsCount: number;
-  followers: number;
-  following: number;
-  location: string;
-  profilePic: string;
-  banner: string;
-  bio: string;
-  flavorProfile: string[];
-}
+import { Prisma, User, Flavor } from "@prisma/client";
+const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
+  include: { flavors: true },
+})
 
-interface User {
-  firstName: string;
-  lastName: string;
-  username: string;
-  isFollowing: boolean;
-}
+type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
-
-  export default function UserProfileComponent({ data, followers, following }: { data: ProfileData; followers: User[], following: User[] }) {
+  export default function UserProfileComponent({ data, followers, following }: { data: UserWithFlavors; followers: User[], following: User[] }) {
     const [showFollowersModal, setShowFollowersModal] = useState(false);
     const [showFollowingModal, setShowFollowingModal] = useState(false); // Add state for modal visibility
     const [showEditProfileModal, setShowEditProfileModal] = useState(false)
@@ -54,25 +39,25 @@ interface User {
   return (
     <main className={`h-full`}>
       <div className="container px-5 mx-auto mt-5 flex justify-center flex-col md:flex-row w-full max-w-screen-lg relative h-[450px] md:h-[330px] items-start">
-        <img className="absolute top-0 inset-0 w-full max-w-screen h-60 rounded-lg z-0 object-cover" src={data.banner} alt="" />
-        <img className="w-48 h-48 rounded-full absolute object-cover z-10 border-4 border-white-1000 bottom-22 md:bottom-0 md:left-20 left-1/2 transform -translate-x-1/2 md:transform-none" src={data.profilePic} alt="" />
+        <img className="absolute top-0 inset-0 w-full max-w-screen h-60 rounded-lg z-0 object-cover" src={data.coverURL} alt="" />
+        <img className="w-48 h-48 rounded-full absolute object-cover z-10 border-4 border-white-1000 bottom-22 md:bottom-0 md:left-20 left-1/2 transform -translate-x-1/2 md:transform-none" src={data.pfpURL} alt="" />
         <div className="absolute left-1/2 transform -translate-x-1/2 md:transform-none container flex flex-col md:flex-row md:w-7/12 md:full md:bottom-7 bottom-3 md:left-[35%]">
           <div className="w-full max-w-screen md:w-5/12 flex-col flex justify-center items-center md:flex-none md:justify-normal md:items-start md:-translate-x-12">
             <p className="text-xl font-extrabold"> {data.firstName} {data.lastName} <FontAwesomeIcon icon={faPlusCircle} className="hover:cursor-pointer hover:drop-shadow-md" style={{ color: '#24a0ed' }} /> <FontAwesomeIcon id="edit-profile-button" className="hover:cursor-pointer hover:drop-shadow-md" icon={faEdit} onClick={handleEditProfileModal}/></p>
-            <p className="text-base font-font-medium color-gray"> @{data.username} </p>
+            <p className="text-base font-font-medium color-gray"> @{data.userName} </p>
           </div>
           <div className="w-full max-w-screen flex flex-row">
             <div className="w-6/12 flex flex-col justify-center items-center px-0 rounded-full hover:bg-gray-200 transition-colors">
-              <p className="text-xl font-extrabold"> {data.postsCount}</p>
+              <p className="text-xl font-extrabold"> {/* data.postsCount */}</p>
               <p className="text-base font-medium text-gray-500">posts</p>
             </div>
             <div onClick={handleFollowersModal} className="flex-col w-6/12 flex justify-center items-center px-0 rounded-full hover:bg-gray-200 transition-colors">
-              <p className="text-xl font-extrabold"> {data.followers} </p>
+              <p className="text-xl font-extrabold"> {followers.length} </p>
               <p className="text-base font-medium text-gray-500">followers</p>
             </div>
 
             <div onClick={handleFollowingModal} className="flex-col w-6/12 flex justify-center items-center px-0 rounded-full hover:bg-gray-200 transition-colors">
-              <p className="text-xl font-extrabold"> {data.following} </p>
+              <p className="text-xl font-extrabold"> {following.length} </p>
               <p className="text-base font-medium text-gray-500">following</p>
             </div>
             
@@ -92,12 +77,12 @@ interface User {
           </h2>
 
           <div className="flex flex-wrap px-1 justify-center items-center md:justify-normal md:items-start">
-            {data.flavorProfile.map((flavor, index) => (
+            {data.flavors.map((flavor : Flavor, index : Number) => (
               <button
-                key={index}
+                key={index.toString()}
                 className={`my-1 mx-2 text-xs hover:bg-orange-700 text-white py-1 px-2 rounded-full h-full ${styles.suleat}`}
               >
-                {flavor}
+                {flavor.name}
               </button>
             ))}
           </div>
