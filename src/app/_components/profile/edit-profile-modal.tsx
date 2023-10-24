@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 
 import { api } from "~/trpc/react";
 
@@ -17,7 +17,29 @@ interface ProfileData {
     banner: string;
     bio: string;
     flavorProfile: string[];
+}
+
+// Event Listeners
+const changeCover = (event: ChangeEvent) => {
+  console.log("Request to Change Cover Photo Reached")
+  const newCoverPhoto = document.getElementById("newCoverPhoto") as HTMLImageElement;
+  if (event.target instanceof HTMLInputElement && event.target.files && event.target.files[0]) {
+      newCoverPhoto.src = URL.createObjectURL(event.target.files[0]);
+  } else {
+    console.log("Changing Cover Photo Preview Failed!")
   }
+}
+
+const changeProfilePhoto = (event: ChangeEvent) => {
+  console.log("Request to Change Cover Photo Reached")
+  const newProfilePhoto = document.getElementById("newProfilePhoto") as HTMLImageElement;
+  if (event.target instanceof HTMLInputElement && event.target.files && event.target.files[0]) {
+      newProfilePhoto.src = URL.createObjectURL(event.target.files[0]);
+  } else {
+    console.log("Changing Profile Photo Preview Failed!")
+  }
+}
+
 
 export function EditProfileModal({ onClose, data }: { onClose: () => void, data: ProfileData }) {
     return (
@@ -32,12 +54,12 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
           {/* Modal content */}
           <div className="relative">
             {/* Modal header */}
-            <div className="flex items-start justify-between p-4 border-b rounded-t mb-3">
-              <h3 className="text-xl font-semibold text-gray-900">Edit Profile</h3>
+            <div className="flex items-start justify-between border-b rounded-t mb-3">
+              <h3 className="p-4 text-xl font-semibold text-gray-900">Edit Profile</h3>
               <button
                 onClick={onClose}
                 type="button"
-                className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
+                className="my-4 mr-1 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
                 data-modal-hide="defaultModal"
               >
                 <svg
@@ -64,22 +86,23 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
                 {/* TODO: Edit Profile Content */}
                 <form method="PATCH" id="edit-profile-form">
                   <div className="cursor-pointer absolute w-full flex justify-center group">
-                    <input className="cursor-pointer z-20 opacity-0 w-full h-40 rounded-lg absolute" id="coverPhoto" type="file" name="coverPhoto" accept="image/*"/>
-                    <img className="cursor-pointer w-full h-40 rounded-lg z-0 object-cover" src={data.banner} alt="" />
-                    <div className="text-sm text-white fixed mx-auto z-10 self-center opacity-0 group-hover:opacity-100">Change Cover</div>
+                    <input onChange={changeCover} className="cursor-pointer z-20 opacity-0 w-full h-40 rounded-lg absolute" id="coverPhoto" type="file" name="coverPhoto" accept="image/*"/>
+                    <img id="newCoverPhoto" className="cursor-pointer w-full h-40 rounded-lg z-0 object-cover" src={data.banner} alt="" />
+                    <div className="text-sm text-white fixed mx-auto z-10 self-center opacity-0 group-hover:opacity-100">Choose New</div>
                     <div className="absolute w-full h-40 rounded-lg bg-black opacity-0 group-hover:opacity-50"></div>
                   </div>
+
                   <div className="cursor-pointer flex justify-start ml-4 md:ml-7 mt-16 w-32 h-32 md:h-36 md:w-36 rounded-full absolute group bg-green-500">
-                    <input className="cursor-pointer z-40 opacity-0 absolute w-32 h-32 md:h-36 md:w-36 rounded-full" id="profilePhoto" type="file" name="profilePhoto" accept="image/*"/>
-                    <div className="text-sm text-white mx-auto z-30 self-center opacity-0 group-hover:opacity-100">Change Profile</div>
+                    <input onChange={changeProfilePhoto} className="cursor-pointer z-40 opacity-0 absolute w-32 h-32 md:h-36 md:w-36 rounded-full" id="profilePhoto" type="file" name="profilePhoto" accept="image/*"/>
+                    <div className="text-sm text-white mx-auto z-30 self-center opacity-0 group-hover:opacity-100">Choose New</div>
                     <div className="border-4 border-white-1000 absolute z-20 w-32 h-32 md:h-36 md:w-36 rounded-full bg-black opacity-0 group-hover:opacity-50"></div>
-                    <img className="cursor-pointer justify-start w-32 h-32 md:h-36 md:w-36 rounded-full absolute object-cover group-hover:z-0 border-4 border-white-1000 transform md:transform-none" src={data.profilePic} alt="" />
+                    <img id="newProfilePhoto" className="cursor-pointer justify-start w-32 h-32 md:h-36 md:w-36 rounded-full absolute object-cover group-hover:z-0 border-4 border-white-1000 transform md:transform-none" src={data.profilePic} alt="" />
                   </div>
                 </form>
                 
 
                 
-                {/* Long content here */}
+  
               </div>
             </div>
           </div>
