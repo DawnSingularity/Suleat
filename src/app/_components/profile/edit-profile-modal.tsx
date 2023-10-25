@@ -1,8 +1,9 @@
-"use client";
+"use client"
 
 import { ChangeEvent } from "react";
-
 import { Prisma, User, Flavor } from "@prisma/client";
+import { api } from "~/trpc/server";
+
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { flavors: true },
 })
@@ -31,11 +32,12 @@ const changeProfilePhoto = (event: ChangeEvent) => {
 }
 
 export function EditProfileModal({ onClose, data }: { onClose: () => void, data: UserWithFlavors }) {
+  /* TODO: Get List of Flavors from Database */
+  const wholeListOfFlavors = ['sweet', 'sour', 'bitter', 'umami', 'spicy']
+
   /* Current Hack: Function Attached on OnScroll Event 
      Possible Setback: Large screens that do not require scrolling */
   const handleFlavorChecks = () => {
-    /* TODO: Get List of Flavors from Database */
-    const wholeListOfFlavors = ['sweet', 'sour', 'bitter', 'umami', 'spicy']
     for(var flavor of wholeListOfFlavors) {
       if (data.flavors.some((item) => item.name === flavor)) {
         const checkbox = document.getElementById(flavor) as HTMLInputElement
@@ -46,8 +48,32 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     }
   }
 
-  const saveProfile = () => {
-    // Handle saving information to database here
+  const saveProfile = async () => {
+    // handle saving information to database here
+    const firstNameInput = document.getElementById("firstName") as HTMLInputElement
+    const lastNameInput = document.getElementById("lastName") as HTMLInputElement
+    const bioInput = document.getElementById("bio") as HTMLTextAreaElement
+    const locationInput = document.getElementById("location") as HTMLInputElement
+
+    const flavorData = []
+    for(let flavor of wholeListOfFlavors) {
+      const flavorInput = document.getElementById(flavor) as HTMLInputElement
+      if(flavorInput.checked) {
+        flavorData.push(flavor)
+      }
+    }
+
+    const data = {
+      firstName: firstNameInput.value,
+      lastName: lastNameInput.value,
+      bio: bioInput.value,
+      location: locationInput.value,
+      flavors: flavorData
+    }
+
+    const result = await api.profile.updateUserProfile.query(data);
+    window.location.reload()
+
     onClose()
   }
 

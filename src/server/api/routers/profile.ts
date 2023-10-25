@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
+import { useRouter } from 'next/router';
 import { Prisma, User, Flavor } from "@prisma/client";
 
 export const profileRouter = createTRPCRouter({
@@ -56,6 +57,43 @@ export const profileRouter = createTRPCRouter({
 
       return following.map((follow) => follow.userFollowing);
     }),
+
+
+    updateUserProfile: publicProcedure
+    .input(z.object({
+      firstName: z.string(),
+      lastName: z.string(),
+      bio: z.string(),
+      location: z.string(),
+      flavors: z.array(z.string())
+    }))
+    .query(async ({ctx, input}) => {
+      const router = useRouter()
+      const { username } = router.query
+
+      // Get user
+      const user = await ctx.db.user.findFirst({
+        where: { userName: username?.toString() },
+      });
+
+      // If user does not exist
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      // update user info
+      const updateProfile = await ctx.db.user.update({
+        where: { id: user.id },
+        data: {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          bio: input.bio,
+          location: input.location
+        }
+      });
+
+      return updateProfile
+    })
 
 
 });
