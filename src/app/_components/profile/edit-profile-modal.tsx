@@ -3,6 +3,7 @@
 import { ChangeEvent } from "react";
 import { Prisma, User, Flavor } from "@prisma/client";
 import { api } from "~/trpc/react";
+import { useMutation } from "@tanstack/react-query";
 
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { flavors: true },
@@ -33,6 +34,7 @@ const changeProfilePhoto = (event: ChangeEvent) => {
 
 export function EditProfileModal({ onClose, data }: { onClose: () => void, data: UserWithFlavors }) {
   /* TODO: Get List of Flavors from Database */
+  const {mutate} = api.profile.updateUserProfile.useMutation(data);
   const wholeListOfFlavors = ['sweet', 'sour', 'bitter', 'umami', 'spicy']
 
   /* Current Hack: Function Attached on OnScroll Event 
@@ -64,15 +66,16 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     }
 
     const data = {
+      userName: "gordonramsay",
       firstName: firstNameInput.value,
       lastName: lastNameInput.value,
       bio: bioInput.value,
       location: locationInput.value,
       flavors: flavorData
     }
+    console.log(data)
 
-    const result = api.profile.updateUserProfile.useQuery(data);
-    window.location.reload()
+    const result = mutate(data)
 
     onClose()
   }

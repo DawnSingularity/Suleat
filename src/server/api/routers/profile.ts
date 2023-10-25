@@ -61,16 +61,15 @@ export const profileRouter = createTRPCRouter({
 
     updateUserProfile: publicProcedure
     .input(z.object({
+      userName: z.string(), // temporary
       firstName: z.string(),
       lastName: z.string(),
       bio: z.string(),
       location: z.string(),
       flavors: z.array(z.string())
     }))
-    .query(async ({ctx, input}) => {
-      const router = useRouter()
-      const { username } = router.query
-
+    .mutation(async ({ctx, input}) => {
+      const username = input.userName // temporary
       console.log("try", username)
 
       // Get user
