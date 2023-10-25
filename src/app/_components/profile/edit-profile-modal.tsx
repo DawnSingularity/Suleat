@@ -2,7 +2,7 @@
 
 import { ChangeEvent } from "react";
 import { Prisma, User, Flavor } from "@prisma/client";
-import { api } from "~/trpc/server";
+import { api } from "~/trpc/react";
 
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { flavors: true },
@@ -48,7 +48,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     }
   }
 
-  const saveProfile = async () => {
+  const saveProfile = () => {
     // handle saving information to database here
     const firstNameInput = document.getElementById("firstName") as HTMLInputElement
     const lastNameInput = document.getElementById("lastName") as HTMLInputElement
@@ -71,7 +71,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
       flavors: flavorData
     }
 
-    const result = await api.profile.updateUserProfile.query(data);
+    const result = api.profile.updateUserProfile.useQuery(data);
     window.location.reload()
 
     onClose()

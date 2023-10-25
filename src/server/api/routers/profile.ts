@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { Prisma, User, Flavor } from "@prisma/client";
 
 export const profileRouter = createTRPCRouter({
@@ -70,6 +70,8 @@ export const profileRouter = createTRPCRouter({
     .query(async ({ctx, input}) => {
       const router = useRouter()
       const { username } = router.query
+
+      console.log("try", username)
 
       // Get user
       const user = await ctx.db.user.findFirst({

@@ -1,11 +1,12 @@
-import { api } from "~/trpc/server";
+"use client";
+import { api } from "~/trpc/react";
 
 import UserProfileComponent from "~/app/_components/profile/profile"
 
-export default async function Profile({ params }: { params: { username: string } }) {
-  const data = await api.profile.getUserProfile.query({username: params.username});
-  const followers =  await api.profile.getFollowers.query({username: params.username});
-  const following = await api.profile.getFollowing.query({username: params.username});
+export default function Profile({ params }: { params: { username: string } }) {
+  const data = api.profile.getUserProfile.useQuery({username: params.username}).data;
+  const followers = api.profile.getFollowers.useQuery({username: params.username}).data;
+  const following = api.profile.getFollowing.useQuery({username: params.username}).data;
 
   if(data != null) {
     return (
