@@ -42,7 +42,7 @@ export function FollowingModal({ onClose, following }: { onClose: () => void; fo
             </button>
           </div>
           {/* Modal body */}
-          <div className="py-6 px-4">
+          <div className="py-6 px-2">
             <div className="h-96 overflow-y-auto flex flex-col gap-5">
             {following.map((following, index) => (
               <UserList key={index} follower={following} />
