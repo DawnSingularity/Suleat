@@ -2,11 +2,13 @@
 import { api } from "~/trpc/react";
 
 import UserProfileComponent from "~/app/_components/profile/profile"
+import { Prisma, User, Flavor } from "@prisma/client";
+
 
 export default function Profile({ params }: { params: { username: string } }) {
   const data = api.profile.getUserProfile.useQuery({username: params.username}).data;
-  const followers = api.profile.getFollowers.useQuery({username: params.username}).data;
-  const following = api.profile.getFollowing.useQuery({username: params.username}).data;
+  const followers = api.profile.getFollowers.useQuery({username: params.username}).data as User[];
+  const following = api.profile.getFollowing.useQuery({username: params.username}).data as User[];
 
   if(data != null) {
     return (

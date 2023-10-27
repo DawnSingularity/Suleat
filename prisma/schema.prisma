@@ -39,7 +39,7 @@ model User {
 
 model Flavor {
     id          Int         @id @default(autoincrement())
-    name        String      @unique @default("")
+    name        String      @default("")
     color       String      @default("")
     user        User        @relation(fields: [userId], references: [id])
     userId      Int         

@@ -60,12 +60,12 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
               <p className="text-base font-medium text-gray-500">posts</p>
             </div>
             <div onClick={handleFollowersModal} className="flex-col w-6/12 flex justify-center items-center px-0 rounded-full hover:bg-gray-200 transition-colors hover:cursor-pointer">
-              <p className="text-xl font-extrabold"> {followers.length} </p>
+              <p className="text-xl font-extrabold"> {followers && followers.length} </p>
               <p className="text-base font-medium text-gray-500">followers</p>
             </div>
 
             <div onClick={handleFollowingModal} className="flex-col w-6/12 flex justify-center items-center px-0 rounded-full hover:bg-gray-200 transition-colors hover:cursor-pointer">
-              <p className="text-xl font-extrabold"> {following.length} </p>
+              <p className="text-xl font-extrabold"> {following && following.length} </p>
               <p className="text-base font-medium text-gray-500">following</p>
             </div>
             
