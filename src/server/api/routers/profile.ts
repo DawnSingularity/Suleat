@@ -82,6 +82,11 @@ export const profileRouter = createTRPCRouter({
         throw new Error("User not found");
       }
 
+      //
+      const flavorsToAdd = input.flavors.map((flavor, idx) => {
+        return {name: flavor}
+      })
+
       // update user info
       const updateProfile = await ctx.db.user.update({
         where: { id: user.id },
@@ -89,7 +94,11 @@ export const profileRouter = createTRPCRouter({
           firstName: input.firstName,
           lastName: input.lastName,
           bio: input.bio,
-          location: input.location
+          location: input.location,
+          flavors: { // delete all flavors for now
+            deleteMany: {},
+            create: flavorsToAdd, // TODO: check if flavors are valid
+          },
         }
       });
 
