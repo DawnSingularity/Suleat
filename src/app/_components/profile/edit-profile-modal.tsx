@@ -84,7 +84,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
 
   <div id="defaultModal" tabIndex={-1} aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-50">
     {/* Modal (Box) itself */}
-    <div className="w-full max-w-xl pb-6 pl-6 pr-6 pt-2 m-5 bg-white rounded-lg shadow-lg">
+    <div className="w-full max-w-2xl pb-6 pl-6 pr-6 pt-2 m-5 bg-white rounded-lg shadow-lg">
       {/* Modal content */}
       <div className="relative">
         {/* Modal header */}
@@ -125,19 +125,19 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
               {/* Text Edits */}
               <div className="mt-56 h-64 overflow-y-auto p-2 mb-2" onScroll={handleFlavorChecks}>
                 <div className="">
-                  <label htmlFor="firstName" className="pl-2 text-sm text-stone-500">First Name</label>
+                  <label htmlFor="firstName" className="pl-0 text-sm text-stone-500">First Name</label>
                   <input id="firstName" name="firstName" className="border-2 border-stone-200 rounded p-2 w-full justify-center" placeholder="Enter your first name." defaultValue={data.firstName} type="text"></input>
                 </div>
                 <div className="mt-2">
-                  <label htmlFor="lastName" className="pl-2 text-sm text-stone-500">Last Name</label>
+                  <label htmlFor="lastName" className="pl-0 text-sm text-stone-500">Last Name</label>
                   <input id="lastName" name="lastName" className="border-2 border-stone-200 rounded p-2 w-full justify-center" placeholder="Enter your last name." defaultValue={data.lastName} type="text"></input>
                 </div>
                 <div className="mt-2">
-                  <label htmlFor="bio" className="pl-2 text-sm text-stone-500">Bio</label><br></br>
+                  <label htmlFor="bio" className="pl-0 text-sm text-stone-500">Bio</label><br></br>
                   <textarea className="border-2 border-stone-200 rounded p-2 w-full justify-center" name="bio" id="bio" rows={5} placeholder="Write something about yourself." defaultValue={data.bio}></textarea>
                 </div>
                 <div className="mt-1">
-                  <label htmlFor="location" className="pl-2 text-sm text-stone-500">Location</label>
+                  <label htmlFor="location" className="pl-0 text-sm text-stone-500">Location</label>
                   <input id="location" name="location" className="border-2 border-stone-200 rounded p-2 w-full justify-center" placeholder="Enter your location." defaultValue={data.location} type="text"></input>
                 </div>
                 <div className="mt-2">
