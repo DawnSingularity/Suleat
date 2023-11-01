@@ -3,7 +3,8 @@
 import { ChangeEvent, useState } from "react";
 import { Prisma, User, Flavor } from "@prisma/client";
 import { api } from "~/trpc/react";
-import { useMutation } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { flavors: true },
@@ -13,6 +14,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
 export function EditProfileModal({ onClose, data }: { onClose: () => void, data: UserWithFlavors }) {
   /* TODO: Get List of Flavors from Database */
+  const queryClient = useQueryClient()
   const {mutate} = api.profile.updateUserProfile.useMutation(data);
   const [newProfilePhoto, setNewProfilePhoto] = useState<File | null>(null);
   const [newCoverPhoto, setNewCoverPhoto] = useState<File | null>(null);
@@ -60,7 +62,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     }
   }
 
-  const saveProfile = () => {
+  const saveProfile = async () => {
     // handle saving information to database here
     const firstNameInput = document.getElementById("firstName") as HTMLInputElement
     const lastNameInput = document.getElementById("lastName") as HTMLInputElement
@@ -85,13 +87,11 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     }
     console.log(data)
 
-    const result = mutate(data)
-
-    // part 2
-    const uploadFile = (intent : String, file : File) => {
+    // step 2: upload files
+    const uploadFile = async (intent : String, file : File) => {
       const data = new FormData();
       data.append("file", file);
-      fetch("/api/upload/" + intent,
+      await fetch("/api/upload/" + intent,
       {
         method: "POST",
         body: data,
@@ -99,13 +99,25 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     } 
 
     if (newProfilePhoto != null) {
-      uploadFile("pfp", newProfilePhoto)
+      await uploadFile("pfp", newProfilePhoto)
     }
     if (newCoverPhoto != null) {
-      uploadFile("cover", newCoverPhoto)
+      await uploadFile("cover", newCoverPhoto)
     }
 
-    onClose()
+    // step 3: update data
+    const result = mutate(data, {
+      onSuccess: () => {
+        const queryKey = getQueryKey(api.profile.getUserProfile, {username: data.userName});
+        queryClient.invalidateQueries({queryKey});
+      },
+      onError: () => {
+        console.log("Error updating profile")
+      },
+      onSettled: () => {
+        onClose()
+      },
+    })
   }
 
   return (  
