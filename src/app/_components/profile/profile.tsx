@@ -1,16 +1,15 @@
 "use client";
 
-import styles from './profile.module.css';
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faPlusCircle, faEdit, faMinusCircle  } from "@fortawesome/free-solid-svg-icons";
-
+import { api } from "~/trpc/react";
 import { useState } from 'react';
 import { FollowersModal } from "~/app/_components/profile/profile-followers-modal"
 import { FollowingModal } from "~/app/_components/profile/profile-following-modal"
 import { EditProfileModal } from "~/app/_components/profile/edit-profile-modal"
 
-import { Prisma, User, Flavor } from "@prisma/client";
+import { Prisma, User, Flavor, FlavorsOnUsers } from "@prisma/client";
+import { PillButton } from './pill-button';
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { flavors: true },
 })
@@ -23,6 +22,8 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
     const [showEditProfileModal, setShowEditProfileModal] = useState(false)
 
     const [isFollowing, setIsFollowing] = useState(false); // Add state for follow button
+
+    const wholeListOfFlavors = api.flavor.getFlavors.useQuery().data ?? []
 
     const handleFollowButton = () => {
       // TODO: Handle follow functionality here
@@ -85,14 +86,15 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
           </h2>
 
           <div className="flex flex-wrap px-1 justify-center items-center md:justify-normal md:items-start">
-            {data.flavors.map((flavor : Flavor, index : Number) => (
-              <button
+            {data.flavors.map((flavor : FlavorsOnUsers, index : Number) => {
+              const cssColor = wholeListOfFlavors.find((element) => element.name === flavor.name)?.color
+
+              return (
+              <PillButton
                 key={index.toString()}
-                className={`my-1 mx-2 text-xs hover:bg-orange-700 text-white py-1 px-2 rounded-full h-full ${styles.suleat}`} 
-              >
-                {flavor.name}
-              </button>
-            ))}
+                id={flavor.name} text={flavor.name} backgroundColor={cssColor}
+              />
+            )})}
           </div>
 
         </div>

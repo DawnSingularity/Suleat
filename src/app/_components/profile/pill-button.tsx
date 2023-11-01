@@ -1,13 +1,16 @@
-import rgba from "color-rgba";
+import Color from "colorjs.io";
+import {useState} from "react";
 
-export function PillButton({ id="", text = "", backgroundColor = "", color = "", value=false, onChange }:  {
+export function PillButton({ id="", text = "", backgroundColor = "", value=true, onChange }:  {
     id: string,
     text: string,
     backgroundColor: string,
-    color: string,
     value: Boolean,
     onChange: (key : string, val : Boolean) => void
     }) { 
+    
+    const [hovering, setHovering] = useState(false)
+
     const onClick = (e : React.MouseEvent) => {
         e.preventDefault()
         if(onChange != null) {
@@ -15,13 +18,20 @@ export function PillButton({ id="", text = "", backgroundColor = "", color = "",
         }
     }
 
-    const backgroundRGBA = rgba(backgroundColor)
+    const newBackgroundColor = new Color(backgroundColor)
 
-    if(backgroundRGBA != null) {
-        backgroundRGBA[3] = value ? 1 : 0
+    if(newBackgroundColor != null) {
+        newBackgroundColor.alpha = value ? 1 : 0
     }
     
-
-    const style : React.CSSProperties = { backgroundColor: `rgba(${backgroundRGBA?.join()})`, color }
-    return (<button className={"px-4 py-1 border rounded-full "} style={style} onClick={onClick}>{text}</button>)
+    if(hovering) {
+        // reduce brightness
+        newBackgroundColor.lch.l *= 0.8
+    }
+    
+    return (<button className={`my-1 mx-2 text-xs ${value ? "dark:text-white" : "dark:text-black"} py-1 px-2 rounded-full h-full border`} 
+        style={{backgroundColor: newBackgroundColor.toString()}} 
+        onClick={onClick} 
+        onMouseEnter={() => {setHovering(true)}}
+        onMouseLeave={() => {setHovering(false)}}>{text}</button>)
 }

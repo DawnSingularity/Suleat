@@ -2,7 +2,7 @@
 
 import { PillButton } from "./pill-button";
 import { ChangeEvent, useState } from "react";
-import { Prisma, User, Flavor } from "@prisma/client";
+import { Prisma, User, Flavor, PrismaClient } from "@prisma/client";
 import { api } from "~/trpc/react";
 import { getQueryKey } from "@trpc/react-query";
 import { useQueryClient } from "@tanstack/react-query";
@@ -14,16 +14,15 @@ const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
 type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
 export function EditProfileModal({ onClose, data }: { onClose: () => void, data: UserWithFlavors }) {
-  /* TODO: Get List of Flavors from Database */
   const queryClient = useQueryClient()
   const {mutate} = api.profile.updateUserProfile.useMutation(data);
   const [newProfilePhoto, setNewProfilePhoto] = useState<File | null>(null);
   const [newCoverPhoto, setNewCoverPhoto] = useState<File | null>(null);
-  const wholeListOfFlavors = ['sweet', 'sour', 'bitter', 'umami', 'spicy']
+  const wholeListOfFlavors = api.flavor.getFlavors.useQuery().data ?? []
 
   // converts ['sweet', 'sour'] to {sweet: true, sour: true, bitter: false, ...}
-  const [flavorButtonStates, setFlavorButtonStates] = useState(wholeListOfFlavors.reduce((obj : Record<string, Boolean>, flavor : string) => {
-      obj[flavor] = data.flavors.some((item) => item.name === flavor)
+  const [flavorButtonStates, setFlavorButtonStates] = useState(wholeListOfFlavors.reduce((obj : Record<string, Boolean>, flavorProfile : Flavor) => {
+      obj[flavorProfile.name] = data.flavors.some((item) => item.name === flavorProfile.name)
       return obj
     }, {}))
 
@@ -76,9 +75,9 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     const locationInput = document.getElementById("location") as HTMLInputElement
 
     const flavorData = []
-    for(let flavor of wholeListOfFlavors) {
-      if(flavorButtonStates[flavor]) {
-        flavorData.push(flavor)
+    for(let { name } of wholeListOfFlavors) {
+      if(flavorButtonStates[name]) {
+        flavorData.push(name)
       }
     }
 
@@ -189,8 +188,8 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
                   <label htmlFor="flavors" className="pl-2 text-sm text-stone-500">Flavors</label><br></br>
                   <div className="flavors pl-2 ml-1" id="flavors">
                     {/* TODO: Get list of flavors from database ? */}
-                    { wholeListOfFlavors.map((flavor, i) => {
-                      return (<PillButton id={flavor} text={flavor} backgroundColor="red" color="black" value={flavorButtonStates[flavor] ?? false} onChange={changeFlavor}/>);
+                    { wholeListOfFlavors.map(({name, color}, i) => {
+                      return (<PillButton id={name} text={name} backgroundColor={color} value={flavorButtonStates[name] ?? false} onChange={changeFlavor}/>);
                     })}
                   </div>  
                 </div>    
