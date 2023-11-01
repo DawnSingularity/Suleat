@@ -87,7 +87,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
           <div className="flex flex-wrap px-1 justify-center items-center md:justify-normal md:items-start">
             {data.flavors.map((flavor : FlavorsOnUsers, index : Number) => {
-              const cssColor = wholeListOfFlavors.find((element) => element.name === flavor.name)?.color
+              const cssColor = wholeListOfFlavors.find((element) => element.name === flavor.name)?.color ?? "initial"
 
               return (
               <PillButton

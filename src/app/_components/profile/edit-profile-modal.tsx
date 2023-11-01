@@ -15,7 +15,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
 export function EditProfileModal({ onClose, data }: { onClose: () => void, data: UserWithFlavors }) {
   const queryClient = useQueryClient()
-  const {mutate} = api.profile.updateUserProfile.useMutation(data);
+  const {mutate} = api.profile.updateUserProfile.useMutation();
   const [newProfilePhoto, setNewProfilePhoto] = useState<File | null>(null);
   const [newCoverPhoto, setNewCoverPhoto] = useState<File | null>(null);
   const wholeListOfFlavors = api.flavor.getFlavors.useQuery().data ?? []
@@ -27,11 +27,11 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     }, {}))
 
   // Helper functions
-  const getUserProfileUrl = () : String => {
+  const getUserProfileUrl = () : string => {
     return newProfilePhoto != null ? URL.createObjectURL(newProfilePhoto) : data.pfpURL;
   }
 
-  const getUserCoverUrl = () : String => {
+  const getUserCoverUrl = () : string => {
     return newCoverPhoto != null ? URL.createObjectURL(newCoverPhoto) : data.coverURL;
   }
 
