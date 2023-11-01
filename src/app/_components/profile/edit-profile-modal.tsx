@@ -1,5 +1,6 @@
 "use client"
 
+import { PillButton } from "./pill-button";
 import { ChangeEvent, useState } from "react";
 import { Prisma, User, Flavor } from "@prisma/client";
 import { api } from "~/trpc/react";
@@ -20,6 +21,11 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
   const [newCoverPhoto, setNewCoverPhoto] = useState<File | null>(null);
   const wholeListOfFlavors = ['sweet', 'sour', 'bitter', 'umami', 'spicy']
 
+  // converts ['sweet', 'sour'] to {sweet: true, sour: true, bitter: false, ...}
+  const [flavorButtonStates, setFlavorButtonStates] = useState(wholeListOfFlavors.reduce((obj : Record<string, Boolean>, flavor : string) => {
+      obj[flavor] = data.flavors.some((item) => item.name === flavor)
+      return obj
+    }, {}))
 
   // Helper functions
   const getUserProfileUrl = () : String => {
@@ -49,17 +55,17 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     }
   }
 
-  /* Current Hack: Function Attached on OnScroll Event 
-     Possible Setback: Large screens that do not require scrolling */
-  const handleFlavorChecks = () => {
-    for(var flavor of wholeListOfFlavors) {
-      if (data.flavors.some((item) => item.name === flavor)) {
-        const checkbox = document.getElementById(flavor) as HTMLInputElement
-        if (checkbox && checkbox instanceof HTMLInputElement) {
-          checkbox.checked = true;
-        }
-      }
-    }
+  const changeFlavor = (flavor : string, val : Boolean) => {
+    // important: it must be a function to prevent issues when >= 2 of the flavors are changed at the same time (only one of them will be changed)
+    setFlavorButtonStates((prevStates) => {
+      // create copy
+      const newFlavorButtonStates = {...prevStates}
+
+      // change value in copy
+      newFlavorButtonStates[flavor] = val
+
+      return newFlavorButtonStates
+    })
   }
 
   const saveProfile = async () => {
@@ -71,8 +77,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
 
     const flavorData = []
     for(let flavor of wholeListOfFlavors) {
-      const flavorInput = document.getElementById(flavor) as HTMLInputElement
-      if(flavorInput.checked) {
+      if(flavorButtonStates[flavor]) {
         flavorData.push(flavor)
       }
     }
@@ -163,7 +168,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
               </div>
               
               {/* Text Edits */}
-              <div className="mt-56 h-64 overflow-y-auto p-2 mb-2" onScroll={handleFlavorChecks}>
+              <div className="mt-56 h-64 overflow-y-auto p-2 mb-2">
                 <div className="">
                   <label htmlFor="firstName" className="pl-0 text-sm text-stone-500">First Name</label>
                   <input id="firstName" name="firstName" className="border-2 border-stone-200 rounded p-2 w-full justify-center" placeholder="Enter your first name." defaultValue={data.firstName} type="text"></input>
@@ -184,16 +189,9 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
                   <label htmlFor="flavors" className="pl-2 text-sm text-stone-500">Flavors</label><br></br>
                   <div className="flavors pl-2 ml-1" id="flavors">
                     {/* TODO: Get list of flavors from database ? */}
-                    <input type="checkbox" id="sweet" name="sweet" value="sweet"/>
-                    <label htmlFor="sweet"> sweet </label><br></br>
-                    <input type="checkbox" id="spicy" name="spicy" value="spicy"/>
-                    <label htmlFor="spicy"> spicy </label><br></br>
-                    <input type="checkbox" id="umami" name="umami" value="umami"/>
-                    <label htmlFor="umami"> umami </label><br></br>
-                    <input type="checkbox" id="bitter" name="bitter" value="bitter"/>
-                    <label htmlFor="bitter"> bitter </label><br></br>
-                    <input type="checkbox" id="sour" name="sour" value="sour"/>
-                    <label htmlFor="sour"> sour </label><br></br>
+                    { wholeListOfFlavors.map((flavor, i) => {
+                      return (<PillButton id={flavor} text={flavor} backgroundColor="red" color="black" value={flavorButtonStates[flavor] ?? false} onChange={changeFlavor}/>);
+                    })}
                   </div>  
                 </div>    
               </div>
