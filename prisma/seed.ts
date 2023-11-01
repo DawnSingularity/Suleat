@@ -24,7 +24,6 @@ async function main() {
             id: 1,
             name: "sweet",
             color: "#FFABF8",
-            userId: 1
         }
     })
 
@@ -35,7 +34,6 @@ async function main() {
             id: 2,
             name: "sour",
             color: "#9DE02E",
-            userId: 1
         }
     })
 
@@ -46,7 +44,6 @@ async function main() {
             id: 3,
             name: "spicy",
             color: "#E0472E",
-            userId: 1
         }
     })
 
@@ -57,7 +54,6 @@ async function main() {
             id: 4,
             name: "umami",
             color: "#1CEBE0",
-            userId: 1
         }
     })
 
@@ -68,7 +64,6 @@ async function main() {
             id: 5,
             name: "bitter",
             color: "#C6B887",
-            userId: 1
         }
     })
 }

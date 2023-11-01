@@ -38,6 +38,7 @@ model User {
 }
 
 model Flavor {
+    id          Int         @id @default(autoincrement())
     name        String      @unique @default("")
     description String      @default("")
     color       String      @default("#fc571a")
