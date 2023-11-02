@@ -18,7 +18,7 @@ export function Home() {
           <div>
             Hello, your current active session is {sessionId}
           </div>
-          {!!user.isSignedIn && <UserButton afterSignOutUrl="/sign-up" />}
+          {!!user.isSignedIn && <UserButton afterSignOutUrl="/" />}
         </main>
       </>
     );
