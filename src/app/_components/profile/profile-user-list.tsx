@@ -26,7 +26,7 @@ export default function UserList({ follower }: { follower: User }) {
   return (
     <div className={`flex flex-row w-full gap-3 ${isFollowing ? 'bg-white border-blue-600' : 'bg-white'}`}>
       <div className="w-12">
-        <img className="rounded-full h-10 w-10" src="https://picsum.photos/100/100" alt="" />
+        <img className="rounded-full h-10 w-10" src={follower.pfpURL} alt="" />
       </div>
       <div className="w-48 flex-col flex">
         <Link href={`/profile/${follower.userName}`}>
