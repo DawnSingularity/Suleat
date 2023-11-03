@@ -23,6 +23,9 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
     const [isFollowing, setIsFollowing] = useState(false); // Add state for follow button
 
+    const username = api.profile.getCurrentUser.useQuery().data ?? ""
+    const editProfileButtonVisibility = username === data.userName ? "visible" : "invisible" 
+
     const wholeListOfFlavors = api.flavor.getFlavors.useQuery().data ?? []
 
     const handleFollowButton = () => {
@@ -52,7 +55,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
         <img className="w-48 h-48 rounded-full absolute object-cover z-10 border-4 border-white bottom-22 md:bottom-0 md:left-5 left-1/2 transform -translate-x-1/2 md:transform-none" src={data.pfpURL} alt="" />
         <div className="absolute left-1/2 transform -translate-x-1/2 md:transform-none container flex flex-col md:flex-row md:w-7/12 md:full md:bottom-7 bottom-3 md:left-[35%]">
           <div className="w-full max-w-screen md:w-5/12 flex-col flex justify-center items-center md:flex-none md:justify-normal md:items-start md:-translate-x-24">
-            <p className="text-xl font-extrabold"> {data.firstName} {data.lastName} <FontAwesomeIcon icon={followIcon} className="hover:cursor-pointer hover:drop-shadow-md" style={{ color: '#24a0ed' }} onClick={handleFollowButton} /> <FontAwesomeIcon id="edit-profile-button" className="hover:cursor-pointer hover:drop-shadow-md" icon={faEdit} onClick={handleEditProfileModal}/></p>
+            <p className="text-xl font-extrabold"> {data.firstName} {data.lastName} <FontAwesomeIcon icon={followIcon} className="hover:cursor-pointer hover:drop-shadow-md" style={{ color: '#24a0ed' }} onClick={handleFollowButton} /> <FontAwesomeIcon id="edit-profile-button" className={`hover:cursor-pointer hover:drop-shadow-md ${editProfileButtonVisibility} `} icon={faEdit} onClick={handleEditProfileModal}/></p>
             <p className="text-base font-font-medium color-gray"> @{data.userName} </p>
           </div>
           <div className="w-full max-w-screen flex flex-row ">
