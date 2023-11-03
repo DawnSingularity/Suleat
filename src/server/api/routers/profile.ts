@@ -58,6 +58,26 @@ export const profileRouter = createTRPCRouter({
       return following.map((follow) => follow.userFollowing);
     }),
 
+    isFollowing: publicProcedure
+    .input(z.object({ follower: z.string(), following: z.string() }))
+    .query(async ({ctx, input}) => {
+      // Get user
+      const getId = async (username : string) => 
+        (await ctx.db.user.findFirst({
+          where: { userName: username },
+        }))?.id;
+
+      // Get all following
+      const relation = await ctx.db.following.findFirst({
+        where: { 
+          myUserId: await getId(input.follower), 
+          userFollowingId: await getId(input.following), 
+         },
+      });
+
+      return relation != null;
+    }),
+
     updateFollowState: userProcedure
     .input(z.object({ username: z.string(), state: z.boolean() }))
     .mutation(async ({ctx, input}) => {

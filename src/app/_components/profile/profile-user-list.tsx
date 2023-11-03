@@ -1,13 +1,26 @@
 import Link from 'next/link';
-import { useState } from 'react';
+import { api } from "~/trpc/react";
 import { User } from "@prisma/client";
 
+import { getQueryKey } from "@trpc/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+
 export default function UserList({ follower }: { follower: User }) {
-  const [isFollowing, setIsFollowing] = useState(false);
+  const queryClient = useQueryClient()
+  
+  const username = api.profile.getCurrentUser.useQuery().data ?? ""
+  const followCheckQuery = {follower: username, following: follower.userName}
+  const isFollowing = api.profile.isFollowing.useQuery(followCheckQuery).data
+
+  const followMutation = api.profile.updateFollowState.useMutation()
 
   const handleFollowToggle = () => {
-   // TODO: Handle db here
-    setIsFollowing(!isFollowing);
+    followMutation.mutate({username: follower.userName, state: !isFollowing}, {
+      onSuccess: () => {
+        const queryKey = getQueryKey(api.profile.isFollowing, followCheckQuery)
+        queryClient.invalidateQueries({queryKey})
+      }
+    })
   };
 
   return (
