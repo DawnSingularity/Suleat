@@ -82,7 +82,6 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     }
 
     const data = {
-      userName: "gordonramsay",
       firstName: firstNameInput.value,
       lastName: lastNameInput.value,
       bio: bioInput.value,

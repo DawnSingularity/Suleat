@@ -11,6 +11,8 @@ import { type NextRequest } from "next/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
+import { getAuth, AuthObject, SignedInAuthObject, SignedOutAuthObject } from '@clerk/nextjs/server';
+import { User } from "prisma/prisma-client"
 import { db } from "~/server/db";
 
 /**
@@ -21,8 +23,13 @@ import { db } from "~/server/db";
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 
+// FIXME
+type AuthObjectWithDeprecatedResources<T extends AuthObject> = Omit<T, 'user' | 'organization' | 'session'>
+
 interface CreateContextOptions {
   headers: Headers;
+  auth: AuthObjectWithDeprecatedResources<SignedInAuthObject | SignedOutAuthObject>;
+  user: User | null;
 }
 
 /**
@@ -38,6 +45,8 @@ interface CreateContextOptions {
 export const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
     headers: opts.headers,
+    auth: opts.auth,
+    user: opts.user,
     db,
   };
 };
@@ -48,11 +57,14 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = (opts: { req: NextRequest }) => {
+export const createTRPCContext = async (opts: { req: NextRequest }) => {
   // Fetch stuff that depends on the request
-
+  const auth = getAuth(opts.req)
+  const user = auth?.userId != null ? await db.user.findUnique({where: {uuid: auth.userId}}) : null
   return createInnerTRPCContext({
     headers: opts.req.headers,
+    auth,
+    user,
   });
 };
 

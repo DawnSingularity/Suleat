@@ -3,10 +3,13 @@
 import Head from "next/head";
 import { useAuth } from "@clerk/nextjs";
 import { UserButton, useUser } from "@clerk/clerk-react";
+import { api } from "~/trpc/react";
 
 export function Home() {
-  const { sessionId, getToken } = useAuth();
+  const { sessionId, userId, getToken } = useAuth();
   const user = useUser();
+  const username = api.profile.getCurrentUser.useQuery().data;
+  
     return (
       <>
         <Head>
@@ -16,7 +19,7 @@ export function Home() {
         </Head>
         <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c]">
           <div>
-            Hello, your current active session is {sessionId}
+            Hello {username ?? ""}, your current active session is {sessionId}
           </div>
           {!!user.isSignedIn && <UserButton afterSignOutUrl="/" />}
         </main>

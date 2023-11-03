@@ -61,7 +61,6 @@ export const profileRouter = createTRPCRouter({
 
     updateUserProfile: publicProcedure
     .input(z.object({
-      userName: z.string(), // temporary
       firstName: z.string(),
       lastName: z.string(),
       bio: z.string(),
@@ -69,13 +68,10 @@ export const profileRouter = createTRPCRouter({
       flavors: z.array(z.string())
     }))
     .mutation(async ({ctx, input}) => {
-      const username = input.userName // temporary
-      console.log("try", username)
-
       // Get user
-      const user = await ctx.db.user.findFirst({
-        where: { userName: username?.toString() },
-      });
+      const user = await ctx.db.user.findUnique({
+        where: { uuid: ctx.auth.userId },
+      })
 
       // If user does not exist
       if (!user) {
@@ -103,8 +99,57 @@ export const profileRouter = createTRPCRouter({
       });
 
       return updateProfile
-    })
+    }),
+    
+    createUser: publicProcedure
+    .input(z.object({
+      firstName: z.string(),
+      lastName: z.string(),
+    }))
+    .mutation(async ({ctx, input}) => {
+      
+      if(ctx.auth.userId != null) {
+        const user = await ctx.db.user.findUnique({
+          where: { uuid: ctx.auth.userId },
+        })
 
+        // if user does not exist
+        if(user == null) {
+          // twitter default username
+          const username = input.firstName + input.lastName + Math.random().toString().slice(2, 10)
 
+          await ctx.db.user.create({
+            data: {
+              uuid: ctx.auth.userId,
+              userName: username,
+              firstName: input.firstName,
+              lastName: input.lastName,
+          }})
+
+          return {
+            message: "OK"
+          }
+        }
+      }
+
+      return {
+        message: "ERROR"
+      }
+    }),
+
+    // TODO: move somewhere else
+    getCurrentUser: publicProcedure.query(
+      async ({ ctx }) => {
+        if(ctx.auth.userId != null) {
+          const user = await ctx.db.user.findUnique({
+            where: { uuid: ctx.auth.userId },
+          })
+
+          return user?.userName
+        }
+
+        return null
+      }
+    )
 });
 
