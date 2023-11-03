@@ -4,6 +4,7 @@ import { writeFile } from 'fs/promises'
 import { NextRequest } from "next/server";
 
 import { PrismaClient } from "@prisma/client";
+import { getAuth } from '@clerk/nextjs/server';
 
 const prisma = new PrismaClient()
 
@@ -23,9 +24,9 @@ export async function POST(req: NextRequest,
         await writeFile("./uploads/" + fileName, fileBuffer)
     
     
-        // find user FIXME
-        const user = await prisma.user.findFirst({
-            where: { userName: "gordonramsay" },
+        // find user
+        const user = await prisma.user.findUnique({
+            where: { uuid: getAuth(req)?.userId ?? undefined },
         });
     
         // If user does not exist
