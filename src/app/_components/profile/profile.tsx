@@ -8,7 +8,7 @@ import { FollowersModal } from "~/app/_components/profile/profile-followers-moda
 import { FollowingModal } from "~/app/_components/profile/profile-following-modal"
 import { EditProfileModal } from "~/app/_components/profile/edit-profile-modal"
 
-import { Prisma, User, Flavor, FlavorsOnUsers } from "@prisma/client";
+import { Prisma, User, Flavor } from "@prisma/client";
 import { PillButton } from './pill-button';
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { flavors: true },
@@ -89,7 +89,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
           </h2>
 
           <div className="flex flex-wrap px-1 justify-center items-center md:justify-normal md:items-start">
-            {data.flavors.map((flavor : FlavorsOnUsers, index : Number) => {
+            {data.flavors.map((flavor : Flavor, index : Number) => {
               const cssColor = wholeListOfFlavors.find((element) => element.name === flavor.name)?.color ?? "initial"
 
               return (
