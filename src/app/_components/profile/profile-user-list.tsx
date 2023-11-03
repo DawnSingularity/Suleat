@@ -8,8 +8,8 @@ import { useQueryClient } from "@tanstack/react-query";
 export default function UserList({ follower }: { follower: User }) {
   const queryClient = useQueryClient()
   
-  const username = api.profile.getCurrentUser.useQuery().data ?? ""
-  const followCheckQuery = {follower: username, following: follower.userName}
+  const loggedInUsername = api.profile.getCurrentUser.useQuery().data ?? ""
+  const followCheckQuery = {follower: loggedInUsername, following: follower.userName}
   const isFollowing = api.profile.isFollowing.useQuery(followCheckQuery).data
 
   const followMutation = api.profile.updateFollowState.useMutation()
@@ -23,6 +23,18 @@ export default function UserList({ follower }: { follower: User }) {
     })
   };
 
+  let followButton;
+  if(loggedInUsername !== follower.userName) {
+    followButton = (
+      <button
+      onClick={handleFollowToggle}
+      className={`w-[86px] px-4 py-1 rounded-lg text-xs font-bold text-${isFollowing ? 'blue-600' : 'white'}  ${isFollowing ? 'bg-gray-200' : 'bg-blue-600'}`}
+      >
+        {isFollowing ? "Unfollow" : "Follow"}
+      </button>
+    )
+  }
+
   return (
     <div className={`flex flex-row w-full gap-3 ${isFollowing ? 'bg-white border-blue-600' : 'bg-white'}`}>
       <div className="w-12">
@@ -35,12 +47,7 @@ export default function UserList({ follower }: { follower: User }) {
         <p className="text-xs font-font-medium color-gray">@{follower.userName}</p>
       </div>
       <div className="w-12">
-        <button
-          onClick={handleFollowToggle}
-          className={`w-[86px] px-4 py-1 rounded-lg text-xs font-bold text-${isFollowing ? 'blue-600' : 'white'}  ${isFollowing ? 'bg-gray-200' : 'bg-blue-600'}`}
-        >
-          {isFollowing ? "Unfollow" : "Follow"}
-        </button>
+        { followButton }
       </div>
     </div>
   );
