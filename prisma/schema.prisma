@@ -29,7 +29,7 @@ model User {
     pfpURL      String  @default("https://picsum.photos/500/500")
     location    String  @default("")
     coverURL    String  @default("https://picsum.photos/600/600")
-    flavors     FlavorsOnUsers[]
+    flavors     Flavor[]
     createdAt   DateTime @default(now())
 
     followers       Follower[]  @relation("Follower")
@@ -44,16 +44,9 @@ model Flavor {
     description String      @default("")
     color       String      @default("#fc571a")
 
-    users       FlavorsOnUsers[]
+    users       User[]
 }
 
-model FlavorsOnUsers {
-    id          Int         @id @default(autoincrement())
-    flavor      Flavor      @relation(fields: [flavorId], references: [id])
-    flavorId    Int
-    user        User        @relation(fields: [userId], references: [id])
-    userId      Int           
-}
 model Follower {
     id               Int        @id @default(autoincrement())
     followedUser     User       @relation("Follower", fields: [followedUserId], references: [id])
