@@ -21,6 +21,7 @@ model Post {
 
 model User {
     id          Int     @id @default(autoincrement())
+    uuid        String  @unique
     bio         String  @default("")
     firstName   String  @default("")
     lastName    String  @default("")
@@ -42,10 +43,14 @@ model Flavor {
     name        String      @unique @default("")
     description String      @default("")
     color       String      @default("#fc571a")
+
+    users       FlavorsOnUsers[]
 }
 
 model FlavorsOnUsers {
-    name        String      @unique @default("")
+    id          Int         @id @default(autoincrement())
+    flavor      Flavor      @relation(fields: [flavorId], references: [id])
+    flavorId    Int
     user        User        @relation(fields: [userId], references: [id])
     userId      Int           
 }
