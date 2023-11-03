@@ -3,7 +3,7 @@
 import UserList from "~/app/_components/profile/profile-user-list"
 import { User } from "@prisma/client";
 
-export function FollowersModal({ onClose, followers }: { onClose: () => void; followers: User[] }) {
+export function FollowModal({ onClose, title, users }: { onClose: () => void; title: string; users: User[] }) {
   return (
     <div
       id="defaultModal"
@@ -16,7 +16,7 @@ export function FollowersModal({ onClose, followers }: { onClose: () => void; fo
         <div className="relative">
           {/* Modal header */}
           <div className="flex items-start justify-between p-4 border-b rounded-t">
-            <h3 className="text-xl font-semibold text-gray-900">Followers</h3>
+            <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
             <button
               onClick={onClose}
               type="button"
@@ -44,7 +44,7 @@ export function FollowersModal({ onClose, followers }: { onClose: () => void; fo
           {/* Modal body */}
           <div className="py-6 px-4">
             <div className="h-96 overflow-y-auto flex flex-col gap-5">
-            {followers.map((follower, index) => (
+            {users.map((follower, index) => (
               <UserList key={index} follower={follower} />
             ))}
             </div>

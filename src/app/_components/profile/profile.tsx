@@ -4,8 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faPlusCircle, faEdit, faMinusCircle  } from "@fortawesome/free-solid-svg-icons";
 import { api } from "~/trpc/react";
 import { useEffect, useState } from 'react';
-import { FollowersModal } from "~/app/_components/profile/profile-followers-modal"
-import { FollowingModal } from "~/app/_components/profile/profile-following-modal"
+import { FollowModal } from "~/app/_components/profile/profile-follow-modal"
 import { EditProfileModal } from "~/app/_components/profile/edit-profile-modal"
 
 import { Prisma, User, Flavor } from "@prisma/client";
@@ -134,8 +133,8 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
           </p>
         </div>
       </div>
-      {showFollowersModal && <FollowersModal onClose={handleFollowersModal} followers = {followers}/>} {/* Show modal based on state */}
-      {showFollowingModal && <FollowingModal onClose={handleFollowingModal} following={following} />} {/* Show modal based on state */}
+      {showFollowersModal && <FollowModal onClose={handleFollowersModal} title="Followers" users={followers} />} {/* Show modal based on state */}
+      {showFollowingModal && <FollowModal onClose={handleFollowingModal} title="Following" users={following} />} {/* Show modal based on state */}
       {showEditProfileModal && <EditProfileModal onClose={handleEditProfileModal} data={data} />} {/* Show edit profile modal based on state */}
     </main>
   );
