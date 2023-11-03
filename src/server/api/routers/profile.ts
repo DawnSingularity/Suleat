@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure, userProcedure } from "~/server/api/trpc";
 
 import { useRouter } from 'next/navigation';
 import { Prisma, User, Flavor } from "@prisma/client";
@@ -36,7 +36,7 @@ export const profileRouter = createTRPCRouter({
         return followers.map((follower) => follower.myUser);
     }),
 
-    getFollowing: publicProcedure
+    getFollowing: userProcedure
     .input(z.object({ username: z.string() }))
     .query(async ({ctx, input}) => {
       // Get user
@@ -58,15 +58,11 @@ export const profileRouter = createTRPCRouter({
       return following.map((follow) => follow.userFollowing);
     }),
 
-    updateFollowState: publicProcedure
+    updateFollowState: userProcedure
     .input(z.object({ username: z.string(), state: z.boolean() }))
     .mutation(async ({ctx, input}) => {
       // Get user
-      const myUserId = (await ctx.db.user.findUnique({
-        where: {
-          uuid: ctx.auth.userId ?? undefined
-        }
-      }))?.id
+      const myUserId = ctx.user.id
       const userFollowingId = (await ctx.db.user.findUnique({
         where: {
           userName: input.username
@@ -92,7 +88,7 @@ export const profileRouter = createTRPCRouter({
       return {}
     }),
 
-    updateUserProfile: publicProcedure
+    updateUserProfile: userProcedure
     .input(z.object({
       firstName: z.string(),
       lastName: z.string(),
@@ -101,19 +97,9 @@ export const profileRouter = createTRPCRouter({
       flavors: z.array(z.string())
     }))
     .mutation(async ({ctx, input}) => {
-      // Get user
-      const user = await ctx.db.user.findUnique({
-        where: { uuid: ctx.auth.userId },
-      })
-
-      // If user does not exist
-      if (!user) {
-        throw new Error("User not found");
-      }
-
       // update user info
       const updateProfile = await ctx.db.user.update({
-        where: { id: user.id },
+        where: { id: ctx.user.id },
         data: {
           firstName: input.firstName,
           lastName: input.lastName,
