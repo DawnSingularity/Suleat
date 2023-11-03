@@ -27,11 +27,9 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
     const [showFollowingModal, setShowFollowingModal] = useState(false); // Add state for modal visibility
     const [showEditProfileModal, setShowEditProfileModal] = useState(false)
 
-    const username = api.profile.getCurrentUser.useQuery().data ?? ""
-    const followButtonVisibility = username === data.userName ? "invisible" : "visible" 
-    const editProfileButtonVisibility = username === data.userName ? "visible" : "invisible" 
+    const loggedInUsername = api.profile.getCurrentUser.useQuery().data ?? ""
 
-    const isFollowing = followers.some((user) => user.userName === username);
+    const isFollowing = followers.some((user) => user.userName === loggedInUsername);
 
     const wholeListOfFlavors = api.flavor.getFlavors.useQuery().data ?? []
     const followMutation = api.profile.updateFollowState.useMutation()
@@ -60,6 +58,17 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
     }
 
     const followIcon = isFollowing ? faMinusCircle : faPlusCircle;
+    let followButton = <></>, editProfileButton = <></>;
+
+    // follow button should not be visible in user's own profile
+    if(loggedInUsername !== data.userName) {
+      followButton = <FontAwesomeIcon icon={followIcon} className="hover:cursor-pointer hover:drop-shadow-md" style={{ color: '#24a0ed' }} onClick={handleFollowButton} />
+    } 
+
+    // edit button should only be visible in user's own profile
+    if(loggedInUsername === data.userName) {
+      editProfileButton = <FontAwesomeIcon id="edit-profile-button" className="hover:cursor-pointer hover:drop-shadow-md" icon={faEdit} onClick={handleEditProfileModal}/>
+    }
 
   return (
     <main className={`h-full`}>
@@ -68,7 +77,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
         <img className="w-48 h-48 rounded-full absolute object-cover z-10 border-4 border-white bottom-22 md:bottom-0 md:left-5 left-1/2 transform -translate-x-1/2 md:transform-none" src={data.pfpURL} alt="" />
         <div className="absolute left-1/2 transform -translate-x-1/2 md:transform-none container flex flex-col md:flex-row md:w-7/12 md:full md:bottom-7 bottom-3 md:left-[35%]">
           <div className="w-full max-w-screen md:w-5/12 flex-col flex justify-center items-center md:flex-none md:justify-normal md:items-start md:-translate-x-24">
-            <p className="text-xl font-extrabold"> {data.firstName} {data.lastName} <FontAwesomeIcon icon={followIcon} className={`hover:cursor-pointer hover:drop-shadow-md ${followButtonVisibility} `} style={{ color: '#24a0ed' }} onClick={handleFollowButton} /> <FontAwesomeIcon id="edit-profile-button" className={`hover:cursor-pointer hover:drop-shadow-md ${editProfileButtonVisibility} `} icon={faEdit} onClick={handleEditProfileModal}/></p>
+            <p className="text-xl font-extrabold"> {data.firstName} {data.lastName} {followButton} {editProfileButton} </p>
             <p className="text-base font-font-medium color-gray"> @{data.userName} </p>
           </div>
           <div className="w-full max-w-screen flex flex-row ">
