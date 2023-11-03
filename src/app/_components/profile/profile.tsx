@@ -3,7 +3,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faPlusCircle, faEdit, faMinusCircle  } from "@fortawesome/free-solid-svg-icons";
 import { api } from "~/trpc/react";
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FollowModal } from "~/app/_components/profile/profile-follow-modal"
 import { EditProfileModal } from "~/app/_components/profile/edit-profile-modal"
 
@@ -30,11 +30,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
     const username = api.profile.getCurrentUser.useQuery().data ?? ""
     const editProfileButtonVisibility = username === data.userName ? "visible" : "invisible" 
 
-    const [isFollowing, setIsFollowing] = useState(false); // Add state for follow button
-    // update state when followers change
-    useEffect(() => {
-      setIsFollowing( followers.some((user) => user.userName === username) )
-    }, [followers, username])
+    const isFollowing = followers.some((user) => user.userName === username);
 
     const wholeListOfFlavors = api.flavor.getFlavors.useQuery().data ?? []
     const followMutation = api.profile.updateFollowState.useMutation()
