@@ -81,7 +81,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
       }
     }
 
-    const data = {
+    const updatedData = {
       firstName: firstNameInput.value,
       lastName: lastNameInput.value,
       bio: bioInput.value,
@@ -109,7 +109,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     }
 
     // step 3: update data
-    const result = mutate(data, {
+    const result = mutate(updatedData, {
       onSuccess: () => {
         const queryKey = getQueryKey(api.profile.getUserProfile, {username: data.userName});
         queryClient.invalidateQueries({queryKey});
