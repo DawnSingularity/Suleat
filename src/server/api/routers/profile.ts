@@ -28,12 +28,12 @@ export const profileRouter = createTRPCRouter({
         }
 
         // Get all followers
-        const followers = await ctx.db.follower.findMany({
-          where: { myUserId: user.id },
-          include: { followedUser: true },
+        const followers = await ctx.db.following.findMany({
+          where: { userFollowingId: user.id },
+          include: { myUser: true },
         });
 
-        return followers.map((follower) => follower.followedUser);
+        return followers.map((follower) => follower.myUser);
     }),
 
     getFollowing: publicProcedure
@@ -58,6 +58,39 @@ export const profileRouter = createTRPCRouter({
       return following.map((follow) => follow.userFollowing);
     }),
 
+    updateFollowState: publicProcedure
+    .input(z.object({ username: z.string(), state: z.boolean() }))
+    .mutation(async ({ctx, input}) => {
+      // Get user
+      const myUserId = (await ctx.db.user.findUnique({
+        where: {
+          uuid: ctx.auth.userId ?? undefined
+        }
+      }))?.id
+      const userFollowingId = (await ctx.db.user.findUnique({
+        where: {
+          userName: input.username
+        }
+      }))?.id
+
+      console.log(input.state)
+      if(myUserId != null && userFollowingId != null) {
+        if(input.state /* follow */) {
+          await ctx.db.following.create({
+            data: { userFollowingId, myUserId }
+          })
+        } else {
+          await ctx.db.following.delete({
+            where: { 
+              userFollowingId_myUserId: { userFollowingId, myUserId }
+            }
+          })
+        }
+
+      }
+
+      return {}
+    }),
 
     updateUserProfile: publicProcedure
     .input(z.object({

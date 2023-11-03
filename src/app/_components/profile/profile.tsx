@@ -3,13 +3,18 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faPlusCircle, faEdit, faMinusCircle  } from "@fortawesome/free-solid-svg-icons";
 import { api } from "~/trpc/react";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FollowersModal } from "~/app/_components/profile/profile-followers-modal"
 import { FollowingModal } from "~/app/_components/profile/profile-following-modal"
 import { EditProfileModal } from "~/app/_components/profile/edit-profile-modal"
 
 import { Prisma, User, Flavor } from "@prisma/client";
 import { PillButton } from './pill-button';
+
+import { getQueryKey } from "@trpc/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+
+
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { flavors: true },
 })
@@ -17,20 +22,32 @@ const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
 type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
   export default function UserProfileComponent({ data, followers, following }: { data: UserWithFlavors; followers: User[], following: User[] }) {
+    const queryClient = useQueryClient()
+
     const [showFollowersModal, setShowFollowersModal] = useState(false);
     const [showFollowingModal, setShowFollowingModal] = useState(false); // Add state for modal visibility
     const [showEditProfileModal, setShowEditProfileModal] = useState(false)
 
-    const [isFollowing, setIsFollowing] = useState(false); // Add state for follow button
-
     const username = api.profile.getCurrentUser.useQuery().data ?? ""
     const editProfileButtonVisibility = username === data.userName ? "visible" : "invisible" 
 
+    const [isFollowing, setIsFollowing] = useState(false); // Add state for follow button
+    // update state when followers change
+    useEffect(() => {
+      setIsFollowing( followers.some((user) => user.userName === username) )
+    }, [followers, username])
+
     const wholeListOfFlavors = api.flavor.getFlavors.useQuery().data ?? []
+    const followMutation = api.profile.updateFollowState.useMutation()
 
     const handleFollowButton = () => {
       // TODO: Handle follow functionality here
-      setIsFollowing(!isFollowing);
+      followMutation.mutate({username: data.userName, state: !isFollowing}, {
+        onSuccess: () => {
+          const queryKey = getQueryKey(api.profile.getFollowers, {username: data.userName});
+          queryClient.invalidateQueries({queryKey});
+        }
+      })
     };
 
     // Function to handle modal visibility

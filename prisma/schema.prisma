@@ -32,10 +32,8 @@ model User {
     flavors     Flavor[]
     createdAt   DateTime @default(now())
 
-    followers       Follower[]  @relation("Follower")
-    myFollowerObj   Follower?   @relation ("MyUser")
+    followers       Following[] @relation("Follower")
     following       Following[] @relation("Following")
-    myFollowingObj  Following?  @relation("MyUser")
 }
 
 model Flavor {
@@ -47,18 +45,11 @@ model Flavor {
     users       User[]
 }
 
-model Follower {
-    id               Int        @id @default(autoincrement())
-    followedUser     User       @relation("Follower", fields: [followedUserId], references: [id])
-    followedUserId   Int     
-    myUser           User       @relation("MyUser", fields: [myUserId], references: [id])
-    myUserId         Int        @unique
-}
-
 model Following {
-    id               Int         @id @default(autoincrement())
-    userFollowing    User        @relation("Following", fields: [userFollowingId], references: [id])
+    @@id([userFollowingId, myUserId]) // user A can only follow user B at most once, so use that relationship as the id
+
+    userFollowing    User        @relation("Follower", fields: [userFollowingId], references: [id])
     userFollowingId  Int   
-    myUser           User       @relation("MyUser", fields: [myUserId], references: [id])
-    myUserId         Int        @unique     
+    myUser           User        @relation("Following", fields: [myUserId], references: [id])
+    myUserId         Int        
 }
