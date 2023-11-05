@@ -23,7 +23,7 @@ export function Navbar() {
     
     return (
       <>
-        <nav className="sticky top-0 bg-zinc-300 flex flex-row justify-between px-4">
+        <nav className="z-50 sticky top-0 bg-zinc-300 flex flex-row justify-between px-4">
             <div className="order-first flex flex-row items-center py-2">
                 <FontAwesomeIcon icon={faBars} style={{color: "#727272",}} size="xl" className="pr-4"/>
                 <a className="flex flex-row items-center" href="/">
