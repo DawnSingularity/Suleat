@@ -24,7 +24,7 @@ async function main() {
         create: {
             id: 1,
             name: "sweet",
-            color: "#FFABF8",
+            color: "#F91E9F",
         }
     })
 
@@ -34,7 +34,7 @@ async function main() {
         create: {
             id: 2,
             name: "sour",
-            color: "#9DE02E",
+            color: "#A8DB00",
         }
     })
 
@@ -44,7 +44,7 @@ async function main() {
         create: {
             id: 3,
             name: "spicy",
-            color: "#E0472E",
+            color: "#FF4300",
         }
     })
 
@@ -54,7 +54,7 @@ async function main() {
         create: {
             id: 4,
             name: "umami",
-            color: "#1CEBE0",
+            color: "#969696",
         }
     })
 
@@ -64,7 +64,7 @@ async function main() {
         create: {
             id: 5,
             name: "bitter",
-            color: "#C6B887",
+            color: "#C17C25",
         }
     })
 }
