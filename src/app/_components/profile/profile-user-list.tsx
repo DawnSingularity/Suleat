@@ -18,7 +18,10 @@ export default function UserList({ follower }: { follower: User }) {
     followMutation.mutate({username: follower.userName, state: !isFollowing}, {
       onSuccess: () => {
         const queryKey = getQueryKey(api.profile.isFollowing, followCheckQuery)
-        queryClient.invalidateQueries({queryKey})
+        void queryClient.invalidateQueries({queryKey: getQueryKey(api.profile.getFollowers)})
+        void queryClient.invalidateQueries({queryKey: getQueryKey(api.profile.getFollowing)})
+        void queryClient.invalidateQueries({queryKey: getQueryKey(api.profile.isFollowing, followCheckQuery)})
+
       }
     })
   };
