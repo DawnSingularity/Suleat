@@ -14,12 +14,13 @@ generator client {
 
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@index([name])
+    id          Int      @id @default(autoincrement())
+    caption     String
+    author      User     @relation("Author", fields: [authorId], references: [id])
+    authorId    Int
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    photos      Photo[]
 }
 
 model User {
@@ -37,6 +38,8 @@ model User {
 
     followers       Following[] @relation("Follower")
     following       Following[] @relation("Following")
+
+    posts       Post[] @relation("Author")
 }
 
 model Flavor {
@@ -55,4 +58,10 @@ model Following {
     userFollowingId  Int   
     myUser           User        @relation("Following", fields: [myUserId], references: [id])
     myUserId         Int        
+}
+
+model Photo {
+    id          Int     @id @default(autoincrement())
+    photoUrl    String
+    posts       Post[]
 }
