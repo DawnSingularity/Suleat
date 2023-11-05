@@ -73,10 +73,10 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
   return (
     <main className={`h-full`}>
       <div className="container px-5 mx-auto mt-5 flex justify-center flex-col md:flex-row w-full max-w-screen-lg relative h-[450px] md:h-[330px] items-start ">
-        <img className="absolute top-0 inset-0 w-full max-w-screen h-60 rounded-lg z-0 object-cover" src={data.coverURL} alt="" />
+        <img className="absolute top-0 inset-0 w-full h-60 rounded-lg z-0 object-cover" src={data.coverURL} alt="" />
         <img className="w-48 h-48 rounded-full absolute object-cover z-10 border-4 border-white bottom-22 md:bottom-0 md:left-5 left-1/2 transform -translate-x-1/2 md:transform-none" src={data.pfpURL} alt="" />
         <div className="absolute left-1/2 transform -translate-x-1/2 md:transform-none container flex flex-col md:flex-row md:w-9/12 md:full md:bottom-7 bottom-3 md:left-[25%]">
-          <div className=" w-full max-w-screen md:w-80 flex-col flex justify-center items-center md:flex-none md:justify-normal md:items-start ">
+          <div className="md:ml-8 lg:ml-0 w-full max-w-screen md:w-80 flex-col flex justify-center items-center md:flex-none md:justify-normal md:items-start ">
             <p className="text-xl font-extrabold"> {data.firstName} {data.lastName} {followButton} {editProfileButton} </p>
             <p className="text-base font-font-medium color-gray"> @{data.userName} </p>
           </div>
