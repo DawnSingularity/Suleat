@@ -10,12 +10,12 @@ export default function UserList({ follower }: { follower: User }) {
   
   const loggedInUsername = api.profile.getCurrentUser.useQuery().data ?? ""
   const followCheckQuery = {follower: loggedInUsername, following: follower.userName}
-  const isFollowing = api.profile.isFollowing.useQuery(followCheckQuery).data
+  const followQuery = api.profile.isFollowing.useQuery(followCheckQuery)
 
   const followMutation = api.profile.updateFollowState.useMutation()
 
   const handleFollowToggle = () => {
-    followMutation.mutate({username: follower.userName, state: !isFollowing}, {
+    followMutation.mutate({username: follower.userName, state: !followQuery.data}, {
       onSuccess: () => {
         const queryKey = getQueryKey(api.profile.isFollowing, followCheckQuery)
         void queryClient.invalidateQueries({queryKey: getQueryKey(api.profile.getFollowers)})
@@ -27,19 +27,19 @@ export default function UserList({ follower }: { follower: User }) {
   };
 
   let followButton;
-  if(loggedInUsername !== follower.userName) {
+  if(followQuery.isSuccess && loggedInUsername !== follower.userName) {
     followButton = (
       <button
       onClick={handleFollowToggle}
-      className={`w-[86px] px-4 py-1 rounded-lg text-xs font-bold text-${isFollowing ? 'blue-600' : 'white'}  ${isFollowing ? 'bg-gray-200' : 'bg-blue-600'}`}
+      className={`w-[86px] px-4 py-1 rounded-lg text-xs font-bold text-${followQuery.data ? 'blue-600' : 'white'}  ${followQuery.data ? 'bg-gray-200' : 'bg-blue-600'}`}
       >
-        {isFollowing ? "Unfollow" : "Follow"}
+        {followQuery.data ? "Unfollow" : "Follow"}
       </button>
     )
   }
 
   return (
-    <div className={`flex flex-row w-full gap-3 ${isFollowing ? 'bg-white border-blue-600' : 'bg-white'}`}>
+    <div className={`flex flex-row w-full gap-3 ${followQuery.data ? 'bg-white border-blue-600' : 'bg-white'}`}>
       <div className="w-12">
         <img className="rounded-full h-10 w-10" src={follower.pfpURL} alt="" />
       </div>
