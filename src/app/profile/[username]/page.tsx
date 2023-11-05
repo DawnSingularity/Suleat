@@ -10,7 +10,7 @@ export default function Profile({ params }: { params: { username: string } }) {
   const followers = api.profile.getFollowers.useQuery({username: params.username}).data as User[];
   const following = api.profile.getFollowing.useQuery({username: params.username}).data as User[];
 
-  if(data != null) {
+  if(data != null && followers != null && following != null) {
     return (
       <main>
         <UserProfileComponent data={data} followers={followers} following={following}/>
