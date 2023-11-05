@@ -25,7 +25,7 @@ model Post {
 model User {
     id          Int     @id @default(autoincrement())
     uuid        String  @unique
-    bio         String  @default("")
+    bio         String  @db.VarChar(10000) @default("") 
     firstName   String  @default("")
     lastName    String  @default("")
     userName    String  @unique
