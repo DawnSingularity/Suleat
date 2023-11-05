@@ -15,12 +15,15 @@ generator client {
 
 model Post {
     id          Int      @id @default(autoincrement())
-    caption     String
+    caption     String   @db.VarChar(10000) @default("") 
     author      User     @relation("Author", fields: [authorId], references: [id])
     authorId    Int
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
     photos      Photo[]
+    favoriteCount   Int // TODO: Make Voting Schema
+    commentCount    Int // TODO: Make Comment Schema
+    isEdited    Boolean
 }
 
 model User {
