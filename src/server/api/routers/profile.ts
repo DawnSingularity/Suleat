@@ -6,12 +6,16 @@ import { Prisma, User, Flavor } from "@prisma/client";
 
 export const profileRouter = createTRPCRouter({
     getUserProfile: publicProcedure
-    .input(z.object({ username: z.string() }))
+    .input(z.object({ username: z.string().optional() }))
     .query(async ({ctx, input}) => {
-          return await ctx.db.user.findFirst({
-            where: {"userName": input.username},
-            include: { flavors: true },
-          });
+          if(input.username != null) {
+            return await ctx.db.user.findFirst({
+              where: {"userName": input.username},
+              include: { flavors: true },
+            });
+          } else {
+            return ctx.user;
+          }
       }),
 
       getFollowers: publicProcedure

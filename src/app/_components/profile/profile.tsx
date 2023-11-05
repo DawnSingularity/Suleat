@@ -9,6 +9,7 @@ import { EditProfileModal } from "~/app/_components/profile/edit-profile-modal"
 
 import { Prisma, User, Flavor } from "@prisma/client";
 import { PillButton } from './pill-button';
+import { Navbar } from "~/app/_components/common/navbar"
 
 import { getQueryKey } from "@trpc/react-query";
 import { useQueryClient } from "@tanstack/react-query";
@@ -72,6 +73,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
   return (
     <main className={`h-full`}>
+      <Navbar />
       <div className="container px-5 mx-auto mt-5 flex justify-center flex-col md:flex-row w-full max-w-screen-lg relative h-[450px] md:h-[330px] items-start ">
         <img className="absolute top-0 inset-0 w-full h-60 rounded-lg z-0 object-cover" src={data.coverURL} alt="" />
         <img className="w-48 h-48 rounded-full absolute object-cover z-10 border-4 border-white bottom-22 md:bottom-0 md:left-5 left-1/2 transform -translate-x-1/2 md:transform-none" src={data.pfpURL} alt="" />
