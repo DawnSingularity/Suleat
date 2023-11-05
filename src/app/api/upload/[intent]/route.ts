@@ -5,8 +5,11 @@ import { NextRequest } from "next/server";
 
 import { PrismaClient } from "@prisma/client";
 import { getAuth } from '@clerk/nextjs/server';
+import { s3 } from "~/s3"
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 
 const prisma = new PrismaClient()
+
 
 export async function POST(req: NextRequest,
                            { params }: { params: { intent: String }}) {
@@ -20,8 +23,17 @@ export async function POST(req: NextRequest,
     // ensure that the file is a real image
     if(detectedType?.mime.startsWith("image")) {
         const fileName = crypto.randomUUID()
-        await fs.ensureDir("./uploads")
-        await writeFile("./uploads/" + fileName, fileBuffer)
+
+        if(process.env.S3_BUCKET_NAME != null) {
+            await s3.send(new PutObjectCommand({
+                Bucket: process.env.S3_BUCKET_NAME,
+                Key: fileName,
+                Body: fileBuffer,
+            }))
+        } else {
+            await fs.ensureDir("./uploads")
+            await writeFile("./uploads/" + fileName, fileBuffer)
+        }
     
     
         // find user
