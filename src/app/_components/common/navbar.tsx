@@ -5,7 +5,7 @@ import Image from "next/image"
 import { useAuth } from "@clerk/nextjs";
 import { UserButton, useUser } from "@clerk/clerk-react";
 import { api } from "~/trpc/react";
-
+import { UserIcon } from "./user-icon"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars  } from "@fortawesome/free-solid-svg-icons";
 
@@ -14,11 +14,7 @@ export function Navbar() {
 
     let userIcon
     if(selfUserQuery.data != null) {
-        userIcon = <>
-            <a href={`/profile/${selfUserQuery.data?.userName}`}>
-                        <img className="rounded-full h-10 w-10" src={selfUserQuery.data?.pfpURL} alt="" />
-            </a>
-            </>
+        userIcon = <UserIcon user={selfUserQuery.data} width="10" />
     }
     
     return (
