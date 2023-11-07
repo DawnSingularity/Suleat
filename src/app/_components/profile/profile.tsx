@@ -32,7 +32,6 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
     const isFollowing = followers.some((user) => user.userName === loggedInUsername);
 
-    const wholeListOfFlavors = api.flavor.getFlavors.useQuery().data ?? []
     const followMutation = api.profile.updateFollowState.useMutation()
 
     const handleFollowButton = () => {
@@ -113,15 +112,11 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
           </h2>
 
           <div className="flex flex-wrap px-1 justify-center items-center md:justify-normal md:items-start">
-            {data.flavors.map((flavor : Flavor, index : Number) => {
-              const cssColor = wholeListOfFlavors.find((element) => element.name === flavor.name)?.color ?? "initial"
-
-              return (
+            {data.flavors.map((flavor : Flavor, index : Number) => 
               <PillButton
                 key={index.toString()}
-                id={flavor.name} text={flavor.name} backgroundColor={cssColor}
-              />
-            )})}
+                id={flavor.name} text={flavor.name} backgroundColor={flavor.color}
+              />)}
           </div>
 
         </div>
