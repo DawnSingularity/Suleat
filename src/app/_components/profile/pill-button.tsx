@@ -32,8 +32,9 @@ export function PillButton({ id="", text = "", backgroundColor = "", disabledBac
 
         newBackgroundColor = color.toString()
 
-        // determine if black or white text using https://stackoverflow.com/a/3943023
-        newColor = color.luminance > 0.179 ? "black" : "white"
+        // determine text color using APCA contrast
+        newColor = Math.abs(Color.contrastAPCA(color, "#000000")) > Math.abs(Color.contrastAPCA(color, "#FFFFFF")) ? "#000000" : "#FFFFFF"
+
     } catch (e : unknown) {
         console.log("Error parsing background color passed to button")
     }
