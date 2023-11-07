@@ -1,34 +1,32 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure, userProcedure } from "~/server/api/trpc";
 
 export const postRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
-      return {
-        greeting: `Hello ${input.text}`,
-      };
-    }),
 
-  create: publicProcedure
-    .input(z.object({ name: z.string().min(1) }))
+
+    create: userProcedure
+    .input(
+      z.object({
+        caption: z.string().min(1).max(10000),
+        location: z.string(), // You can add more validation if needed
+      })
+    )
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      return ctx.db.post.create({
-        data: {
-          name: input.name,
-        },
-      });
-    }),
-
-  getLatest: publicProcedure.query(({ ctx }) => {
-    return ctx.db.post.findFirst({
-      orderBy: { createdAt: "desc" },
-    });
+      if(ctx.auth.userId === null) return;
+        const post = await ctx.db.post.create({
+          data: {
+            caption: input.caption,
+            authorId: ctx.auth.userId,
+            location: input.location,
+            favoriteCount: 0, // Provide default values for other fields
+            commentCount: 0,
+            isEdited: false,
+          },
+        });
+        return post;
   }),
+
 
   getPreview: publicProcedure
   .query(async ({ ctx }) => {
@@ -50,7 +48,7 @@ export const postRouter = createTRPCRouter({
   .query(async ({ ctx, input }) => {
     return await ctx.db.post.findMany({
       where: {
-        authorId: (await ctx.db.user.findUnique({where: {userName: input.username}}))?.id
+        authorId: (await ctx.db.user.findUnique({where: {userName: input.username}}))?.uuid
       },
       include: {
         author: true,

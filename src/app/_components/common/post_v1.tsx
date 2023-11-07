@@ -52,7 +52,7 @@ export function PostComponent({ post } : { post: PostDetailed }) {
                 </div>
                 <div className="flex flex-row items-center justify-between">
                     <div className="order-first">
-                        {post.flavors?.map((flavor : Flavor, index : Number) => (<PillButton
+                        {post.flavors?.map((flavor : Flavor, index : number) => (<PillButton
                             key={index.toString()}
                             id={flavor.name} text={flavor.name} backgroundColor={flavor.color}
                         />))}

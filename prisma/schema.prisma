@@ -16,8 +16,8 @@ generator client {
 model Post {
     id          Int      @id @default(autoincrement())
     caption     String   @db.VarChar(10000) @default("") 
-    author      User     @relation("Author", fields: [authorId], references: [id])
-    authorId    Int
+    author      User     @relation("Author", fields: [authorId], references: [uuid])
+    authorId    String
     location    String   @default("")
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
@@ -29,8 +29,7 @@ model Post {
 }
 
 model User {
-    id          Int     @id @default(autoincrement())
-    uuid        String  @unique
+    uuid        String  @unique @id
     bio         String  @db.VarChar(10000) @default("") 
     firstName   String  @default("")
     lastName    String  @default("")
@@ -60,10 +59,10 @@ model Flavor {
 model Following {
     @@id([userFollowingId, myUserId]) // user A can only follow user B at most once, so use that relationship as the id
 
-    userFollowing    User        @relation("Follower", fields: [userFollowingId], references: [id])
-    userFollowingId  Int   
-    myUser           User        @relation("Following", fields: [myUserId], references: [id])
-    myUserId         Int        
+    userFollowing    User        @relation("Follower", fields: [userFollowingId], references: [uuid])
+    userFollowingId  String   
+    myUser           User        @relation("Following", fields: [myUserId], references: [uuid])
+    myUserId         String        
 }
 
 model Photo {

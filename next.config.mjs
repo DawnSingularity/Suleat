@@ -3,7 +3,7 @@
  * for Docker builds.
  */
 // @ts-ignore
-await import("./src/env.mjs");
+await import("./src/env.mjs"  );
 
 /** @type {import("next").NextConfig} */
 const config = {

@@ -3,10 +3,9 @@ const prisma = new PrismaClient()
 
 async function main() {
     const gordon_ramsay = await prisma.user.upsert({
-        where: { id: 1},
+        where: { uuid: "hardcoded"},
         update: {},
         create: {
-            id: 1,
             uuid: "hardcoded",
             bio: "Renowned chef & TV personality with a passion for culinary excellence. Known for my fiery persona in the kitchen and commitment to exquisite flavors. Join me on a journey of taste and gastronomic exploration. #CookingWithPassion 🍽️",
             firstName: "Gordon",

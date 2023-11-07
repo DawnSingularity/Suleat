@@ -48,7 +48,7 @@ export async function POST(req: NextRequest,
         switch(intent) {
             case "pfp":
                 await prisma.user.update({
-                    where: { id: user.id },
+                    where: { uuid: user.uuid },
                     data: {
                         pfpURL: "/api/content/" + fileName,
                     },
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest,
                 break
             case "cover":
                 await prisma.user.update({
-                    where: { id: user.id },
+                    where: { uuid: user.uuid },
                     data: {
                         coverURL: "/api/content/" + fileName,
                     },

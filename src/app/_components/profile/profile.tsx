@@ -13,6 +13,7 @@ import { Navbar } from "~/app/_components/common/navbar"
 
 import { getQueryKey } from "@trpc/react-query";
 import { useQueryClient } from "@tanstack/react-query";
+import { CreatePost } from "../create-post";
 
 
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
@@ -147,6 +148,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
       {showFollowersModal && <FollowModal onClose={handleFollowersModal} title="Followers" users={followers} />} {/* Show modal based on state */}
       {showFollowingModal && <FollowModal onClose={handleFollowingModal} title="Following" users={following} />} {/* Show modal based on state */}
       {showEditProfileModal && <EditProfileModal onClose={handleEditProfileModal} data={data} />} {/* Show edit profile modal based on state */}
+      <CreatePost />
     </main>
   );
 }

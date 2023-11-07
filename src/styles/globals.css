@@ -9,3 +9,18 @@
     --text-color: #333333;
     --suleat: #fc571a;
   }
+
+  .cl-internal-b3fm6y, .cl-headerSubtitle, .cl-footerAction{
+    visibility: hidden;
+}
+.cl-headerSubtitle{
+    color: rgb(225 225 225 / 65%);
+}
+
+.cl-otpCodeFieldInput{
+    background-color: white;
+
+}
+.cl-headerTitle {
+    font-size: 1.5rem;
+}

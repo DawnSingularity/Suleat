@@ -33,7 +33,7 @@ export const profileRouter = createTRPCRouter({
 
         // Get all followers
         const followers = await ctx.db.following.findMany({
-          where: { userFollowingId: user.id },
+          where: { userFollowingId: user.uuid },
           include: { myUser: true },
         });
 
@@ -55,7 +55,7 @@ export const profileRouter = createTRPCRouter({
 
       // Get all following
       const following = await ctx.db.following.findMany({
-        where: { myUserId: user.id },
+        where: { myUserId: user.uuid },
         include: { userFollowing: true },
       });
 
@@ -69,7 +69,7 @@ export const profileRouter = createTRPCRouter({
       const getId = async (username : string) => 
         (await ctx.db.user.findFirst({
           where: { userName: username },
-        }))?.id;
+        }))?.uuid;
 
       // Get all following
       const relation = await ctx.db.following.findFirst({
@@ -86,12 +86,12 @@ export const profileRouter = createTRPCRouter({
     .input(z.object({ username: z.string(), state: z.boolean() }))
     .mutation(async ({ctx, input}) => {
       // Get user
-      const myUserId = ctx.user.id
+      const myUserId = ctx.user.uuid
       const userFollowingId = (await ctx.db.user.findUnique({
         where: {
           userName: input.username
         }
-      }))?.id
+      }))?.uuid
 
       console.log(input.state)
       if(myUserId != null && userFollowingId != null) {
@@ -123,7 +123,7 @@ export const profileRouter = createTRPCRouter({
     .mutation(async ({ctx, input}) => {
       // update user info
       const updateProfile = await ctx.db.user.update({
-        where: { id: ctx.user.id },
+        where: { uuid: ctx.user.uuid },
         data: {
           firstName: input.firstName,
           lastName: input.lastName,
