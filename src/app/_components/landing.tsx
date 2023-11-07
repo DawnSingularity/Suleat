@@ -1,11 +1,14 @@
 "use client";
 
+import { api } from "~/trpc/react";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { SignIn, useUser } from "@clerk/clerk-react";
 import { useState } from "react";
 import { useSignIn } from '@clerk/nextjs';
 import toast from "react-hot-toast";
+import { PostComponent } from "./common/post_v1"
+
 interface ApiErrorResponse  {
   errors: {
     message: string;
@@ -96,6 +99,9 @@ export function Landing() {
     );
   };
   
+  const postQuery = api.post.getPreview.useQuery()
+
+  const previewPosts = postQuery.data?.map((post) => <PostComponent post={post} />)
   return (
     <div>
       <style dangerouslySetInnerHTML={{__html: "\n:root {\n--font-family: 'Inter', sans-serif;\n --text-color: #333333;\n--suleat: #fc571a;\n}\n\nbody {\nfont-family: var(--font-family);\ncolor: var(--text-color);\n}\n\n.suleat {\n color: var(--suleat);\n background-color: var(--suleat);\n}\n" }} />
@@ -145,7 +151,8 @@ export function Landing() {
                           <div className="rounded-full border-[6px] w-1 h-1 border-green-500 m-1 absolute left-[3rem]"></div>
                           <div className="bg-gray-200 border-4 border-gray-200 rounded-lg m-auto w-1/2 text-center my-2">Trending</div>
                       </div>
-                      <div className="bg-gray-300 rounded-lg flex-1 mx-2 mb-2 text-center">
+                      <div className={`${postQuery.isSuccess ? "bg-white" : "bg-gray-300"} rounded-lg flex-1 mx-2 mb-2 p-2 text-center`}>
+                        { previewPosts }
                       </div>
                   </div>
               </div>

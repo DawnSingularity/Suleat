@@ -30,6 +30,21 @@ export const postRouter = createTRPCRouter({
     });
   }),
 
+  getPreview: publicProcedure
+  .query(async ({ ctx }) => {
+    return await ctx.db.post.findMany({
+      take: 10, // TODO: don't hardcode
+      orderBy: {
+        createdAt: "asc",
+      },
+      include: {
+        author: true,
+        photos: true,
+        flavors: true,
+      },
+    });
+  }),
+
   getByUser: publicProcedure
   .input(z.object({ username: z.string() }))
   .query(async ({ ctx, input }) => {
