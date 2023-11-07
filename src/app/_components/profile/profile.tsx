@@ -29,7 +29,8 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
     const [showFollowingModal, setShowFollowingModal] = useState(false); // Add state for modal visibility
     const [showEditProfileModal, setShowEditProfileModal] = useState(false)
 
-    const loggedInUsername = api.profile.getCurrentUser.useQuery().data ?? ""
+    const loggedInUsernameQuery = api.profile.getCurrentUser.useQuery()
+    const loggedInUsername = loggedInUsernameQuery.data ?? ""
 
     const isFollowing = followers.some((user) => user.userName === loggedInUsername);
 
@@ -62,12 +63,12 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
     let followButton = <></>, editProfileButton = <></>;
 
     // follow button should not be visible in user's own profile
-    if(loggedInUsername !== data.userName) {
+    if(loggedInUsernameQuery.isSuccess && loggedInUsername !== data.userName) {
       followButton = <FontAwesomeIcon icon={followIcon} className="hover:cursor-pointer hover:drop-shadow-md" style={{ color: '#24a0ed' }} onClick={handleFollowButton} />
     } 
 
     // edit button should only be visible in user's own profile
-    if(loggedInUsername === data.userName) {
+    if(loggedInUsernameQuery.isSuccess && loggedInUsername === data.userName) {
       editProfileButton = <FontAwesomeIcon id="edit-profile-button" className="hover:cursor-pointer hover:drop-shadow-md" icon={faEdit} onClick={handleEditProfileModal}/>
     }
 
