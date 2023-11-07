@@ -23,6 +23,7 @@ model Post {
     photos      Photo[]
     favoriteCount   Int // TODO: Make Voting Schema
     commentCount    Int // TODO: Make Comment Schema
+    flavors     Flavor[]
     isEdited    Boolean
 }
 
@@ -52,6 +53,7 @@ model Flavor {
     color       String      @default("#fc571a")
 
     users       User[]
+    posts       Post[]
 }
 
 model Following {
