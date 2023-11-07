@@ -33,7 +33,7 @@ export const postRouter = createTRPCRouter({
     return await ctx.db.post.findMany({
       take: 10, // TODO: don't hardcode
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
       include: {
         author: true,
