@@ -1,7 +1,7 @@
 "use client"
 
 import { PillButton } from "./pill-button";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Prisma, User, Flavor, PrismaClient } from "@prisma/client";
 import { api } from "~/trpc/react";
 import { getQueryKey } from "@trpc/react-query";
@@ -18,13 +18,20 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
   const {mutate} = api.profile.updateUserProfile.useMutation();
   const [newProfilePhoto, setNewProfilePhoto] = useState<File | null>(null);
   const [newCoverPhoto, setNewCoverPhoto] = useState<File | null>(null);
-  const wholeListOfFlavors = api.flavor.getFlavors.useQuery().data ?? []
+  const wholeListOfFlavorsQuery = api.flavor.getFlavors.useQuery()
+  const wholeListOfFlavors = wholeListOfFlavorsQuery.data ?? []
 
-  // converts ['sweet', 'sour'] to {sweet: true, sour: true, bitter: false, ...}
-  const [flavorButtonStates, setFlavorButtonStates] = useState(wholeListOfFlavors.reduce((obj : Record<string, Boolean>, flavorProfile : Flavor) => {
+  
+  const [flavorButtonStates, setFlavorButtonStates] = useState<Record<string, Boolean>>({})
+
+  // set values once we have the list
+  useEffect(() => {
+    // converts ['sweet', 'sour'] to {sweet: true, sour: true, bitter: false, ...}
+    setFlavorButtonStates(wholeListOfFlavors.reduce((obj : Record<string, Boolean>, flavorProfile : Flavor) => {
       obj[flavorProfile.name] = data.flavors.some((item) => item.name === flavorProfile.name)
       return obj
     }, {}))
+  }, [wholeListOfFlavors])
 
   // Helper functions
   const getUserProfileUrl = () : string => {
