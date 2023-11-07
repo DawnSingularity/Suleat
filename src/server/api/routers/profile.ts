@@ -13,8 +13,14 @@ export const profileRouter = createTRPCRouter({
               where: {"userName": input.username},
               include: { flavors: true },
             });
+          } else if (ctx.auth.userId != null) { // username not provided
+            // can't use ctx.user because it does not have the flavor profiles
+            return await ctx.db.user.findFirst({
+              where: {"uuid": ctx.auth.userId},
+              include: { flavors: true },
+            });
           } else {
-            return ctx.user;
+            return null;
           }
       }),
 
