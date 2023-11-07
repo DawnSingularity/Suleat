@@ -23,7 +23,7 @@ const postDetailed = Prisma.validator<Prisma.PostDefaultArgs>()({
 type PostDetailed = Prisma.PostGetPayload<typeof postDetailed>
   
 export function PostComponent({ post } : { post: PostDetailed }) {
-    
+    const auth = useAuth()
     return (
       <>
         <div className="">
@@ -38,10 +38,13 @@ export function PostComponent({ post } : { post: PostDetailed }) {
                          </div>
                     </div>
                 </div>
+            { auth.isSignedIn ? (
                 <div className="order-last flex flex-row items-center">
                     <PillButton id="reserved" text="Follow" backgroundColor="#49e66b" className="color-black" />
                     <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}} />
                 </div>
+            ) : (<></>)}
+                
             </div>
             <div className="">
                 <div>
