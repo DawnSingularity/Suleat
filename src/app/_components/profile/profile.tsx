@@ -6,7 +6,7 @@ import { api } from "~/trpc/react";
 import { useState } from 'react';
 import { FollowModal } from "~/app/_components/profile/profile-follow-modal"
 import { EditProfileModal } from "~/app/_components/profile/edit-profile-modal"
-
+import { ProfilePosts } from "./profile-posts";
 import { Prisma, User, Flavor } from "@prisma/client";
 import { PillButton } from './pill-button';
 import { Navbar } from "~/app/_components/common/navbar"
@@ -129,6 +129,9 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
         <div className="w-full md:w-6/12 order-3 md:order-2 mt-6 md:mt-1">
           <h2 className="text-lg font-bold">Posts</h2>
           <hr className="w-11/12 mt-2 border-1 border-gray-300" />
+          <div className="w-11/12">
+            <ProfilePosts username={data.userName} />
+          </div>
         </div>
         
         <div className="w-full md:w-3/12 order-2 md:order-3 mt-6 md:mt-1">
