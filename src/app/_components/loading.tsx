@@ -1,3 +1,8 @@
+/**
+ * Loading Spinner Component
+ * Based on https://flowbite.com/docs/components/spinner/
+ */
+
 export const LoadingSpinner = (props: {size?: number}) =>{
     return (
         <div role="status">
