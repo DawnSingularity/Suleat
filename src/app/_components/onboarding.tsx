@@ -1,44 +1,39 @@
 "use client";
 
+import Head from "next/head";
 import { api } from "~/trpc/react";
 import { useEffect, useState } from "react"
-import { useUser } from "@clerk/clerk-react";
-
+import { useAuth } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/clerk-react";
 
 /* NOTES
   1. User object in Prisma DB is only created after onboarding
   2. Optimal way to do it is https://clerk.com/docs/users/sync-data, but it needs a fixed URL for the website (which we dont have for now)
 */
-export default function Onboarding() {
+export function Onboarding() {
   const { user, isLoaded } = useUser();
   const [ firstName, setFirstName ] = useState("");
   const [ lastName, setLastName ] = useState("");
+  const { sessionId, getToken } = useAuth();
   const { mutate } = api.profile.createUser.useMutation();
-  const userQuery = api.profile.getCurrentUser.useQuery();
+
 
   // update from clerk
   useEffect(() => {
-    // do not change if the user already changed it
-    setFirstName((val) => val == "" ? (user?.firstName ?? "") : val)
-    setLastName ((val) => val == "" ? (user?.lastName  ?? "") : val)
+    setFirstName(user?.firstName ?? "")
+    setLastName(user?.lastName ?? "")
   }, [isLoaded])
 
-  useEffect(() => {
-    if((isLoaded && user == null) /* user is not logged in */ || userQuery.data != null  /* user already finished onboarding */) {
-      location.assign("/")
-    }
-  }, [isLoaded, userQuery.isSuccess])
-
-  const handleSubmit = (e : React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault()
+  const handleSubmit = () => {
     mutate({firstName, lastName}, {
       onSuccess: () => {
-        location.assign("/")
       },
-      onError: (err) => {
+      onError: () => {
         console.log("Error updating profile")
-        console.log(err)
-      }
+      },
+      onSettled: () => {
+        window.location.reload()
+      },
     })
   } 
   if (!isLoaded ) {
