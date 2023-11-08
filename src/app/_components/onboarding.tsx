@@ -21,8 +21,9 @@ export function Onboarding() {
 
   // update from clerk
   useEffect(() => {
-    setFirstName(user?.firstName ?? "")
-    setLastName(user?.lastName ?? "")
+    // do not change if the user already changed it
+    setFirstName((val) => val == "" ? (user?.firstName ?? "") : val)
+    setLastName ((val) => val == "" ? (user?.lastName  ?? "") : val)
   }, [isLoaded])
 
   const handleSubmit = (e : React.MouseEvent<HTMLButtonElement>) => {
