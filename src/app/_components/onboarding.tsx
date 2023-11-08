@@ -5,6 +5,7 @@ import { api } from "~/trpc/react";
 import { useEffect, useState } from "react"
 import { useAuth } from "@clerk/nextjs";
 import { UserButton, useUser } from "@clerk/clerk-react";
+import { useRouter } from "next/navigation";
 
 /* NOTES
   1. User object in Prisma DB is only created after onboarding
@@ -16,7 +17,7 @@ export function Onboarding() {
   const [ lastName, setLastName ] = useState("");
   const { sessionId, getToken } = useAuth();
   const { mutate } = api.profile.createUser.useMutation();
-
+  const router = useRouter()
 
   // update from clerk
   useEffect(() => {
@@ -24,15 +25,17 @@ export function Onboarding() {
     setLastName(user?.lastName ?? "")
   }, [isLoaded])
 
-  const handleSubmit = () => {
+  const handleSubmit = (e : React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
     mutate({firstName, lastName}, {
       onSuccess: () => {
+        // fetches everything
+        // https://nextjs.org/docs/app/api-reference/functions/use-router
+        router.refresh()
       },
       onError: () => {
         console.log("Error updating profile")
-      },
-      onSettled: () => {
-        window.location.reload()
+        console.log(e)
       },
     })
   } 
