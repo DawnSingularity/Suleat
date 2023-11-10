@@ -3,18 +3,48 @@
 import suleatIcon from "~/../public/suleat-icon.png"
 import Image from "next/image"
 import { useAuth } from "@clerk/nextjs";
-import { UserButton, useUser } from "@clerk/clerk-react";
+import { UserButton, UserProfile, useUser } from "@clerk/clerk-react";
 import { api } from "~/trpc/react";
 import { UserIcon } from "./user-icon"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars  } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faGear, faRightFromBracket  } from "@fortawesome/free-solid-svg-icons";
+import { UserPopover } from "./user-popover"
+import { useEffect, useState } from "react";
+import { FloatingFocusManager, FloatingOverlay, FloatingPortal, useFloating } from "@floating-ui/react";
+import { Modal } from "./modal";
 
 export function Navbar() {
+    const auth = useAuth();
+    const {context} = useFloating();
     const selfUserQuery = api.profile.getUserProfile.useQuery({})
 
+    const [showModal, setModal] = useState(false)
+    
     let userIcon
     if(selfUserQuery.data != null) {
-        userIcon = <UserIcon user={selfUserQuery.data} width="10" />
+        userIcon = <UserPopover button={(
+            <UserIcon user={selfUserQuery.data} width="10" clickable={false} />
+        )} popover={(
+            <div className="mx-4 py-6 bg-white flex flex-col shadow-lg rounded-lg">
+                <a href={`/profile/${selfUserQuery.data.userName}`} className="py-4 pl-4 pr-6 hover:bg-zinc-200">
+                    <div className="flex flex-row items-center">
+                        <UserIcon user={selfUserQuery.data} width="12" clickable={false} className="mr-3" />
+                        <div>
+                            <div className="font-bold">{selfUserQuery.data.firstName} {selfUserQuery.data.lastName}</div>
+                            <div>{selfUserQuery.data.userName}</div>
+                        </div>
+                    </div>
+                </a>
+                <div className="flex flex-row items-center py-2 px-6 hover:bg-zinc-200 cursor-pointer" onClick={() => { setModal(true) }}>
+                    <FontAwesomeIcon icon={faGear} style={{color: "--var(suleat)"}} className="mr-4" />
+                    <span>Settings</span>
+                </div>
+                <div className="flex flex-row items-center py-2 px-6 hover:bg-zinc-200 cursor-pointer" onClick={async () => {await auth.signOut()}}>
+                    <FontAwesomeIcon icon={faRightFromBracket} style={{color: "--var(suleat)"}} className="mr-4" />
+                    <span>Sign-out</span>
+                </div>
+            </div>
+        )} />
     }
     
     return (
@@ -32,6 +62,30 @@ export function Navbar() {
             </div>
             
         </nav>
+        {showModal && (
+            <Modal open={showModal} onOpenChange={setModal} title="Settings">
+                <UserProfile path="/user-profile" routing="virtual" appearance={{
+                    elements: {
+                        card: {
+                            borderRadius: 0,
+                            boxShadow: "none",
+                            height: "75vh",
+                            margin: "0",
+                        },
+                        scrollBox: {
+                            borderRadius: "0",
+                        },
+                        // disable "profile section" for now
+                        profileSection__profile: {
+                            display: "none",
+                        },
+                        // disable "delete account" for now
+                        profileSection__danger: {
+                            display: "none",
+                        }
+                    }
+                }} />
+            </Modal>)}
       </>
     );
 
