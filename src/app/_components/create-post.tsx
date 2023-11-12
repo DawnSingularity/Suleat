@@ -2,20 +2,70 @@
 
 import { useUser } from "@clerk/clerk-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImages } from "@fortawesome/free-solid-svg-icons";
+
 
 import { api } from "~/trpc/react";
 import { LoadingSpinner } from "./loading";
+
+import { ImageUploadPreview } from "./image-upload-preview";
+
 const CreatePostWizard = () =>{
   const user = useUser();
   const [location, setLocation] = useState("");
   const [caption, setCaption] = useState("");
   const ctx = api.useUtils();
+
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+
+  // ADD IMAGES
+  type FilesType = {
+    [key: string]: File;
+  };
+  let FILES: FilesType = {}; // use to store pre selected files
+
+  const reqAddImages = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const selectedFiles = Array.from(event.target.files);
+  
+      // Check if the number of uploaded files plus the selected files is less than or equal to 5
+      if (uploadedFiles.length + selectedFiles.length <= 5) {
+        // Update the uploaded files array
+        setUploadedFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+        toast.success(`${selectedFiles.length} image(s) added successfully!`);
+      } else {
+        toast.error("You can upload only up to 5 images.");
+      }
+  
+      // Clear the input field after successful or failed upload
+      event.target.value = "";
+    } else {
+      console.log("Image upload failed!");
+    }
+  };
+
   const {mutate, isLoading: isPosting} = api.post.create.useMutation({
-    onSuccess: ()=>{
+    onSuccess: async  (data)=>{
+      console.log(data)
+      await Promise.all(
+        uploadedFiles.map(async (file) => {
+          const formData = new FormData();
+          formData.append("id", String(data?.id));
+          formData.append("file", file);
+          const response = await fetch("/api/upload/post", {
+            method: "POST",
+            body: formData,
+          });
+        })
+      );
+
       setCaption("");
       setLocation("");
+      FILES = {}
+      setUploadedFiles([])
       void ctx.post.getByUser.invalidate();  //add refresh if necessary
     },
     onError: (e) =>{
@@ -27,6 +77,21 @@ const CreatePostWizard = () =>{
       }
     }
   });
+  
+  const handleDeleteImage = (fileIndex: number) => {
+    // Create a copy of the uploadedFiles array
+    const updatedFiles = [...uploadedFiles];
+    // Remove the file at the specified index
+    updatedFiles.splice(fileIndex, 1);
+    // Update the state with the new array
+    setUploadedFiles(updatedFiles);
+  };
+
+  const handlePostButtonClick = async () => {
+      // Trigger the post mutation 
+      mutate({ caption, location});
+  };
+  
 
   if(!user) return null;
   return (
@@ -42,7 +107,7 @@ const CreatePostWizard = () =>{
             if(e.key === "Enter"){
               e.preventDefault();
               if(caption !=="" && location !==""){
-                mutate({caption,location});
+                handlePostButtonClick;
               }
             }
           }}
@@ -59,15 +124,30 @@ const CreatePostWizard = () =>{
             if(e.key === "Enter"){
               e.preventDefault();
               if(caption !=="" && location !==""){
-                mutate({caption,location});
+                handlePostButtonClick;
               }
             }
           }}
           disabled={isPosting}
           />
+          <div id="images-preview-container" className="flex flex-col">
+          {uploadedFiles.map((file, index) => (
+            <ImageUploadPreview
+              key={index}
+              file={file}
+              onDelete={() => handleDeleteImage(index)}
+            />
+          ))}
+        </div>
+          
+          <div className="cursor-pointer w-full flex group">
+            <input onChange={reqAddImages} className="cursor-pointer z-20 opacity-0 w-12 h-40 rounded-lg absolute" id="coverPhoto" type="file" name="coverPhoto" accept="image/*" multiple/>
+            <FontAwesomeIcon icon={faImages} style={{ color: "--var(suleat)" }} className="suleat" />
+          </div>
+
         {caption !=="" && location !=="" && !isPosting && (
           <button 
-          onClick={() => mutate({caption, location})} 
+          onClick={handlePostButtonClick}
           className="primaryButton hover:bg-green-300 text-white font-bold p-1 rounded-lg"
           >
             Post

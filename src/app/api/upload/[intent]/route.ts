@@ -7,6 +7,7 @@ import { PrismaClient } from "@prisma/client";
 import { getAuth } from '@clerk/nextjs/server';
 import { s3 } from "~/s3"
 import { PutObjectCommand } from '@aws-sdk/client-s3';
+import { getBody } from '@trpc/client/dist/links/internals/httpUtils';
 
 const prisma = new PrismaClient()
 
@@ -62,6 +63,22 @@ export async function POST(req: NextRequest,
                     },
                 })
                 break
+            case 'post':
+                console.log(formData)
+                const postid = formData.get("id") as Blob
+                const postId: number = Number(await new Response(postid).text());
+                console.log(postId)
+                await prisma.post.update({
+                    where: { id: postId},
+                    data: {
+                    photos: {
+                        create: {
+                          photoUrl: '/api/content/' + fileName,
+                        },
+                      }
+                    },
+                });
+                break;
         }
     }
 
