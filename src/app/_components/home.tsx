@@ -5,6 +5,7 @@ import { Navbar } from "~/app/_components/common/navbar"
 import { useAuth } from "@clerk/nextjs";
 import { UserButton, useUser } from "@clerk/clerk-react";
 import { api } from "~/trpc/react";
+import { Infinite } from "./common/infinite";
 
 export function Home() {
   const { sessionId, userId, getToken } = useAuth();
@@ -20,10 +21,7 @@ export function Home() {
         </Head>
         <Navbar />
         <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b">
-          <div>
-            Hello {username ?? ""}, your current active session is {sessionId}
-          </div>
-          {!!user.isSignedIn && <UserButton afterSignOutUrl="/" />}
+          <Infinite></Infinite>
         </main>
       </>
     );

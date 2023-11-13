@@ -57,4 +57,45 @@ export const postRouter = createTRPCRouter({
       }
     });
   }),
+
+  getPosts: publicProcedure
+  .input(z.object({
+    limit: z.number().min(1).max(50).default(10),
+    cursor: z.object({
+      createdAt: z.coerce.date().default(() => new Date()),
+      id: z.number().default(1 << 64 /* max ID */), // tiebreaker
+    }).default({}),
+  }))
+  .query(async ({ ctx, input }) => {
+    console.log(input)
+    return await ctx.db.post.findMany({
+      where: {
+        OR: [
+          {
+            createdAt: {
+              lt: input.cursor.createdAt,
+            }
+          },
+
+          // equal date, tiebreaker needed
+          {
+            createdAt: input.cursor.createdAt,
+            id: {
+              lt: input.cursor.id, // untested, "less than" is arbitrary
+            }
+          }
+        ]
+      },
+      include: {
+        author: true,
+        photos: true,
+        flavors: true,
+      },
+      orderBy: [
+        { createdAt: "desc" },
+        { id: "desc" }, // matches "less than" logic
+      ],
+      take: input.limit,
+    });
+  })
 });
