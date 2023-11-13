@@ -19,6 +19,11 @@ export function Navbar() {
     const selfUserQuery = api.profile.getUserProfile.useQuery({})
 
     const [showModal, setModal] = useState(false)
+    const [searchKey, setSearchKey] = useState("")
+
+    const handleSearchButtonClick = async () => {
+        alert("GIRL!")
+    }
     
     let userIcon
     if(selfUserQuery.data != null) {
@@ -60,9 +65,24 @@ export function Navbar() {
                         </a>
                         <span className="ml-8 flex px-4 group w-full">
                             <div className="ease-in-out duration-500 group-focus-within:w-full flex items-center w-0 rounded-full group-focus-within:border-black border-white group-focus-within:border sticky">
-
-                                    <input type="search" className="cursor-pointer opacity-0 group-focus-within:opacity-100 invisible group-hover:visible group-focus-within:visible ease-in-out duration-500 rounded-full w-full h-5 py-3.5 pl-4 ml-1 text-[#101010] bg-gray-100 leading-tight focus:outline-none focus:shadow-outline lg:text-sm text-xs" placeholder="Search"/>
-                                    <button className="cursor-default -ml-11 group-focus-within:ml-auto group-focus-within:mr-1">
+                                    <input 
+                                      id="search"
+                                      name="search"
+                                      placeholder="Search"
+                                      type="search" 
+                                      autoComplete="off"
+                                      onChange={(e) => setSearchKey(e.target.value)}
+                                      onKeyDown={(e)=>{
+                                        if(e.key === "Enter"){
+                                          e.preventDefault();
+                                          if(searchKey.trim() !==""){
+                                            handleSearchButtonClick
+                                          }
+                                        }
+                                      }}
+                                      className="cursor-pointer opacity-0 group-focus-within:opacity-100 invisible group-hover:visible group-focus-within:visible ease-in-out duration-500 rounded-full w-full h-5 py-3.5 pl-4 ml-1 text-[#101010] bg-gray-100 leading-tight focus:outline-none focus:shadow-outline lg:text-sm text-xs"
+                                      />
+                                    <button onClick={handleSearchButtonClick} className="cursor-default -ml-11 group-focus-within:ml-auto group-focus-within:mr-1">
                                         <FontAwesomeIcon icon={faMagnifyingGlass} style={{height: "14px", color: "#fc571a", }} className="cursor-pointer ml-4 rounded-full border-[#fc571a] mt-1 border p-1.5"/>
                                     </button>
                             </div>
