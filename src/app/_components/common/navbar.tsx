@@ -49,7 +49,7 @@ export function Navbar() {
     
     return (
       <>
-        <nav className="z-50 sticky top-0 drop-shadow-md bg-white flex flex-row justify-between px-4">
+        <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-4">
             <div className="order-first flex flex-row items-center py-2">
                 {/* <FontAwesomeIcon icon={faBars} style={{color: "#101010",}} size="xl" className="pr-4"/> */}
                 <a className="flex flex-row items-center ml-2" href="/">
