@@ -21,7 +21,10 @@ export function Home() {
         </Head>
         <Navbar />
         <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b">
-          <Infinite></Infinite>
+          <div className="w-full sm:w-1/3">
+            <Infinite />
+          </div>
+          
         </main>
       </>
     );
