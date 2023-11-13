@@ -34,13 +34,13 @@ export function PostComponent({ post } : { post: PostDetailed }) {
     const auth = useAuth()
     return (
       <>
-        <div className="mb-5">
+        <div className="py-3 border-b-2 border-slate-200">
             <div className="flex flex-row items-center justify-between py-2">
                 <div className="order-first flex flex-row items-center">
                     <UserIcon user={post.author} width="10" className="mx-2" />
                     <div>
                         <div className="text-sm">{ post.author.firstName } { post.author.lastName }</div>
-                        <div className="text-xs">
+                        <div className="text-xs text-red-600">
                             <FontAwesomeIcon icon={faLocationDot} className="mr-1" style={{ color: 'red' }} />
                             { post.location }
                          </div>
