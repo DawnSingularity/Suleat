@@ -7,7 +7,7 @@ import { UserButton, UserProfile, useUser } from "@clerk/clerk-react";
 import { api } from "~/trpc/react";
 import { UserIcon } from "./user-icon"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faGear, faRightFromBracket  } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faGear, faRightFromBracket, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { UserPopover } from "./user-popover"
 import { useEffect, useState } from "react";
 import { FloatingFocusManager, FloatingOverlay, FloatingPortal, useFloating } from "@floating-ui/react";
@@ -36,11 +36,11 @@ export function Navbar() {
                     </div>
                 </a>
                 <div className="flex flex-row items-center py-2 px-6 hover:bg-zinc-200 cursor-pointer" onClick={() => { setModal(true) }}>
-                    <FontAwesomeIcon icon={faGear} style={{color: "--var(suleat)"}} className="mr-4" />
+                    <FontAwesomeIcon icon={faGear} style={{color: "#fc571a"}} className="mr-4" />
                     <span>Settings</span>
                 </div>
                 <div className="flex flex-row items-center py-2 px-6 hover:bg-zinc-200 cursor-pointer" onClick={async () => {await auth.signOut()}}>
-                    <FontAwesomeIcon icon={faRightFromBracket} style={{color: "--var(suleat)"}} className="mr-4" />
+                    <FontAwesomeIcon icon={faRightFromBracket} style={{color: "#fc571a"}} className="mr-4" />
                     <span>Sign-out</span>
                 </div>
             </div>
@@ -49,13 +49,16 @@ export function Navbar() {
     
     return (
       <>
-        <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-4">
+        <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-5">
             <div className="order-first flex flex-row items-center py-2">
                 {/* <FontAwesomeIcon icon={faBars} style={{color: "#101010",}} size="xl" className="pr-4"/> */}
-                <a className="flex flex-row items-center ml-2" href="/">
-                    <Image src={suleatIcon} className="w-auto h-6 mr-3" alt="Suleat logo"></Image>
-                    <span className="text-[#101010] text-xl font-['Poppins'] font-medium">Suleat</span>
+                <a className="flex flex-row items-center" href="/">
+                    <Image src={suleatIcon} className="w-auto h-7 mr-3" alt="Suleat logo"></Image>
+                    <span className="text-[#101010] text-[22px] font-['Poppins'] font-medium">Suleat</span>
                 </a>
+                <span className="">
+                    <FontAwesomeIcon icon={faMagnifyingGlass} style={{height: "18px"}} className="ml-4"/>
+                </span>
             </div>
             <div className="order-last flex flex-row items-center py-1">
                 {userIcon}
