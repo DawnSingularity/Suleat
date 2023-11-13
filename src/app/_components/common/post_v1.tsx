@@ -34,7 +34,7 @@ export function PostComponent({ post } : { post: PostDetailed }) {
     const auth = useAuth()
     return (
       <>
-        <div className="py-3 border-b-2 border-slate-200">
+        <div className="py-3 border-b-2 bg-white border-slate-200">
             <div className="flex flex-row items-center justify-between py-2">
                 <div className="order-first flex flex-row items-center">
                     <UserIcon user={post.author} width="10" className="mx-2" />
