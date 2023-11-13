@@ -63,7 +63,7 @@ export const postRouter = createTRPCRouter({
     limit: z.number().min(1).max(50).default(10),
     cursor: z.object({
       createdAt: z.coerce.date().default(() => new Date()),
-      id: z.number().default(1 << 64 /* max ID */), // tiebreaker
+      id: z.string().default(""), // tiebreaker
     }).default({}),
   }))
   .query(async ({ ctx, input }) => {
@@ -81,7 +81,7 @@ export const postRouter = createTRPCRouter({
           {
             createdAt: input.cursor.createdAt,
             id: {
-              lt: input.cursor.id, // untested, "less than" is arbitrary
+              gt: input.cursor.id,
             }
           }
         ]
@@ -93,7 +93,7 @@ export const postRouter = createTRPCRouter({
       },
       orderBy: [
         { createdAt: "desc" },
-        { id: "desc" }, // matches "less than" logic
+        { id: "asc" }, // matches "greater than" logic
       ],
       take: input.limit,
     });

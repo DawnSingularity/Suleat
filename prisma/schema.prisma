@@ -14,7 +14,7 @@ generator client {
 
 
 model Post {
-    id          Int      @id @default(autoincrement())
+    id          String   @id @default(cuid())
     caption     String   @db.VarChar(10000) @default("") 
     author      User     @relation("Author", fields: [authorId], references: [uuid])
     authorId    String

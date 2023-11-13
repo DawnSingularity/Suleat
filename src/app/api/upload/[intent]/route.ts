@@ -66,7 +66,7 @@ export async function POST(req: NextRequest,
             case 'post':
                 console.log(formData)
                 const postid = formData.get("id") as Blob
-                const postId: number = Number(await new Response(postid).text());
+                const postId = (await new Response(postid).text());
                 console.log(postId)
                 await prisma.post.update({
                     where: { id: postId},
