@@ -3,11 +3,13 @@
 @tailwind utilities;
 
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;900&display=swap');
 
 :root {
     --font-family: 'Lato', sans-serif;
     --text-color: #333333;
     --suleat: #fc571a;
+    --font-poppins: 'Poppins';
   }
 
   .cl-internal-b3fm6y, .cl-headerSubtitle, .cl-footerAction{

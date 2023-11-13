@@ -93,7 +93,7 @@ export function Landing() {
         <button className="text-white bg-gray-600 h-12 rounded-xl border-2 mb-2 w-11/12 m-auto flex justify-center" onClick={signInWithFacebook}>
             <img className="h-8 w-8 my-auto inline" src="https://www.facebook.com/favicon.ico" alt={`google`} width={32} height={32} />
             <div className="relative my-auto ml-3">
-                Register with facebook
+                Register with Facebook
             </div>
         </button>
       </div>
