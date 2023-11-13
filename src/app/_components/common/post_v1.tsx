@@ -12,6 +12,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis, faLocationDot  } from "@fortawesome/free-solid-svg-icons";
 import { faMessage, faStar } from "@fortawesome/free-regular-svg-icons";
 
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import EmblaCarousel from '../carousel/EmblaCarousel'
+import { EmblaOptionsType } from 'embla-carousel-react'
+const OPTIONS: EmblaOptionsType = {}
+const SLIDE_COUNT = 5
+const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
+
 const postDetailed = Prisma.validator<Prisma.PostDefaultArgs>()({
     include: { 
         author: true,
@@ -46,6 +54,13 @@ export function PostComponent({ post } : { post: PostDetailed }) {
             ) : (<></>)}
                 
             </div>
+            
+            <div>
+                {post.photos && post.photos.length > 0 && (
+                    <EmblaCarousel photos={post.photos} options={OPTIONS} />
+                )}
+            </div>
+
             <div className="">
                 <div>
                 { post.caption }
