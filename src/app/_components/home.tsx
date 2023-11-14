@@ -21,7 +21,7 @@ export function Home() {
         </Head>
         <Navbar />
         <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b">
-          <div className="w-full sm:w-1/3">
+          <div className="w-full sm:w-[500px]">
             <Infinite />
           </div>
           
