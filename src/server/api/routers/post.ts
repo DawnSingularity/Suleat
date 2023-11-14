@@ -2,6 +2,48 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, userProcedure } from "~/server/api/trpc";
 
+import { PrismaClient, Prisma } from "@prisma/client";
+import { elasticsearchFTS } from "@prisma-fts/elasticsearch";
+import { Client } from "@elastic/elasticsearch";
+import { NextRequest } from "next/server";
+
+var key = ""
+if(process.env.ELASTIC_SEARCH_KEY != null) {
+    key = process.env.ELASTIC_SEARCH_KEY
+}
+
+const esClient = new Client({ 
+    node: 'https://localhost:3000',
+    auth: {
+        apiKey: key
+    }
+ });
+
+const prisma = new PrismaClient();
+const middleware = elasticsearchFTS(
+  esClient,
+  Prisma.dmmf,
+  {
+    User: {
+      docId: "uuid",
+      indexes: {
+        firstName: "user_index",
+        lastName: "user_index",
+        userName: "user_index"
+      }
+    },
+    Post: {
+      docId: "id",
+      indexes: {
+        caption: "post_index",
+        author: "post_index"  
+      }
+    }
+  }
+)
+
+prisma.$use(middleware)
+
 export const postRouter = createTRPCRouter({
 
 
@@ -64,7 +106,7 @@ export const postRouter = createTRPCRouter({
     cursor: z.object({
       createdAt: z.coerce.date().default(() => new Date()),
       id: z.string().default(""), // tiebreaker
-    }).default({}),
+    }).default({})
   }))
   .query(async ({ ctx, input }) => {
     console.log(input)
@@ -97,5 +139,53 @@ export const postRouter = createTRPCRouter({
       ],
       take: input.limit,
     });
+  }),
+
+  getSearchPosts: publicProcedure
+  .input(z.object({
+    limit: z.number().min(1).max(50).default(10),
+    cursor: z.object({
+      createdAt: z.coerce.date().default(() => new Date()),
+      id: z.string().default(""), // tiebreaker
+    }).default({}),
+    searchKey: z.string()
+  }))
+  .query(async ({ ctx, input }) => {
+    console.log(input)
+    const result = await ctx.db.post.findMany({
+      where: {
+        OR: [
+          { caption: "fts:" + input.searchKey },
+          { 
+              author: {
+                  firstName: "fts:" + input.searchKey  
+              }
+          },
+          { 
+              author: {
+                  lastName: "fts:" + input.searchKey  
+              }
+          },
+          { 
+              author: {
+                  userName: "fts:" + input.searchKey  
+              }
+          },
+        ]
+        
+      },
+      include: {
+        author: true,
+        photos: true,
+        flavors: true,
+      },
+      orderBy: [
+        { createdAt: "desc" },
+        { id: "asc" }, // matches "greater than" logic
+      ],
+      take: input.limit,
+    })
+    console.log("Result: " +result)
+    return result
   })
 });
