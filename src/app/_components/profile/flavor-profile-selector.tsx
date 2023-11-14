@@ -16,10 +16,16 @@ export function useFlavorStates({ initialValues } : { initialValues: Flavor[] | 
 }
 
 export function FlavorProfileSelector({ flavors, flavorStates, setFlavorStates } : {  
-    flavors : Flavor[],
+    flavors : Flavor[] | undefined,
     flavorStates : FlavorStates,
     setFlavorStates : Dispatch<SetStateAction<FlavorStates>>
 }) {
+    const wholeListOfFlavorsQuery = api.flavor.getFlavors.useQuery(undefined /* no params */, {enabled: flavors == null})
+
+    // if no flavors list passed
+    if(flavors == null) {
+        flavors= wholeListOfFlavorsQuery.data ?? []
+    }
     const changeFlavor = (flavor : string, val : Boolean) => {
         // important: it must be a function to prevent issues when >= 2 of the flavors are changed at the same time (only one of them will be changed)
         setFlavorStates((prevStates) => {
