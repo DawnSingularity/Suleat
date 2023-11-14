@@ -20,7 +20,7 @@ export function useFlavorStates(params? : { initialValues: Flavor[] | string[] |
 }
 
 export function FlavorProfileSelector({ flavors, flavorStates, setFlavorStates } : {  
-    flavors : Flavor[] | undefined,
+    flavors? : Flavor[],
     flavorStates : FlavorStates,
     setFlavorStates : Dispatch<SetStateAction<FlavorStates>>
 }) {
