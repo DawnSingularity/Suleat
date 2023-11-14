@@ -1,12 +1,12 @@
 "use client"
 
-import { PillButton } from "./pill-button";
+
 import { ChangeEvent, useEffect, useState } from "react";
 import { Prisma, User, Flavor, PrismaClient } from "@prisma/client";
 import { api } from "~/trpc/react";
 import { getQueryKey } from "@trpc/react-query";
 import { useQueryClient } from "@tanstack/react-query";
-
+import { FlavorProfileSelector, useFlavorStates } from "./flavor-profile-selector";
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { flavors: true },
 })
@@ -18,20 +18,9 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
   const {mutate} = api.profile.updateUserProfile.useMutation();
   const [newProfilePhoto, setNewProfilePhoto] = useState<File | null>(null);
   const [newCoverPhoto, setNewCoverPhoto] = useState<File | null>(null);
-  const wholeListOfFlavorsQuery = api.flavor.getFlavors.useQuery()
-  const wholeListOfFlavors = wholeListOfFlavorsQuery.data ?? []
 
-  
-  const [flavorButtonStates, setFlavorButtonStates] = useState<Record<string, Boolean>>({})
-
-  // set values once we have the list
-  useEffect(() => {
-    // converts ['sweet', 'sour'] to {sweet: true, sour: true, bitter: false, ...}
-    setFlavorButtonStates(wholeListOfFlavors.reduce((obj : Record<string, Boolean>, flavorProfile : Flavor) => {
-      obj[flavorProfile.name] = data.flavors.some((item) => item.name === flavorProfile.name)
-      return obj
-    }, {}))
-  }, [wholeListOfFlavors])
+  const wholeListOfFlavors = api.flavor.getFlavors.useQuery().data ?? []
+  const [flavorStates, setFlavorStates] = useFlavorStates({initialValues: data.flavors})
 
   // Helper functions
   const getUserProfileUrl = () : string => {
@@ -61,18 +50,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     }
   }
 
-  const changeFlavor = (flavor : string, val : Boolean) => {
-    // important: it must be a function to prevent issues when >= 2 of the flavors are changed at the same time (only one of them will be changed)
-    setFlavorButtonStates((prevStates) => {
-      // create copy
-      const newFlavorButtonStates = {...prevStates}
 
-      // change value in copy
-      newFlavorButtonStates[flavor] = val
-
-      return newFlavorButtonStates
-    })
-  }
 
   const saveProfile = async () => {
     // handle saving information to database here
@@ -81,19 +59,14 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
     const bioInput = document.getElementById("bio") as HTMLTextAreaElement
     const locationInput = document.getElementById("location") as HTMLInputElement
 
-    const flavorData = []
-    for(let { name } of wholeListOfFlavors) {
-      if(flavorButtonStates[name]) {
-        flavorData.push(name)
-      }
-    }
+
 
     const updatedData = {
       firstName: firstNameInput.value,
       lastName: lastNameInput.value,
       bio: bioInput.value,
       location: locationInput.value,
-      flavors: flavorData
+      flavors: flavorStates.toArray()
     }
     console.log(data)
 
@@ -192,12 +165,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
                 </div>
                 <div className="mt-2">
                   <label htmlFor="flavors" className="pl-2 text-sm text-stone-500">Flavors</label><br></br>
-                  <div className="flavors pl-2 ml-1" id="flavors">
-                    {/* TODO: Get list of flavors from database ? */}
-                    { wholeListOfFlavors.map(({name, color}, i) => {
-                      return (<PillButton id={name} text={name} backgroundColor={color} value={flavorButtonStates[name] ?? false} onChange={changeFlavor}/>);
-                    })}
-                  </div>  
+                  <FlavorProfileSelector flavors={wholeListOfFlavors} flavorStates={flavorStates} setFlavorStates={setFlavorStates}/>
                 </div>    
               </div>
             </form>
