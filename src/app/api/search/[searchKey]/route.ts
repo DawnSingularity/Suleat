@@ -45,7 +45,7 @@ export async function GET(req: NextRequest,
 
     // back-end checker to ensure that search key isn't blank
     if(params.searchKey !== "") {
-        const users = await prisma.user.findMany({
+        const users = await prisma.user.findMany({ // TODO: implement infinite scrolling
             where: {
                 OR: [
                     { firstName: "fts:" + params.searchKey },
@@ -55,7 +55,7 @@ export async function GET(req: NextRequest,
             }
         })
 
-        const posts = await prisma.post.findMany({
+        const posts = await prisma.post.findMany({ // TODO: implement infinite scrolling
             where: {
                 OR: [
                     { caption: "fts:" + params.searchKey },
@@ -79,11 +79,10 @@ export async function GET(req: NextRequest,
         })
 
         if (users !== null && posts != null) {
-            const [postsFinal, usersFinal] = await Promise.all([posts, users])
             console.log('Posts:', posts)
             console.log('Users', users)
 
-            return { postsFinal, usersFinal }
+            return { users, posts }
         }
     }
     
