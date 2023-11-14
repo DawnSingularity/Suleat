@@ -10,6 +10,7 @@ import { FlavorProfileSelector, useFlavorStates } from "./profile/flavor-profile
 import { Modal } from "./common/modal";
 import toast from "react-hot-toast";
 import { LoadingSpinner } from "./loading";
+import { contextProps } from "@trpc/react-query/shared";
 
 /* NOTES
   1. User object in Prisma DB is only created after onboarding
@@ -17,6 +18,7 @@ import { LoadingSpinner } from "./loading";
 */
 export function Onboarding() {
   const { user, isLoaded } = useUser();
+  const ctx = api.useUtils();
 
   const [ pageNo, setPageNo ] = useState(0);
   const [ firstName, setFirstName ] = useState("");
@@ -65,10 +67,13 @@ export function Onboarding() {
     } else {
       // submit form
       mutate({firstName, lastName, flavors: flavorStates.toArray()}, {
-        onSuccess: () => {
+        onSuccess: async () => {
           // refreshes everything
           // https://nextjs.org/docs/app/api-reference/functions/use-router
           router.refresh()
+
+          // get actual user profile this time
+          await ctx.profile.getCurrentUser.invalidate()
         },
         onError: () => {
           console.log("Error updating profile")
