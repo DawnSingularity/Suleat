@@ -84,13 +84,19 @@ export function Onboarding() {
       <Modal open={true} onOpenChange={(x) => {}} title="Welcome to Suleat" showCloseButton={false}>
         <div className="flex flex-col justify-center p-4 w-[66vw] md:w-[32rem]">
         { isLoaded ? <>
+          <div className="flex flex-row space-x-2">
+            {[-1, 0, 1].map( (pointNo) => 
+              <div className={`w-4 h-4 ${pointNo <= pageNo ? "bg-[color:var(--suleat)]" : "" } border-[color:var(--suleat)] border rounded-full`}></div>
+            )}
+
+          </div>
           { pageNo == 0 && (<>
-            <p className="text-l font-semibold mt-2 mb-1">How would like us to call you?</p>
+            <p className="text-l font-semibold mt-4 mb-1">How would like us to call you?</p>
             <input onChange={(e) => setFirstName(e.target.value)} placeholder="First Name" value={firstName} className="h-12 rounded-xl border-2 p-3 mb-4"/>
             <input onChange={(e) => setLastName(e.target.value)}  placeholder="Last Name" value={lastName} className="h-12 rounded-xl border-2 p-3 mb-4"/>
           </>) }
           { pageNo == 1 && (<>
-            <p className="text-l font-semibold mt-2 mb-1">Which flavors are you interested in?</p>
+            <p className="text-l font-semibold mt-4 mb-1">Which flavors are you interested in?</p>
             <p className="text-xs">You may choose multiple flavors.</p>
             <FlavorProfileSelector flavorStates={flavorStates} setFlavorStates={setFlavorStates} className="my-2" />
           </>) }
