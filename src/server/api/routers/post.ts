@@ -62,7 +62,6 @@ export const postRouter = createTRPCRouter({
             authorId: ctx.auth.userId,
             location: input.location,
             favoriteCount: 0, // Provide default values for other fields
-            commentCount: 0,
             isEdited: false,
           },
         });
@@ -99,6 +98,27 @@ export const postRouter = createTRPCRouter({
       }
     });
   }),
+  getPostById: publicProcedure
+  .input(z.object({ id: z.string() }))
+  .query(async ({ ctx, input }) => {
+    const post = await ctx.db.post.findUnique({
+      where: {
+        id: input.id,
+      },
+      include: {
+        comments: {
+          include: {
+            subcomments: true,
+          },
+        },
+        author: true,
+      },
+    });
+
+    return post;
+  }),
+
+
 
   getPosts: publicProcedure
   .input(z.object({

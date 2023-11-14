@@ -16,6 +16,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import EmblaCarousel from '../carousel/EmblaCarousel'
 import { EmblaOptionsType } from 'embla-carousel-react'
+import Link from "next/link";
 const OPTIONS: EmblaOptionsType = {}
 const SLIDE_COUNT = 5
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
@@ -34,6 +35,7 @@ export function PostComponent({ post } : { post: PostDetailed }) {
     const auth = useAuth()
     return (
       <>
+      <Link href={`/post/${post.id}`}>
         <div className="sm:p-4 pl-1 p-3  border-b-2 bg-white border-slate-200">
             <div className="flex flex-row items-center justify-between py-2">
                 <div className="order-first flex flex-row items-center">
@@ -75,7 +77,7 @@ export function PostComponent({ post } : { post: PostDetailed }) {
                     <div className="order-last flex flex-row">
                         <div className="flex flex-row items-center">
                             <FontAwesomeIcon icon={faMessage} style={{color: "#000000",}} className="pr-1" />
-                            <span>{post.commentCount}</span>
+                            <span>{/*post.commentCount*/}</span>
                         </div>
                         <div className="flex flex-row items-center">
                             <FontAwesomeIcon icon={faStar} style={{color: "#000000",}} className="pr-1" />
@@ -86,6 +88,8 @@ export function PostComponent({ post } : { post: PostDetailed }) {
             </div>
             
         </div>
+      </Link>
+        
       </>
     );
 
