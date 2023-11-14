@@ -63,7 +63,7 @@ export const postRouter = createTRPCRouter({
     limit: z.number().min(1).max(50).default(10),
     cursor: z.object({
       createdAt: z.coerce.date().default(() => new Date()),
-      id: z.string().default(""),
+      id: z.string().default(""), // tiebreaker
     }).default({}),
   }))
   .query(async ({ ctx, input }) => {
