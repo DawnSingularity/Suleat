@@ -150,6 +150,7 @@ export const profileRouter = createTRPCRouter({
     .input(z.object({
       firstName: z.string(),
       lastName: z.string(),
+      flavors: z.array(z.string()).min(1)
     }))
     .mutation(async ({ctx, input}) => {
       
@@ -169,6 +170,11 @@ export const profileRouter = createTRPCRouter({
               userName: username,
               firstName: input.firstName,
               lastName: input.lastName,
+              flavors: {
+                connect: input.flavors.map((flavor, idx) => ({
+                  name: flavor
+                }))
+              }
           }})
 
           return {

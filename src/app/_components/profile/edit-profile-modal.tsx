@@ -165,7 +165,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
                 </div>
                 <div className="mt-2">
                   <label htmlFor="flavors" className="pl-2 text-sm text-stone-500">Flavors</label><br></br>
-                  <FlavorProfileSelector flavors={wholeListOfFlavors} flavorStates={flavorStates} setFlavorStates={setFlavorStates}/>
+                  <FlavorProfileSelector flavors={wholeListOfFlavors} flavorStates={flavorStates} setFlavorStates={setFlavorStates} className="pl-2 ml-1"/>
                 </div>    
               </div>
             </form>

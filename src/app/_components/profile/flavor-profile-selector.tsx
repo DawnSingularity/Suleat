@@ -19,10 +19,11 @@ export function useFlavorStates(params? : { initialValues: Flavor[] | string[] |
     return state
 }
 
-export function FlavorProfileSelector({ flavors, flavorStates, setFlavorStates } : {  
+export function FlavorProfileSelector({ flavors, flavorStates, setFlavorStates, className } : {  
     flavors? : Flavor[],
     flavorStates : FlavorStates,
-    setFlavorStates : Dispatch<SetStateAction<FlavorStates>>
+    setFlavorStates : Dispatch<SetStateAction<FlavorStates>>,
+    className? : string,
 }) {
     const wholeListOfFlavorsQuery = api.flavor.getFlavors.useQuery(undefined /* no params */, {enabled: flavors == null})
 
@@ -48,7 +49,7 @@ export function FlavorProfileSelector({ flavors, flavorStates, setFlavorStates }
       }
 
     return (
-        <div className="flavors pl-2 ml-1" id="flavors">
+        <div className={"flavors " + className} id="flavors">
             { flavors.map(({name, color}, i) => {
             return (<PillButton id={name} text={name} backgroundColor={color} value={flavorStates.has(name)} onChange={changeFlavor}/>);
             })}

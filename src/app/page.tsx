@@ -7,18 +7,17 @@ import { Onboarding } from "./_components/onboarding";
 export default async function RootPage() {
   const currentAuth = auth();
 
+  
   if(currentAuth.userId != null) {
-    if(await db.user.findUnique({where: { uuid: currentAuth.userId }}) == null) { 
-      // user has not completed the onboarding procedure
-      // note: there might be a better place for this
-      return (
-        <Onboarding />
-      )
-    } else {
-      return (
-        <Home />
-      );
-    }
+    // user has not completed the onboarding procedure
+    // note: placed on page.tsx so it can be server-side rendered
+    const isNotOnboarded = await db.user.findUnique({where: { uuid: currentAuth.userId }}) == null
+    return (
+      <>
+      {isNotOnboarded &&  <Onboarding />}
+      <Home />
+      </>
+    );
   } else {
     return (
       <Landing />
