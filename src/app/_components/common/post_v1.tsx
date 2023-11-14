@@ -31,8 +31,20 @@ const postDetailed = Prisma.validator<Prisma.PostDefaultArgs>()({
   
 type PostDetailed = Prisma.PostGetPayload<typeof postDetailed>
   
-export function PostComponent({ post } : { post: PostDetailed }) {
-    const auth = useAuth()
+export function PostComponent({ post }: { post: PostDetailed }) {
+    const auth = useAuth();
+    const [isFavorited, setIsFavorited] = React.useState(false);
+    const [favoriteCount, setFavoriteCount] = React.useState(post.favoriteCount);
+
+    const handleFavoriteClick = () => {
+        if (isFavorited) {
+            setFavoriteCount((prevCount) => prevCount - 1);
+        } else {
+            setFavoriteCount((prevCount) => prevCount + 1);
+        }
+        setIsFavorited((prev) => !prev);
+    };
+
     return (
       <>
       <Link href={`/post/${post.id}`}>
@@ -79,10 +91,14 @@ export function PostComponent({ post } : { post: PostDetailed }) {
                             <FontAwesomeIcon icon={faMessage} style={{color: "#000000",}} className="pr-1" />
                             <span>{/*post.commentCount*/}</span>
                         </div>
-                        <div className="flex flex-row items-center">
-                            <FontAwesomeIcon icon={faStar} style={{color: "#000000",}} className="pr-1" />
-                            <span>{post.favoriteCount}</span>
-                        </div>
+                        <button
+                            className="flex flex-row items-center"
+                            onClick={handleFavoriteClick}
+                            style={{ color: isFavorited ? '#ff7f50' : '#000000' }}
+                        >
+                            <FontAwesomeIcon icon={faStar} className="pr-1" />
+                            <span>{favoriteCount}</span>
+                         </button>
                     </div>
                 </div>
             </div>
