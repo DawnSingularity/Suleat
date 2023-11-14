@@ -22,7 +22,7 @@ export function Navbar() {
     const [searchKey, setSearchKey] = useState("")
 
     const handleSearchButtonClick = async () => {
-        alert("GIRL!")
+        await alert("GIRL!")
     }
     
     let userIcon
@@ -74,10 +74,9 @@ export function Navbar() {
                                       onChange={(e) => setSearchKey(e.target.value)}
                                       onKeyDown={(e)=>{
                                         if(e.key === "Enter"){
-                                          e.preventDefault();
-                                          if(searchKey.trim() !==""){
-                                            handleSearchButtonClick
-                                          }
+                                          e.preventDefault()
+                                          if(searchKey.trim() !== "")
+                                            handleSearchButtonClick()
                                         }
                                       }}
                                       className="cursor-pointer opacity-0 group-focus-within:opacity-100 invisible group-hover:visible group-focus-within:visible ease-in-out duration-500 rounded-full w-full h-5 py-3.5 pl-4 ml-1 text-[#101010] bg-gray-100 leading-tight focus:outline-none focus:shadow-outline lg:text-sm text-xs"
