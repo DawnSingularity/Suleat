@@ -8,8 +8,12 @@ class FlavorStates extends Set<string> {
     toArray = () => Array.from(this.values())
 }
 
-export function useFlavorStates({ initialValues } : { initialValues: Flavor[] | string[] }) {
-    const initialValuesString : string[] = initialValues.map((val) => typeof val == "string" ? val /* string */ : val.name /* flavor */)
+export function useFlavorStates({ initialValues } : { initialValues: Flavor[] | string[] | undefined }) {
+    let initialValuesString : string[] | undefined = undefined
+
+    if(initialValues != null) {
+        initialValuesString = initialValues.map((val) => typeof val == "string" ? val /* string */ : val.name /* flavor */)
+    }
 
     const state = useState<FlavorStates>(new FlavorStates(initialValuesString))
     return state
