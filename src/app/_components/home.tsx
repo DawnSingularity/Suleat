@@ -32,6 +32,9 @@ export function Home() {
           <div className="w-full sm:w-[500px]">
             <InfiniteSearch key={searchKey}/>
           </div>
+          <div className="mb-6">
+
+          </div>
           
         </main>
       </>

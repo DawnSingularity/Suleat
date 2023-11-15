@@ -158,6 +158,7 @@ export const postRouter = createTRPCRouter({
         author: true,
         photos: true,
         flavors: true,
+        comments: true,
       },
       orderBy: [
         { createdAt: "desc" },

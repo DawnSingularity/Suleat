@@ -54,7 +54,7 @@ export function Navbar() {
     
     return (
       <>
-        <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-5">
+        <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-5 mb-4">
             
                 <form className="order-first flex flex-row items-center py-2 md:w-7/12">
                     {/* <FontAwesomeIcon icon={faBars} style={{color: "#101010",}} size="xl" className="pr-4"/> */}
