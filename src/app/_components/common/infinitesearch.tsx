@@ -54,10 +54,23 @@ export function InfiniteSearch() {
         }
     })
 
+  // remove possible duplicate posts
+  // note: there might be a better way for this
+  const renderedPosts = new Set()
+
   return (<div>
-    { infiniteQuery.data?.pages.map((page, index) => (
+    { 
+      infiniteQuery.data?.pages.map((page, index) => (
         <Fragment key={index}>
-            {page.map((post) => (<PostComponent post={post} />))}
+            {page.map((post) => {
+                if (!renderedPosts.has(post.id)) {
+                    renderedPosts.add(post.id)
+                    return <PostComponent post={post} />
+                } else {
+                    // do nothing
+                    return <></>
+                }
+            })}
         </Fragment>
     )) }
     <div ref={scrollMonitorRef}></div>
