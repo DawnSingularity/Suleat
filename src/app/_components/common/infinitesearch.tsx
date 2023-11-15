@@ -17,6 +17,8 @@ export function InfiniteSearch() {
     if(searchKey !== null) {
         key = searchKey
     }
+
+    let receivedCount = 0
     const infiniteQuery = api.post.getSearchPosts.useInfiniteQuery(
         {
             limit: 5,
@@ -27,23 +29,24 @@ export function InfiniteSearch() {
           getNextPageParam: (lastPage) => {
             if(lastPage != null) {
                 if(lastPage.length > 0) {
-                    const lastPost = lastPage[lastPage.length - 1]
-                    return {
-                        createdAt: lastPost?.createdAt,
-                        id: lastPost?.id,
-                    }
+                    return receivedCount
                 } else {
                     // no more pages, tell tanstack by returning undefined
                     console.log("Last post reached")
                     return undefined;
                 }
             } else {
-                 // no pages yet, get first page by sending empty object to server
-                 return {};
+                 // no pages yet, get first page by sending 0
+                 return 0;
             }
           },
         }
       )
+
+    for(const page of infiniteQuery.data?.pages ?? []) {
+        receivedCount += page.length
+    }
+
     console.log("Obtained Data: " + infiniteQuery)
     useEffect(() => {
         if(scrollMonitorInView && infiniteQuery.hasNextPage) {

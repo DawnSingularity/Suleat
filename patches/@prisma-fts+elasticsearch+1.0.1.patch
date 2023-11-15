@@ -1,0 +1,25 @@
+diff --git a/node_modules/@prisma-fts/elasticsearch/dist/index.js b/node_modules/@prisma-fts/elasticsearch/dist/index.js
+index 8405eb8..1718394 100644
+--- a/node_modules/@prisma-fts/elasticsearch/dist/index.js
++++ b/node_modules/@prisma-fts/elasticsearch/dist/index.js
+@@ -74,13 +74,19 @@ var searchByElasticsearchIndexes = async (client, indexMapping, mapping, pkIsNum
+         const [col] = key.match(/[^.]+$/) ?? [];
+         const index = indexMapping[col];
+         const [option] = val.match(/\{.*}$/) ?? ["{}"];
++
++        const optionObjRaw = JSON.parse(option)
++        // remove searchOptions from match options
++        const { searchOptions, ...matchOptions } = optionObjRaw  
++        
+         const res = await client.search({
+           index,
++          ...searchOptions,
+           query: {
+             match: {
+               [col]: {
+                 query: val.replace(/\{.*}$/, ""),
+-                ...JSON.parse(option)
++                ...matchOptions
+               }
+             }
+           }
