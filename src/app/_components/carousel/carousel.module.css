@@ -15,7 +15,6 @@
   .embla__slide {
     flex: 0 0 var(--slide-size);
     min-width: 0;
-    padding-left: var(--slide-spacing);
     position: relative;
   }
   .embla__slide__img {
@@ -38,6 +37,7 @@
     text-align: center;
     pointer-events: none;
   }
+
   .embla__slide__number > span {
     color: var(--brand-primary);
     background-image: linear-gradient(

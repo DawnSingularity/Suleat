@@ -47,39 +47,40 @@ export function PostComponent({ post }: { post: PostDetailed }) {
 
     return (
       <>
-      <Link href={`/post/${post.id}`}>
-        <div className="sm:p-4 pl-1 p-3  border-b-2 bg-white border-slate-200">
-            <div className="flex flex-row items-center justify-between py-2">
-                <div className="order-first flex flex-row items-center">
-                    <UserIcon user={post.author} width="10" className="mx-2" />
-                    <div>
-                        <div className="text-sm">{ post.author.firstName } { post.author.lastName }</div>
-                        <div className="text-xs text-red-600">
-                            <FontAwesomeIcon icon={faLocationDot} className="mr-1" style={{ color: 'red' }} />
-                            { post.location }
-                         </div>
+        <div className="py-4 bg-white sm:mb-4 mt-0.5 drop-shadow-md sm:rounded-lg">
+            <Link href={`/post/${post.id}`}>
+                <div className="sm:px-4 px-4 flex flex-row items-center justify-between mb-4">
+                    <div className="order-first flex flex-row items-center">
+                        <UserIcon user={post.author} width="10" className="mr-3" />
+                        <div>
+                            <div className="text-sm">{ post.author.firstName } { post.author.lastName }</div>
+                            <div className="text-xs text-red-600">
+                                <FontAwesomeIcon icon={faLocationDot} className="mr-1" style={{ color: 'red' }} />
+                                { post.location }
+                            </div>
+                        </div>
                     </div>
+                { auth.isSignedIn ? (
+                    <div className="order-last flex flex-row items-center">
+                        <PillButton id="reserved" text="Follow" backgroundColor="#49e66b" className="color-black" />
+                        <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}} />
+                    </div>
+                ) : (<></>)}
+                    
                 </div>
-            { auth.isSignedIn ? (
-                <div className="order-last flex flex-row items-center">
-                    <PillButton id="reserved" text="Follow" backgroundColor="#49e66b" className="color-black" />
-                    <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}} />
-                </div>
-            ) : (<></>)}
-                
-            </div>
+            </Link>
             
-            <div>
+            <div className="">
                 {post.photos && post.photos.length > 0 && (
                     <EmblaCarousel photos={post.photos} options={OPTIONS} />
                 )}
             </div>
 
-            <div className="">
-                <div className="text-sm px-5 pt-3">
+            <div className="px-4 ">
+                <div className="text-sm mt-4">
                 { post.caption }
                 </div>
-                <div className="flex flex-row items-center justify-between">
+                <div className="mt-2 flex flex-row items-center justify-between">
                     <div className="order-first">
                         {post.flavors?.map((flavor : Flavor, index : number) => (<PillButton
                             key={index.toString()}
@@ -87,9 +88,9 @@ export function PostComponent({ post }: { post: PostDetailed }) {
                         />))}
                     </div>
                     <div className="order-last flex flex-row">
-                        <div className="flex flex-row items-center">
-                            <FontAwesomeIcon icon={faMessage} style={{color: "#000000",}} className="pr-1" />
-                            <span>{/*post.commentCount*/}</span>
+                        <div className="flex flex-row items-center mr-1">
+                            <FontAwesomeIcon icon={faMessage} style={{color: "#000000",}} className="pr-1 pt-0.5" />
+                            <span>{post.comments.length}</span>
                         </div>
                         <button
                             className="flex flex-row items-center"
@@ -101,11 +102,8 @@ export function PostComponent({ post }: { post: PostDetailed }) {
                          </button>
                     </div>
                 </div>
-            </div>
-            
-        </div>
-      </Link>
-        
+            </div>    
+        </div>   
       </>
     );
 
