@@ -135,6 +135,7 @@ export const profileRouter = createTRPCRouter({
           lastName: input.lastName,
           bio: input.bio,
           location: input.location,
+          modifiedAt: new Date(),
           flavors: { 
             set: [], // delete all flavors for now
             connect: input.flavors.map((flavor, idx) => ({

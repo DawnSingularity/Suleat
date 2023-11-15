@@ -56,6 +56,7 @@ model User {
     coverURL    String  @default("https://picsum.photos/600/600")
     flavors     Flavor[]
     createdAt   DateTime @default(now())
+    modifiedAt  DateTime @default(now())
 
     followers       Following[] @relation("Follower")
     following       Following[] @relation("Following")

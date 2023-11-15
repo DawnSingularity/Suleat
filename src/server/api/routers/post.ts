@@ -13,14 +13,10 @@ if(process.env.ELASTIC_SEARCH_KEY != null) {
 }
 
 const esClient = new Client({ 
-  node: 'https://localhost:9200',
+  node: 'http://localhost:9200',
   auth: {
     username: 'elastic',
     password: 'vZptqzgfVNilxfw4HUVl'
-  }, 
-  tls: {
-    ca: 'd6a40f0f4459def1ae56122410bebb6d0f493b4f00d681aa5c4c7dd2e8350410',
-    rejectUnauthorized: false
   }
     // d6a40f0f4459def1ae56122410bebb6d0f493b4f00d681aa5c4c7dd2e8350410
     // LTKlDBeyBh-GdvlFssIr
