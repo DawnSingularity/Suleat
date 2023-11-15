@@ -13,10 +13,18 @@ if(process.env.ELASTIC_SEARCH_KEY != null) {
 }
 
 const esClient = new Client({ 
-    node: 'https://localhost:3000',
-    auth: {
-        apiKey: key
-    }
+  node: 'https://localhost:9200',
+  auth: {
+    username: 'elastic',
+    password: 'vZptqzgfVNilxfw4HUVl'
+  }, 
+  tls: {
+    ca: 'd6a40f0f4459def1ae56122410bebb6d0f493b4f00d681aa5c4c7dd2e8350410',
+    rejectUnauthorized: false
+  }
+    // d6a40f0f4459def1ae56122410bebb6d0f493b4f00d681aa5c4c7dd2e8350410
+    // LTKlDBeyBh-GdvlFssIr
+    // eyJ2ZXIiOiI4LjExLjEiLCJhZHIiOlsiMTkyLjE2OC41Ni4xOjkyMDAiXSwiZmdyIjoiZDZhNDBmMGY0NDU5ZGVmMWFlNTYxMjI0MTBiZWJiNmQwZjQ5M2I0ZjAwZDY4MWFhNWM0YzdkZDJlODM1MDQxMCIsImtleSI6ImROOGZ6WXNCdTZRbWxObkhMb2s1OmJuZTFtRl9nU1FXN3pTMlJ1V1BHT1EifQ==
  });
 
 const prisma = new PrismaClient();
@@ -174,7 +182,7 @@ export const postRouter = createTRPCRouter({
   }))
   .query(async ({ ctx, input }) => {
     console.log(input)
-    const result = await ctx.db.post.findMany({
+    const result = await prisma.post.findMany({
       where: {
         OR: [
           { caption: "fts:" + input.searchKey },
