@@ -1,6 +1,5 @@
 "use client";
 
-import suleatIcon from "~/../public/suleat-icon.png"
 import Image from "next/image"
 import { useAuth } from "@clerk/nextjs";
 import { UserButton, useUser } from "@clerk/clerk-react";
@@ -26,6 +25,7 @@ const postDetailed = Prisma.validator<Prisma.PostDefaultArgs>()({
         author: true,
         photos: true,
         flavors: true,
+        comments: true,
     },
   })
   
