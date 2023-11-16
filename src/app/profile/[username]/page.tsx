@@ -6,6 +6,9 @@ import { Prisma, User, Flavor } from "@prisma/client";
 
 
 export default function Profile({ params }: { params: { username: string } }) {
+  // convert URI-encoded string back to unicode
+  params.username = decodeURIComponent(params.username);
+
   const data = api.profile.getUserProfile.useQuery({username: params.username}).data;
   const followers = api.profile.getFollowers.useQuery({username: params.username}).data as User[];
   const following = api.profile.getFollowing.useQuery({username: params.username}).data as User[];
