@@ -116,7 +116,7 @@ export function Landing() {
     <div>
       <style dangerouslySetInnerHTML={{__html: "\n:root {\n--font-family: 'Inter', sans-serif;\n --text-color: #333333;\n--suleat: #fc571a;\n}\n\nbody {\nfont-family: var(--font-family);\ncolor: var(--text-color);\n}\n\n.suleat {\n color: var(--suleat);\n background-color: var(--suleat);\n}\n" }} />
       <button
-          className="absolute top-4 right-4 sm:block hidden rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4"
+          className="absolute top-4 text-md right-4 sm:block hidden rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4"
           onClick={toggleModal}
         >
           Log In
@@ -130,7 +130,7 @@ export function Landing() {
               className="mt-4 mr-7 bg-blue-700 hover:bg-blue-900 text-white py-2 px-4 rounded self-end"
               onClick={toggleModal}
             >
-              Close Modal
+              Close
             </button>
           </div>
         </div>
