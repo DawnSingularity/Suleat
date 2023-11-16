@@ -5,7 +5,7 @@ import { useInView } from "react-intersection-observer";
 import { getQueryKey } from "@trpc/react-query";
 import { Fragment, useEffect } from "react";
 import { PostComponent } from "./post_v1";
-import { UserComponent } from "./user";
+import { UserComponent } from "./user-search";
 import { useSearchParams } from 'next/navigation'
 
 export function InfiniteSearchUsers() {

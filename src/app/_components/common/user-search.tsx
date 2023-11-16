@@ -4,7 +4,7 @@ import { useAuth } from "@clerk/nextjs";
 import { UserIcon } from "./user-icon"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis, faLocationDot  } from "@fortawesome/free-solid-svg-icons";
-import { PillButton } from "./../profile/pill-button" 
+import { PillButton } from "../profile/pill-button" 
 
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
     include: { flavors: true },

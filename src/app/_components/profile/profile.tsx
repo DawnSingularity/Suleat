@@ -69,7 +69,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
     // edit button should only be visible in user's own profile
     if(loggedInUsernameQuery.isSuccess && loggedInUsername === data.userName) {
-      editProfileButton = <FontAwesomeIcon id="edit-profile-button" className="hover:cursor-pointer hover:drop-shadow-md" icon={faEdit} onClick={handleEditProfileModal}/>
+      editProfileButton = <FontAwesomeIcon id="edit-profile-button" className="hover:cursor-pointer hover:text-white hover:drop-shadow-xl" icon={faEdit} onClick={handleEditProfileModal}/>
     }
 
   return (
