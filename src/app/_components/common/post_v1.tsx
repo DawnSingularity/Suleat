@@ -45,6 +45,11 @@ export function PostComponent({ post }: { post: PostDetailed }) {
         setIsFavorited((prev) => !prev);
     };
 
+    let comment_count = 0
+    if(post.comments)
+        comment_count = post.comments.length
+    console.log("Comments: " + comment_count)
+
     return (
       <>
         <div className="py-4 bg-white sm:mb-4 mt-0.5 drop-shadow-md sm:rounded-lg">
@@ -90,7 +95,7 @@ export function PostComponent({ post }: { post: PostDetailed }) {
                     <div className="order-last flex flex-row">
                         <div className="flex flex-row items-center mr-1">
                             <FontAwesomeIcon icon={faMessage} style={{color: "#000000",}} className="pr-1 pt-0.5" />
-                            <span>{post.comments.length}</span>
+                            <span>{comment_count}</span>
                         </div>
                         <button
                             className="flex flex-row items-center"
