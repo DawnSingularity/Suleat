@@ -17,8 +17,16 @@ export function Home() {
 
   const searchParams = useSearchParams()
   const searchKey = searchParams.get('search')
-
+  var content = <InfiniteSearch />
   console.log(searchKey)
+
+  const showPosts = () => {
+    content = <InfiniteSearch />
+  }
+
+  const showUsers = () => {
+    content = <InfiniteSearchUsers />
+  }
 
   if(searchKey !== null && searchKey !== "") {
     return (
@@ -30,9 +38,20 @@ export function Home() {
         </Head>
         <Navbar />
         <main className="flex flex-col items-center bg-gradient-to-b">
+
           <div className="w-full sm:w-[500px]">
-            {/* <InfiniteSearch /> */}
+            <div className="mb-2">Search Results</div>
+            <div className="s">
+            {/* Filter buttons */}
+              <button onClick={showPosts} type="button" className="text-sm text-[#fc571a] hover:underline mb-4 font-bold mr-4">Posts</button>
+              <button onClick={showUsers} type="button" className="text-sm text-[#fc571a] hover:underline mb-4 font-bold mr-4">Users</button>
+              <div className="w-full mb-3 border-black border-b-2"></div>
+            </div>
+            
+            {/* {content} */}
             <InfiniteSearchUsers />
+            <InfiniteSearch />
+            
           </div>
           <div className="mb-6">
 
