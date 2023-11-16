@@ -3,7 +3,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure, userProcedure } from "~/server/api/trpc";
 
 import { PrismaClient, Prisma } from "@prisma/client";
-import { elasticsearchFTS } from "@prisma-fts/elasticsearch";
+import { elasticsearchFTS } from "~/prisma-fts/elasticsearch/index";
 import { Client } from "@elastic/elasticsearch";
 import { NextRequest } from "next/server";
 
