@@ -1,5 +1,5 @@
 diff --git a/node_modules/@prisma-fts/elasticsearch/dist/index.js b/node_modules/@prisma-fts/elasticsearch/dist/index.js
-index 8405eb8..1718394 100644
+index 8405eb8..25e2773 100644
 --- a/node_modules/@prisma-fts/elasticsearch/dist/index.js
 +++ b/node_modules/@prisma-fts/elasticsearch/dist/index.js
 @@ -74,13 +74,19 @@ var searchByElasticsearchIndexes = async (client, indexMapping, mapping, pkIsNum
@@ -15,10 +15,12 @@ index 8405eb8..1718394 100644
            index,
 +          ...searchOptions,
            query: {
-             match: {
+-            match: {
++            fuzzy: {
                [col]: {
-                 query: val.replace(/\{.*}$/, ""),
+-                query: val.replace(/\{.*}$/, ""),
 -                ...JSON.parse(option)
++                value: val.replace(/\{.*}$/, ""),
 +                ...matchOptions
                }
              }
