@@ -204,10 +204,6 @@ export const postRouter = createTRPCRouter({
         photos: true,
         flavors: true,
       },
-      orderBy: [
-        { createdAt: "desc" },
-        { id: "asc" }, // matches "greater than" logic
-      ],
       take: input.limit,
     })
     console.log("Result: " +result)
