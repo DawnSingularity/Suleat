@@ -48,7 +48,6 @@ export function PostComponent({ post }: { post: PostDetailed }) {
     let comment_count = 0
     if(post.comments)
         comment_count = post.comments.length
-    console.log("Comments: " + comment_count)
 
     return (
       <>
