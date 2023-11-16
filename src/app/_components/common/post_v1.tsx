@@ -53,7 +53,7 @@ export function PostComponent({ post }: { post: PostDetailed }) {
       <>
         <div className="py-4 bg-white sm:mb-4 mt-0.5 drop-shadow-md sm:rounded-lg">
             <Link href={`/post/${post.id}`}>
-                <div className="sm:px-4 px-4 flex flex-row items-center justify-between mb-4">
+                <div className="px-5 flex flex-row items-center justify-between mb-4">
                     <div className="order-first flex flex-row items-center">
                         <UserIcon user={post.author} width="10" className="mr-3" />
                         <div>
@@ -80,7 +80,7 @@ export function PostComponent({ post }: { post: PostDetailed }) {
                 )}
             </div>
 
-            <div className="px-4 ">
+            <div className="px-5 ">
                 <div className="text-sm mt-4">
                 { post.caption }
                 </div>

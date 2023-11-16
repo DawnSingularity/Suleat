@@ -28,7 +28,7 @@ export function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Navbar />
-        <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b">
+        <main className="flex flex-col items-center bg-gradient-to-b">
           <div className="w-full sm:w-[500px]">
             <InfiniteSearch key={searchKey}/>
           </div>
@@ -48,7 +48,7 @@ export function Home() {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         <Navbar />
-        <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b">
+        <main className="flex flex-col items-center bg-gradient-to-b">
           <div className="w-full sm:w-[500px]">
             <Infinite />
           </div>
