@@ -262,6 +262,9 @@ export const profileRouter = createTRPCRouter({
             { userName: "fts:" + input.searchKey + searchOptions },
           ]
         },
+        include: {
+          flavors: true
+        },
         take: input.limit,
       })
       console.log("Result: " + result)

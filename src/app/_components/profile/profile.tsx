@@ -125,7 +125,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
         <div className="w-full md:w-6/12 order-3 md:order-2 mt-6 md:mt-1">
           <h2 className="text-lg font-bold">Posts</h2>
-          <hr className="w-11/12 mt-2 border-1 border-gray-300" />
+          <hr className="mb-2 w-full md:w-11/12 mt-2 border-1 border-gray-300" />
           <div className="md:w-11/12 w-full">
             <ProfilePosts username={data.userName} />
           </div>

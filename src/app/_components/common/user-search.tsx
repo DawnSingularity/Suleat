@@ -14,29 +14,40 @@ const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
 
 export function UserComponent({ user }: { user: UserWithFlavors }) {
   const auth = useAuth();
+  console.log("Flavors: " + user.flavors)
 
   return (
     <>
     <Link href={`/profile/${user.userName}`}>
-      <div className="px-5 flex flex-row items-center justify-between mb-4">
-          <div className="order-first flex flex-row items-center">
-              <UserIcon user={user} width="10" className="mr-3" />
-              <div>
-                  <div className="text-sm">{ user.firstName } { user.lastName }</div>
-                  <div className="text-xs text-red-600">
-                      <FontAwesomeIcon icon={faLocationDot} className="mr-1" style={{ color: 'red' }} />
-                      { user.location }
-                  </div>
-              </div>
-          </div>
-      { auth.isSignedIn ? (
-          <div className="order-last flex flex-row items-center">
-              <PillButton id="reserved" text="Follow" backgroundColor="#49e66b" className="color-black" />
-              <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}} />
-          </div>
-      ) : (<></>)}
-          
+      <div className="bg-white mb-3 p-4 rounded-lg drop-shadow-md">
+        <div className=" flex flex-row items-center justify-between">
+            <div className="order-first flex flex-row items-center">
+                <UserIcon user={user} width="10" className="mr-3" />
+                <div>
+                    <div className="text-sm">{ user.firstName } { user.lastName }</div>
+                    <div className="text-xs text-red-600">
+                        <FontAwesomeIcon icon={faLocationDot} className="mr-1" style={{ color: 'red' }} />
+                        { user.location }
+                    </div>
+                </div>
+            </div>
+        { auth.isSignedIn ? (
+            <div className="order-last flex flex-row items-center">
+                <PillButton id="reserved" text="Follow" backgroundColor="#49e66b" className="color-black" />
+                <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}} />
+            </div>
+        ) : (<></>)}
+        </div>
+        <div className="flex flex-wrap px-1 ml-10">
+          {user.flavors?.map((flavor : Flavor, index : Number) => 
+            <PillButton
+              key={index.toString()}
+              id={flavor.name} text={flavor.name} backgroundColor={flavor.color}
+            />)}
+        </div>
       </div>
+      
+      
   </Link>
     </>
   )
