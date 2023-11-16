@@ -138,7 +138,7 @@ const CreatePostWizard = () =>{
         </div>
           
         <div className="cursor-pointer w-full flex group">
-          <input onChange={reqAddImages} className="cursor-pointer z-20 opacity-0 w-12 h-40 rounded-lg absolute" id="coverPhoto" type="file" name="coverPhoto" accept="image/*" multiple/>
+          <input onChange={reqAddImages} className="cursor-pointer z-20 opacity-0 w-12 h-5 rounded-lg absolute" id="coverPhoto" type="file" name="coverPhoto" accept="image/*" multiple/>
           <FontAwesomeIcon icon={faImages} style={{ color: "--var(suleat)" }} className="suleat" />
         </div>
 
