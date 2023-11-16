@@ -83,20 +83,27 @@ export function Landing() {
       });
       
     return (
-      <div>
-        <button className="text-white bg-gray-600 h-12 rounded-xl border-2 mb-2 w-11/12 m-auto flex justify-center" onClick={signInWithGoogle}>
-            <img className="h-8 w-8 my-auto inline" src="https://www.google.com/favicon.ico" alt={`google`} width={32} height={32} />
-            <div className="relative my-auto ml-3">
-                Register with Google
-            </div>
-        </button>
-        <button className="text-white bg-gray-600 h-12 rounded-xl border-2 mb-2 w-11/12 m-auto flex justify-center" onClick={signInWithFacebook}>
-            <img className="h-8 w-8 my-auto inline" src="https://www.facebook.com/favicon.ico" alt={`google`} width={32} height={32} />
-            <div className="relative my-auto ml-3">
-                Register with Facebook
-            </div>
-        </button>
-        
+      <div className="w-full">
+        <div className="w-11/12 m-auto">
+          <button className="text-white bg-gray-600 h-12 rounded-xl border-2 mb-2 w-full m-auto flex justify-center" onClick={signInWithGoogle}>
+              <img className="h-8 w-8 my-auto inline" src="https://www.google.com/favicon.ico" alt={`google`} width={32} height={32} />
+              <div className="relative my-auto ml-3">
+                  Register with Google
+              </div>
+          </button>
+          <button className="text-white bg-gray-600 h-12 rounded-xl border-2 mb-2 w-full m-auto flex justify-center" onClick={signInWithFacebook}>
+              <img className="h-8 w-8 my-auto inline" src="https://www.facebook.com/favicon.ico" alt={`google`} width={32} height={32} />
+              <div className="relative my-auto ml-3">
+                  Register with Facebook
+              </div>
+          </button>
+          <button
+            className="ml- sm:hidden block rounded text-sm text text-blue-400 hover:underline"
+            onClick={toggleModal}
+          >
+            Already have an account? Log in instead.
+          </button>
+        </div>
       </div>
     );
   };
@@ -109,7 +116,7 @@ export function Landing() {
     <div>
       <style dangerouslySetInnerHTML={{__html: "\n:root {\n--font-family: 'Inter', sans-serif;\n --text-color: #333333;\n--suleat: #fc571a;\n}\n\nbody {\nfont-family: var(--font-family);\ncolor: var(--text-color);\n}\n\n.suleat {\n color: var(--suleat);\n background-color: var(--suleat);\n}\n" }} />
       <button
-          className="fixed top-4 right-4 sm:block hidden rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4"
+          className="absolute top-4 right-4 sm:block hidden rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4"
           onClick={toggleModal}
         >
           Log In
