@@ -163,7 +163,8 @@ export const profileRouter = createTRPCRouter({
         // if user does not exist
         if(user == null) {
           // twitter default username
-          const username = input.firstName + input.lastName + Math.random().toString().slice(2, 10)
+          const removeWhitespace = (s : string) => s.replace(/\s/g, '')
+          const username = removeWhitespace(input.firstName) + removeWhitespace(input.lastName) + Math.random().toString().slice(2, 10)
 
           await ctx.db.user.create({
             data: {
