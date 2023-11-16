@@ -7,16 +7,26 @@ import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImages } from "@fortawesome/free-solid-svg-icons";
 
-
+import { Prisma, User, Flavor, PrismaClient } from "@prisma/client";
 import { api } from "~/trpc/react";
 import { LoadingSpinner } from "./loading";
 
 import { ImageUploadPreview } from "./image-upload-preview";
+import { FlavorProfileSelector, useFlavorStates } from "./profile/flavor-profile-selector";
+const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
+  include: { flavors: true },
+})
+
+type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
 const CreatePostWizard = () =>{
   const user = useUser();
   const [location, setLocation] = useState("");
   const [caption, setCaption] = useState("");
+  
+  const wholeListOfFlavors = api.flavor.getFlavors.useQuery().data ?? [];
+  const [flavorStates, setFlavorStates] = useFlavorStates();
+
   const ctx = api.useUtils();
 
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -97,26 +107,13 @@ const CreatePostWizard = () =>{
   return (
     <div className = "border-b border-slate-400 p-8 flex flex-col">
       <div className ="flex w-full gap-3 flex-col">
-        <input 
-          placeholder="Location" 
-          className="bg-transparent grow outline-none"
-          type="text"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          onKeyDown={(e)=>{
-            if(e.key === "Enter"){
-              e.preventDefault();
-              if(caption !=="" && location !==""){
-                handlePostButtonClick;
-              }
-            }
-          }}
-          disabled={isPosting}
-        />
+        
+        <h1>Create Post</h1>
+
         <textarea 
           id="message" 
           className="block p-2.5 w-full text-sm bg-transparent rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500" 
-          placeholder="Content"
+          placeholder="Tasting something?"
           name="content"
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
@@ -140,10 +137,32 @@ const CreatePostWizard = () =>{
           ))}
         </div>
           
-          <div className="cursor-pointer w-full flex group">
-            <input onChange={reqAddImages} className="cursor-pointer z-20 opacity-0 w-12 h-40 rounded-lg absolute" id="coverPhoto" type="file" name="coverPhoto" accept="image/*" multiple/>
-            <FontAwesomeIcon icon={faImages} style={{ color: "--var(suleat)" }} className="suleat" />
-          </div>
+        <div className="cursor-pointer w-full flex group">
+          <input onChange={reqAddImages} className="cursor-pointer z-20 opacity-0 w-12 h-40 rounded-lg absolute" id="coverPhoto" type="file" name="coverPhoto" accept="image/*" multiple/>
+          <FontAwesomeIcon icon={faImages} style={{ color: "--var(suleat)" }} className="suleat" />
+        </div>
+
+        <input 
+          placeholder="Location" 
+          className="bg-transparent grow outline-none"
+          type="text"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          onKeyDown={(e)=>{
+            if(e.key === "Enter"){
+              e.preventDefault();
+              if(caption !=="" && location !==""){
+                handlePostButtonClick;
+              }
+            }
+          }}
+          disabled={isPosting}
+        />
+
+        <div className="mt-2">
+          <label htmlFor="flavors" className="pl-2 text-sm text-stone-500">Flavors</label><br></br>
+          <FlavorProfileSelector flavors={wholeListOfFlavors} flavorStates={flavorStates} setFlavorStates={setFlavorStates} className="pl-2 ml-1"/>
+        </div>
 
         {caption !=="" && location !=="" && uploadedFiles.length > 0 && !isPosting && (
           <button 
