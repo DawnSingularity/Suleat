@@ -7,6 +7,7 @@ import { UserButton, useUser } from "@clerk/clerk-react";
 import { api } from "~/trpc/react";
 import { Infinite } from "./common/infinite";
 import { InfiniteSearch } from "./common/infinitesearch"
+import { InfiniteSearchUsers } from "./common/infinitesearchusers"
 import { useSearchParams } from 'next/navigation'
 
 export function Home() {
@@ -30,7 +31,8 @@ export function Home() {
         <Navbar />
         <main className="flex flex-col items-center bg-gradient-to-b">
           <div className="w-full sm:w-[500px]">
-            <InfiniteSearch key={searchKey}/>
+            {/* <InfiniteSearch /> */}
+            <InfiniteSearchUsers />
           </div>
           <div className="mb-6">
 

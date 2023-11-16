@@ -7,11 +7,6 @@ import { elasticsearchFTS } from "~/prisma-fts/elasticsearch/index";
 import { Client } from "@elastic/elasticsearch";
 import { NextRequest } from "next/server";
 
-var key = ""
-if(process.env.ELASTIC_SEARCH_KEY != null) {
-    key = process.env.ELASTIC_SEARCH_KEY
-}
-
 const esClient = new Client({ 
   node: 'http://localhost:9200',
   auth: {

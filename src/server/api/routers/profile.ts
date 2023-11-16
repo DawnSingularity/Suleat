@@ -3,6 +3,45 @@ import { createTRPCRouter, publicProcedure, userProcedure } from "~/server/api/t
 
 import { useRouter } from 'next/navigation';
 import { Prisma, User, Flavor } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { Client } from "@elastic/elasticsearch";
+import { elasticsearchFTS } from "~/prisma-fts/elasticsearch/index";
+
+const esClient = new Client({ 
+  node: 'http://localhost:9200',
+  auth: {
+    username: 'elastic',
+    password: 'vZptqzgfVNilxfw4HUVl'
+  }
+    // d6a40f0f4459def1ae56122410bebb6d0f493b4f00d681aa5c4c7dd2e8350410
+    // LTKlDBeyBh-GdvlFssIr
+    // eyJ2ZXIiOiI4LjExLjEiLCJhZHIiOlsiMTkyLjE2OC41Ni4xOjkyMDAiXSwiZmdyIjoiZDZhNDBmMGY0NDU5ZGVmMWFlNTYxMjI0MTBiZWJiNmQwZjQ5M2I0ZjAwZDY4MWFhNWM0YzdkZDJlODM1MDQxMCIsImtleSI6ImROOGZ6WXNCdTZRbWxObkhMb2s1OmJuZTFtRl9nU1FXN3pTMlJ1V1BHT1EifQ==
+ });
+
+const prisma = new PrismaClient();
+const middleware = elasticsearchFTS(
+  esClient,
+  Prisma.dmmf,
+  {
+    User: {
+      docId: "uuid",
+      indexes: {
+        firstName: "user_index",
+        lastName: "user_index",
+        userName: "user_index"
+      }
+    },
+    Post: {
+      docId: "id",
+      indexes: {
+        caption: "post_index",
+        author: "post_index"  
+      }
+    }
+  }
+)
+
+prisma.$use(middleware)
 
 export const profileRouter = createTRPCRouter({
     getUserProfile: publicProcedure
@@ -203,6 +242,30 @@ export const profileRouter = createTRPCRouter({
 
         return null
       }
-    )
+    ),
+
+    // TODO: move somewhere else
+    getSearchUsers: publicProcedure
+    .input(z.object({
+      limit: z.number().min(1).max(50).default(10),
+      cursor: z.number().default(0),
+      searchKey: z.string()
+    }))
+    .query(async ({ ctx, input }) => {
+      console.log(input)
+      const searchOptions = ` {"searchOptions": {"from": ${ input.cursor }}}`
+      const result = await prisma.user.findMany({
+        where: {
+          OR: [
+            { firstName: "fts:" + input.searchKey + searchOptions },
+            { lastName: "fts:" + input.searchKey + searchOptions },
+            { userName: "fts:" + input.searchKey + searchOptions },
+          ]
+        },
+        take: input.limit,
+      })
+      console.log("Result: " + result)
+      return result
+    })
 });
 
