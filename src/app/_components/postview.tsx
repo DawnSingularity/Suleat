@@ -1,6 +1,8 @@
 import { RouterOutputs } from "~/trpc/shared";
 import { PostComponent } from "./common/post_v1";
 import { SetStateAction, useState } from 'react';
+import { api } from "~/trpc/react";
+
 
 type PostWithUser = RouterOutputs["post"]["getPostById"];
 export const PostView = (props: PostWithUser) => {
@@ -9,6 +11,7 @@ export const PostView = (props: PostWithUser) => {
     }
 
     // TODO: move to new file maybe (subcomments)
+    const ctx = api.useUtils();
     const [textareaValue, setTextareaValue] = useState('');
     const [parentCommentId, setParentCommentId] = useState('');
 
@@ -16,14 +19,15 @@ export const PostView = (props: PostWithUser) => {
         setTextareaValue(e.target.value)
     }
 
-    const handleReply = (parentCommentId : String) => {
-        // TODO: use router to update db
-        if (textareaValue != "") {
-            console.log(textareaValue)
-            console.log(parentCommentId);
-        } else {
-            console.log("empty");
+    const { mutate } = api.comment.createSub.useMutation({
+        onSuccess: () => {
+            console.log('yes')
+            // TODO: refresh comments
         }
+    })
+
+    const handleReply = async (parentCommentId : string) => {
+        mutate({ text: textareaValue, parentId: parentCommentId})
     }
 
     // end of TODO
