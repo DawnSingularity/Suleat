@@ -144,7 +144,6 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
       {showFollowersModal && <FollowModal onClose={handleFollowersModal} title="Followers" users={followers} />} {/* Show modal based on state */}
       {showFollowingModal && <FollowModal onClose={handleFollowingModal} title="Following" users={following} />} {/* Show modal based on state */}
       {showEditProfileModal && <EditProfileModal onClose={handleEditProfileModal} data={data} />} {/* Show edit profile modal based on state */}
-      <CreatePost />
     </main>
   );
 }
