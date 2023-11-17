@@ -34,7 +34,7 @@ model Comment {
     authorId       String
     post           Post?    @relation("PostToComment", fields: [postId], references: [id])
     postId         String?
-
+    createdAt      DateTime @default(now())
     parentComment  Comment? @relation("Subcomments", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     parentId       String?
 

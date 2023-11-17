@@ -109,7 +109,12 @@ export const postRouter = createTRPCRouter({
       include: {
         comments: {
           include: {
-            subcomments: true,
+            subcomments: {
+              include:{
+                author: true,
+              }
+            },
+            author: true,
           },
         },
         author: true,
