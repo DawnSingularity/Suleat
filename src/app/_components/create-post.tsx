@@ -108,9 +108,25 @@ const CreatePostWizard = () =>{
     <div className = "bg-white rounded-lg mb-4 p-6 flex flex-col">
       <div className ="flex w-full gap-1 flex-col">
         
-        <h1 className="font-bold ">Create Post</h1>
-
+      <h1 className="font-bold text-lg text-[#fc571a]">Create Post</h1>
       
+
+      <input 
+          placeholder="Location" 
+          className="block p-2.5 w-full text-sm bg-transparent rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          type="text"
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          onKeyDown={(e)=>{
+            if(e.key === "Enter"){
+              e.preventDefault();
+              if(caption !=="" && location !==""){
+                handlePostButtonClick;
+              }
+            }
+          }}
+          disabled={isPosting}
+        />
 
         <textarea 
           id="message" 
