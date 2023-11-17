@@ -108,7 +108,7 @@ const CreatePostWizard = () =>{
     <div className = "bg-white rounded-lg mb-4 p-6 flex flex-col">
       <div className ="flex w-full gap-1 flex-col">
         
-        <h1 className="font-bold ">Create Post</h1>
+        <h1 className="font-bold text-lg text-[#fc571a]">Create Post</h1>
 
         <textarea 
           id="message" 
