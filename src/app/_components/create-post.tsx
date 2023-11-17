@@ -147,7 +147,7 @@ const CreatePostWizard = () =>{
           />
           <div id="images-preview-container" className="flex flex-wrap">
           {uploadedFiles.map((file, index) => (
-            <div key={index} className="w-1/2">
+            <div key={index} className="w-full">
             <ImageUploadPreview file={file} onDelete={() => handleDeleteImage(index)} />
             </div>
           ))}
