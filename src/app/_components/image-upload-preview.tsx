@@ -1,7 +1,7 @@
 export function ImageUploadPreview({ file, onDelete }: { file: File; onDelete: () => void }) {
     return (
       <div id="image-template">
-        <li className="block p-1 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 xl:w-1/8 h-24">
+        <li className="block p-1 w-full h-20">
           <article tabIndex={0} className="group hasImage w-full h-full rounded-md focus:outline-none focus:shadow-outline bg-gray-100 cursor-pointer relative text-transparent hover:text-white shadow-sm">
             <img alt="Image preview" className="img-preview w-full h-full sticky object-cover rounded-md bg-fixed" src={URL.createObjectURL(file)} />
   

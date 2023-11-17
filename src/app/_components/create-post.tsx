@@ -108,7 +108,9 @@ const CreatePostWizard = () =>{
     <div className = "bg-white rounded-lg mb-4 p-6 flex flex-col">
       <div className ="flex w-full gap-1 flex-col">
         
-        <h1 className="font-bold text-lg text-[#fc571a]">Create Post</h1>
+        <h1 className="font-bold ">Create Post</h1>
+
+      
 
         <textarea 
           id="message" 
@@ -127,13 +129,11 @@ const CreatePostWizard = () =>{
           }}
           disabled={isPosting}
           />
-          <div id="images-preview-container" className="flex flex-col">
+          <div id="images-preview-container" className="flex flex-wrap">
           {uploadedFiles.map((file, index) => (
-            <ImageUploadPreview
-              key={index}
-              file={file}
-              onDelete={() => handleDeleteImage(index)}
-            />
+            <div key={index} className="w-1/2">
+            <ImageUploadPreview file={file} onDelete={() => handleDeleteImage(index)} />
+            </div>
           ))}
         </div>
           
@@ -142,22 +142,7 @@ const CreatePostWizard = () =>{
           <FontAwesomeIcon icon={faImages} style={{ color: "--var(suleat)" }} className="suleat" />
         </div>
 
-        <input 
-          placeholder="Location" 
-          className="bg-transparent grow outline-none"
-          type="text"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          onKeyDown={(e)=>{
-            if(e.key === "Enter"){
-              e.preventDefault();
-              if(caption !=="" && location !==""){
-                handlePostButtonClick;
-              }
-            }
-          }}
-          disabled={isPosting}
-        />
+        
 
         <div className="mt-2">
           <label htmlFor="flavors" className="pl-2 text-sm text-stone-500">Flavors</label><br></br>
