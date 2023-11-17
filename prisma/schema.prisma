@@ -32,8 +32,8 @@ model Comment {
     text           String   @db.VarChar(10000)
     author         User     @relation("CommentAuthor", fields: [authorId], references: [uuid])
     authorId       String
-    post?          Post     @relation("PostToComment", fields: [postId], references: [id])
-    postId?        String
+    post           Post?    @relation("PostToComment", fields: [postId], references: [id])
+    postId         String?
 
     parentComment  Comment? @relation("Subcomments", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     parentId       String?
