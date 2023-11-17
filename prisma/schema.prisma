@@ -32,8 +32,8 @@ model Comment {
     text           String   @db.VarChar(10000)
     author         User     @relation("CommentAuthor", fields: [authorId], references: [uuid])
     authorId       String
-    post           Post     @relation("PostToComment", fields: [postId], references: [id])
-    postId         String
+    post           Post?    @relation("PostToComment", fields: [postId], references: [id])
+    postId         String?
 
     parentComment  Comment? @relation("Subcomments", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
     parentId       String?
@@ -47,7 +47,7 @@ model Comment {
 
 model User {
     uuid        String  @unique @id
-    bio         String  @db.VarChar(10000) @default("") 
+    bio         String  @db.VarChar(10000) @default("")
     firstName   String  @default("")
     lastName    String  @default("")
     userName    String  @unique
@@ -81,9 +81,9 @@ model Following {
     @@id([userFollowingId, myUserId]) // user A can only follow user B at most once, so use that relationship as the id
 
     userFollowing    User        @relation("Follower", fields: [userFollowingId], references: [uuid])
-    userFollowingId  String   
+    userFollowingId  String
     myUser           User        @relation("Following", fields: [myUserId], references: [uuid])
-    myUserId         String        
+    myUserId         String
 }
 
 model Photo {
