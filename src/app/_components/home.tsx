@@ -9,6 +9,7 @@ import { Infinite } from "./common/infinite";
 import { InfiniteSearch } from "./common/infinitesearch"
 import { InfiniteSearchUsers } from "./common/infinitesearchusers"
 import { useSearchParams } from 'next/navigation'
+import { useState } from 'react';
 
 export function Home() {
   const { sessionId, userId, getToken } = useAuth();
@@ -17,15 +18,28 @@ export function Home() {
 
   const searchParams = useSearchParams()
   const searchKey = searchParams.get('search')
-  var content = <InfiniteSearch />
   console.log(searchKey)
 
-  const showPosts = () => {
-    content = <InfiniteSearch />
-  }
+  const [showUsers, setShowUsers] = useState(false);
 
-  const showUsers = () => {
-    content = <InfiniteSearchUsers />
+  const showSearchedUsers = () => {
+    setShowUsers(true);
+    const showPostBtn = document.getElementById("showPostBtn")
+    const showUserBtn = document.getElementById("showUserBtn")
+    showUserBtn?.classList.remove('text-stone-400')
+    showUserBtn?.classList.add('text-[#fc571a]')
+    showPostBtn?.classList.remove('text-[#fc571a]')
+    showPostBtn?.classList.add('text-stone-400')
+  };
+
+  const showPosts = () => {
+    setShowUsers(false)
+    const showPostBtn = document.getElementById("showPostBtn")
+    const showUserBtn = document.getElementById("showUserBtn")
+    showPostBtn?.classList.remove('text-stone-400')
+    showPostBtn?.classList.add('text-[#fc571a]')
+    showUserBtn?.classList.remove('text-[#fc571a]')
+    showUserBtn?.classList.add('text-stone-400')
   }
 
   if(searchKey !== null && searchKey !== "") {
@@ -40,17 +54,19 @@ export function Home() {
         <main className="flex flex-col items-center bg-gradient-to-b">
 
           <div className="w-full sm:w-[500px]">
-            <div className="mb-2">Search Results</div>
+            <div className="mb-2 text-lg">Search Results</div>
             <div className="s">
             {/* Filter buttons */}
-              <button onClick={showPosts} type="button" className="text-sm text-[#fc571a] hover:underline mb-4 font-bold mr-4">Posts</button>
-              <button onClick={showUsers} type="button" className="text-sm text-[#fc571a] hover:underline mb-4 font-bold mr-4">Users</button>
+              <button id="showPostBtn" onClick={showPosts} type="button" className="text-sm text-[#fc571a] hover:text-[#fc571a] mb-4 font-bold mr-4">Posts</button>
+              <button id="showUserBtn" onClick={showSearchedUsers} type="button" className="text-sm text-stone-400 hover:text-[#fc571a] mb-4 font-bold mr-4">Users</button>
               <div className="w-full mb-3 border-black border-b-2"></div>
             </div>
             
             {/* {content} */}
-            <InfiniteSearchUsers />
-            <InfiniteSearch />
+            <div id="search-content">
+              {showUsers ? <InfiniteSearchUsers /> : <InfiniteSearch />}
+            </div>
+            
             
           </div>
           <div className="mb-6">
