@@ -105,10 +105,10 @@ const CreatePostWizard = () =>{
 
   if(!user) return null;
   return (
-    <div className = "border-b border-slate-400 p-8 flex flex-col">
-      <div className ="flex w-full gap-3 flex-col">
+    <div className = "bg-white rounded-lg mb-4 p-6 flex flex-col">
+      <div className ="flex w-full gap-1 flex-col">
         
-        <h1>Create Post</h1>
+        <h1 className="font-bold ">Create Post</h1>
 
         <textarea 
           id="message" 

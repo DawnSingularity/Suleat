@@ -10,6 +10,7 @@ import { InfiniteSearch } from "./common/infinitesearch"
 import { InfiniteSearchUsers } from "./common/infinitesearchusers"
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react';
+import { CreatePost } from "./create-post";
 
 export function Home() {
   const { sessionId, userId, getToken } = useAuth();
@@ -87,6 +88,7 @@ export function Home() {
         <Navbar />
         <main className="flex flex-col items-center bg-gradient-to-b">
           <div className="w-full sm:w-[500px]">
+            <CreatePost />
             <Infinite />
           </div>
           
