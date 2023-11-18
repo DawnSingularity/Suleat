@@ -176,7 +176,7 @@ const CreatePostWizard = () =>{
         {caption !=="" && location !=="" && uploadedFiles.length > 0 && !isPosting && (
           <button 
           onClick={handlePostButtonClick}
-          className="primaryButton hover:bg-green-300 text-white font-bold p-1 rounded-lg"
+          className="primaryButton bg-green-500 text-white font-bold p-1 rounded-lg"
           >
             Post
           </button>)}

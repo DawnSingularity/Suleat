@@ -81,15 +81,20 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
               <NextButton onClick={scrollNext} disabled={nextBtnDisabled} />
             </div>
           </div>
-        ) && (<div className={`${styles.embla__dots} mt-3`}>
-          {scrollSnaps.map((_, index) => (
-            <DotButton
-              key={index}
-              onClick={() => scrollTo(index)}
-              className={`${styles.embla__dot} ${index === selectedIndex ? styles['embla__dot--selected'] : ''}`}
-            />
-          ))}
-        </div>)}
+        )}
+
+        {photos.length > 1 && (
+          <div className={`${styles.embla__dots} mt-3`}>
+            {scrollSnaps.map((_, index) => (
+              <DotButton
+                key={index}
+                onClick={() => scrollTo(index)}
+                className={`${styles.embla__dot} ${index === selectedIndex ? styles['embla__dot--selected'] : ''}`}
+
+              />
+            ))}
+          </div>
+        )}
       </div>
     </>
   )
