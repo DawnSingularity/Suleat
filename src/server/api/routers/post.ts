@@ -180,6 +180,8 @@ export const postRouter = createTRPCRouter({
     console.log(input)
     const searchOptions = ` {"searchOptions": {"from": ${ input.cursor }}}`
     const searchResults = await esClient.search({
+      from: input.cursor,
+      size: input.limit,
       query: {
         bool: {
           should: [
