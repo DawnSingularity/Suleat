@@ -115,33 +115,38 @@ export function Landing() {
   return (
     <div>
       <style dangerouslySetInnerHTML={{__html: "\n:root {\n--font-family: 'Inter', sans-serif;\n --text-color: #333333;\n--suleat: #fc571a;\n}\n\nbody {\nfont-family: var(--font-family);\ncolor: var(--text-color);\n}\n\n.suleat {\n color: var(--suleat);\n background-color: var(--suleat);\n}\n" }} />
-      <button
-          className="absolute top-4 text-md right-4 sm:block hidden rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4"
-          onClick={toggleModal}
-        >
-          Log In
-        </button>
-        {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-md">
-          <div className="modal-bg fixed inset-0 opacity-50"></div>
-          <div className="modal-content bg-transparent p-8 rounded z-50 flex flex-col">
-            <SignIn />
-            <button
-              className="mt-4 mr-7 bg-blue-700 hover:bg-blue-900 text-white py-2 px-4 rounded self-end"
-              onClick={toggleModal}
-            >
-              Close
-            </button>
-          </div>
+      <div>
+        <div className="flex justify-start bg-slate-100">
+          <img src="/suleat-icon.png" width="60" className="ml-8"></img>
         </div>
-        )}
+        <div className = "absolute top-4 text-md right-4 sm:block hidden">
+          <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 " ><a href="#aboutArea">About</a></button>
+          <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 "><a href="#privacySafety">Privacy & Safety</a></button>
+          <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 "><a href="#contactUs">Contact Us</a></button>
+          <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 " onClick={toggleModal}>Log In</button>
+            {isModalOpen && (
+              <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-md">
+              <div className="modal-bg fixed inset-0 opacity-50"></div>
+              <div className="modal-content bg-transparent p-8 rounded z-50 flex flex-col">
+                <SignIn />
+                <button
+                  className="mt-4 mr-7 bg-blue-700 hover:bg-blue-900 text-white py-2 px-4 rounded self-end"
+                  onClick={toggleModal}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+            )}
+        </div>
+      </div>
+      
+      
       {!pendingVerification && (
         <div className="bg-gray-100 p-0 flex justify-center flex-col items-center">
             <div className="flex flex-row xl:max-w-[60%] p-0 min-[1064.5px]:justify-center max-[1064.5px]:flex-col h-full ">
               <div className="flex flex-col p-6 min-[1064.5px]:w-1/2 min-[1064.5px]:max-w-3xl max-w-[500px] min-[1064.5px]:min-w-[34rem] h-screen justify-center">
-                  <div className="min-[1064.5px]:text-7xl text-5xl font-semibold sm:max-[1064.5px]:text-center text-center">Where food <br /> meets friends</div>
-                  <br />
-                  <div className="min-[1064.5px]:text-xl/6 text-center">Longer but still brief description/motivation. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean id lectus risus. Cras hendrerit elit at elit rutrum, sit amet sollicitudin urna gravida.</div>
+                  <div className="min-[1064.5px]:text-6xl text-5xl font-semibold sm:max-[1064.5px]:text-center text-center">Where food <br /> meets friends</div>
                   <div className="flex flex-col justify-center w-full container">
                       <div className="text-center text-2xl p-4">Embrace Your Foodie Destiny!</div>
                       <form className="flex flex-col justify-center" id="form-register">
@@ -166,11 +171,79 @@ export function Landing() {
                       </div>
                   </div>
               </div>
-          </div>
-          <div className="bg-slate-300 h-screen w-32">
-          </div>
+            </div>
         </div>
       )}
+
+        <section className="bg-[url('/aboutUs.png')] bg-center" id ="aboutArea"> 
+          <div className="max-w-7xl mx-auto py-20 px-0 "> 
+            <div className="text-left"> 
+              <h1 className="mt-1 text-4xl font-extrabold text-white sm:text-5xl sm:tracking-tight lg:text-6xl">About Us</h1> 
+              <p className="max-w-xl mt-5  text-xl text-white">Our focus is on providing a platform for users to share detailed information about their food experiences, emphasizing factors like taste, location, and satisfaction. We want to help people discover new restaurants, find the best dishes to try, and learn more about the food they love.</p> 
+            </div> 
+          </div> 
+        </section> 
+        <section className="bg-gray-100 py-16 px-4 sm:px-6 lg:px-8"  id = "privacySafety">
+          <p className="text-center text-5xl font-bold mb-10">Your Privacy is our Priority</p> 
+          
+          <div className="grid grid-cols-4  gap-6 text-center mb-3"> 
+            <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Data Encryption</h2> 
+            <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Compliant with Standards</h2> 
+            <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Controlled Data Handling</h2> 
+            <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Transparency Matters</h2> 
+          </div>
+
+          <div className="grid grid-cols-4 gap-6 text-center"> 
+            <div className="text-center"> 
+            <p className="mt-1 text-xl font-regular text-gray-900 ">Your information is shielded by robust encryption, keeping it secure from prying eyes.</p> 
+            </div> 
+            <div className="text-center"> 
+            <p className="mt-1 text-xl font-regular text-gray-900 ">We follow industry regulations, such as SOC 2 Type II compliance, showcasing our commitment to your privacy, as upheld by Clerk and PlanetScale.</p> 
+            </div> 
+            <div className="text-center"> 
+            <p className="mt-1 text-xl font-regular text-gray-900 ">With access control measures, only authorized users can access your information, ensuring your privacy is respected.</p> 
+            </div> 
+            <div className="text-center"> 
+            <p className="mt-1 text-xl font-regular text-gray-900 ">We conduct regular security checks and maintain transparent practices, following the lead of Clerk and PlanetScale, to ensure your privacy is safeguarded.</p> 
+            </div> 
+          </div> 
+        </section> 
+        <section className="bg-gradient-to-r from-orange-500 to-red-500 py-16 px-4 sm:px-6 lg:px-8"  id = "contactUs">
+          <div className="grid grid-cols-3  gap-6 mb-3 text-center"> 
+            <div className="flex justify-center items-center">
+              <img src="/addressIcon.png" width="150" height="100"></img>
+            </div>
+            <div className="flex justify-center items-center">
+              <img src="/phoneIcon.png" width="150" height="100"></img>
+            </div>
+            <div className="flex justify-center items-center">
+              <img src="/emailIcon.png" width="150" height="100"></img>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-6"> 
+            <div className="text-center"> 
+              <p className="mt-1 text-2xl font-bold text-white ">ADDRESS</p>
+              <p className="mt-1 text-xl font-regular text-white ">De La Salle University, 2401 Taft Avenue, Malate, Manila 1004, Metro Manila</p> 
+            </div> 
+            <div className="text-center">
+              <p className="mt-1 text-2xl font-bold text-white ">PHONE</p>
+              <p className="mt-1 text-xl font-regular text-white ">Landline : 1234-567-8910<br></br>Smart : 1234-567-8910<br></br>Globe : 1234-567-8910</p> 
+            </div> 
+            <div className="text-center"> 
+              <p className="mt-1 text-2xl font-bold text-white ">EMAIL</p>
+              <p className="mt-1 text-xl font-regular text-white ">Gmail : example@gmail.com<br></br>Yahoo : example@yahoo.com</p> 
+            </div> 
+          </div> 
+          
+        </section>
+        <footer className="bg-gradient-to-r from-orange-500 to-red-500">
+          <div className="grid grid-cols-2 gap-6">
+            <p className="text-center text-xs">© Suleat 2023. Lorem ipsum dolor sit amet.</p> 
+            <p className="text-center text-xs">Developed by 2223T1CSSWENGS15B</p>
+          </div>
+        </footer>
+        
     </div>
   );
 }
