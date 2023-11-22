@@ -31,7 +31,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
     const auth = useAuth();
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [favoriteCount, setFavoriteCount] = React.useState(post.favoriteCount);
-
+    /*
     const handleFavoriteClick = async () => {
         try {
 
@@ -55,7 +55,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
         }
         setIsFavorited((prev) => !prev);
       };
-    
+    */
 
     let comment_count = post._count.comments
 
@@ -108,7 +108,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
                         </div>
                         <button
                             className="flex flex-row items-center"
-                            onClick={handleFavoriteClick}
+                          
                             style={{ color: isFavorited ? '#ff7f50' : '#000000' }}
                         >
                             <FontAwesomeIcon icon={faStar} className="pr-1" />
