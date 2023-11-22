@@ -117,28 +117,34 @@ export function Landing() {
       <style dangerouslySetInnerHTML={{__html: "\n:root {\n--font-family: 'Inter', sans-serif;\n --text-color: #333333;\n--suleat: #fc571a;\n}\n\nbody {\nfont-family: var(--font-family);\ncolor: var(--text-color);\n}\n\n.suleat {\n color: var(--suleat);\n background-color: var(--suleat);\n}\n" }} />
       <div>
         <div className="flex justify-start bg-slate-100">
-          <img src="/suleat-icon.png" width="60" className="ml-8"></img>
+          
         </div>
-        <div className = "absolute top-4 text-md right-4 sm:block hidden">
-          <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 " ><a href="#aboutArea">About</a></button>
-          <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 "><a href="#privacySafety">Privacy & Safety</a></button>
-          <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 "><a href="#contactUs">Contact Us</a></button>
-          <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 " onClick={toggleModal}>Log In</button>
-            {isModalOpen && (
-              <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-md">
-              <div className="modal-bg fixed inset-0 opacity-50"></div>
-              <div className="modal-content bg-transparent p-8 rounded z-50 flex flex-col">
-                <SignIn />
-                <button
-                  className="mt-4 mr-7 bg-blue-700 hover:bg-blue-900 text-white py-2 px-4 rounded self-end"
-                  onClick={toggleModal}
-                >
-                  Close
-                </button>
-              </div>
+        <div className="">
+          <a className="sm:top-6 top-10 absolute sm:left-4 left-1/2 sm:translate-x-0 transform -translate-x-1/2" href="/">
+            <img src="/suleat-icon.png" width="60" className="sm:ml-4"></img>
+          </a>
+          <div className="top-6 absolute text-md right-4 sm:block hidden">
+            <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 " ><a href="#aboutArea">About</a></button>
+            <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 "><a href="#privacySafety">Privacy & Safety</a></button>
+            <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 "><a href="#contactUs">Contact Us</a></button>
+            <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 " onClick={toggleModal}>Log In</button>
+              {isModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-md">
+                <div className="modal-bg fixed inset-0 opacity-50"></div>
+                <div className="modal-content bg-transparent p-8 rounded z-50 flex flex-col">
+                  <SignIn />
+                  <button
+                    className="mt-4 mr-7 bg-blue-700 hover:bg-blue-900 text-white py-2 px-4 rounded self-end"
+                    onClick={toggleModal}
+                  >
+                    Close
+                  </button>
+                </div>
             </div>
             )}
         </div>
+        </div>
+        
       </div>
       
       
