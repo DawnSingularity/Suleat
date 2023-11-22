@@ -12,7 +12,7 @@ export function ImageUploadPreview({ file, onDelete }: { file: File; onDelete: (
                 <p className="p-1 size text-xs"></p>
                 <button
                   onClick={onDelete}
-                  className="delete ml-auto focus:outline-none hover:bg-gray-300 p-1 rounded-md"
+                  className="delete ml-auto focus:outline-none hover:bg-[#fc571a] p-1 rounded-md"
                 >
                   <svg
                     className="pointer-events-none fill-current w-4 h-4 ml-auto"

@@ -84,9 +84,10 @@ var searchByElasticsearchIndexes = async (client, indexMapping, mapping, pkIsNum
           index,
           ...searchOptions,
           query: {
-            fuzzy: {
+            match: {
               [col.toLowerCase()]: {
-                value: val.replace(/\{.*}$/, ""),
+                query: val.replace(/\{.*}$/, ""),
+                fuzziness: "AUTO",
                 ...matchOptions
               }
             }

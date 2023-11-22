@@ -107,16 +107,7 @@ export const postRouter = createTRPCRouter({
         id: input.id,
       },
       include: {
-        comments: {
-          include: {
-            subcomments: {
-              include:{
-                author: true,
-              }
-            },
-            author: true,
-          },
-        },
+        comments: true,
         author: true,
         photos: true,
         flavors: true,
@@ -179,26 +170,47 @@ export const postRouter = createTRPCRouter({
   .query(async ({ ctx, input }) => {
     console.log(input)
     const searchOptions = ` {"searchOptions": {"from": ${ input.cursor }}}`
+    const searchResults = await esClient.search({
+      from: input.cursor,
+      size: input.limit,
+      query: {
+        bool: {
+          should: [
+            {
+              match: {
+                firstname: {
+                  query: input.searchKey,
+                  fuzziness: "AUTO",
+                }
+              },
+            },
+            {
+              match: {
+                lastname: {
+                  query: input.searchKey,
+                  fuzziness: "AUTO",
+                }
+              },
+            },
+            {
+              match: {
+                caption: {
+                  query: input.searchKey,
+                  fuzziness: "AUTO",
+                }
+              },
+            },
+          ]
+        }
+      }
+    })
+
+    const idList = searchResults.hits.hits.map(({_id}) => _id)
     const result = await prisma.post.findMany({
       where: {
-        OR: [
-          { caption: "fts:" + input.searchKey + searchOptions },
-          { 
-              author: {
-                  firstName: "fts:" + input.searchKey + searchOptions
-              }
-          },
-          { 
-              author: {
-                  lastName: "fts:" + input.searchKey + searchOptions
-              }
-          },
-          { 
-              author: {
-                  userName: "fts:" + input.searchKey + searchOptions
-              }
-          },
-        ]
+        id: {
+          in: idList
+        }
         
       },
       include: {

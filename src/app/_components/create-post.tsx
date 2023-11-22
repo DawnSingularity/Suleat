@@ -147,16 +147,24 @@ const CreatePostWizard = () =>{
           />
           <div id="images-preview-container" className="flex flex-wrap">
           {uploadedFiles.map((file, index) => (
-            <div key={index} className="w-1/2">
+            <div key={index} className="w-full">
             <ImageUploadPreview file={file} onDelete={() => handleDeleteImage(index)} />
             </div>
           ))}
         </div>
-          
-        <div className="ml-1 cursor-pointer w-full flex group">
-          <input onChange={reqAddImages} className="cursor-pointer z-20 opacity-0 w-12 h-5 rounded-lg absolute" id="coverPhoto" type="file" name="coverPhoto" accept="image/*" multiple/>
-          <FontAwesomeIcon icon={faImages} style={{ color: "--var(suleat)" }} className="suleat" />
+        <div className="flex items-center justify-center w-full">
+      <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-20 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer">
+        <div className="flex flex-col items-center justify-center pt-5 pb-5">
+        <div className="text-gray">
+        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><path d="M160 80H512c8.8 0 16 7.2 16 16V320c0 8.8-7.2 16-16 16H490.8L388.1 178.9c-4.4-6.8-12-10.9-20.1-10.9s-15.7 4.1-20.1 10.9l-52.2 79.8-12.4-16.9c-4.5-6.2-11.7-9.8-19.4-9.8s-14.8 3.6-19.4 9.8L175.6 336H160c-8.8 0-16-7.2-16-16V96c0-8.8 7.2-16 16-16zM96 96V320c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H160c-35.3 0-64 28.7-64 64zM48 120c0-13.3-10.7-24-24-24S0 106.7 0 120V344c0 75.1 60.9 136 136 136H456c13.3 0 24-10.7 24-24s-10.7-24-24-24H136c-48.6 0-88-39.4-88-88V120zm208 24a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"/></svg>
         </div>
+
+          <p className="m-2 text-sm text-gray-500"><span className="font-semibold">Add Photos</span> </p>
+        </div>
+        <input id="dropzone-file" type="file" onChange={reqAddImages} className="cursor-pointer z-20 opacity-0 w-12 h-5 rounded-lg absolute" name="coverPhoto" accept="image/*" multiple />
+      </label>
+    </div>
+
 
         
 
@@ -168,7 +176,7 @@ const CreatePostWizard = () =>{
         {caption !=="" && location !=="" && uploadedFiles.length > 0 && !isPosting && (
           <button 
           onClick={handlePostButtonClick}
-          className="primaryButton hover:bg-green-300 text-white font-bold p-1 rounded-lg"
+          className="primaryButton bg-green-500 text-white font-bold p-1 rounded-lg"
           >
             Post
           </button>)}

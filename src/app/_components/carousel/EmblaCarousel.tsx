@@ -57,18 +57,13 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     emblaApi.on('select', onSelect)
   }, [emblaApi, onInit, onSelect])
 
-  const emblaDot = 'embla__dot--selected' 
-
   return (
     <>
       <div className={styles.embla}>
-  <div className={styles.embla__viewport} ref={emblaRef}>
-    <div className={styles.embla__container}>
-      {photos.map((photo, index) => (
+        <div className={styles.embla__viewport} ref={emblaRef}>
+          <div className={styles.embla__container}>
+            {photos.map((photo, index) => (
               <div className={styles.embla__slide} key={index}>
-                <div className={styles.embla__slide__number}>
-                  <span>{index + 1}</span>
-                </div>
                 <img
                   className={`${styles.embla__slide__img} `}
                   src={photo.photoUrl}
@@ -76,31 +71,31 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                 />
               </div>
             ))}
-    </div>
-  </div>
+          </div>
+        </div>
 
-  {photos.length > 1 && (
-    <div className={styles.embla__buttons} style={{ pointerEvents: 'none' }}>
-      <div className="flex flex-row justify-between">
-        <PrevButton onClick={scrollPrev} disabled={prevBtnDisabled} />
-        <NextButton onClick={scrollNext} disabled={nextBtnDisabled} />
+        {photos.length > 1 && (
+          <div className={styles.embla__buttons} style={{ pointerEvents: 'none' }}>
+            <div className="flex flex-row justify-between">
+              <PrevButton onClick={scrollPrev} disabled={prevBtnDisabled} />
+              <NextButton onClick={scrollNext} disabled={nextBtnDisabled} />
+            </div>
+          </div>
+        )}
+
+        {photos.length > 1 && (
+          <div className={`${styles.embla__dots} mt-3`}>
+            {scrollSnaps.map((_, index) => (
+              <DotButton
+                key={index}
+                onClick={() => scrollTo(index)}
+                className={`${styles.embla__dot} ${index === selectedIndex ? styles['embla__dot--selected'] : ''}`}
+
+              />
+            ))}
+          </div>
+        )}
       </div>
-    </div>
-  )}
-{/* TODO: carousel page indicator */}
-  {/* <div className={styles.embla__dots}>
-    {scrollSnaps.map((_, index) => (
-      <DotButton
-        key={index}
-        onClick={() => scrollTo(index)}
-        className={`${styles.embla__dot}${index === selectedIndex ? ` ${styles.emblaDot}` : ''}`}
-      />
-    ))}
-  </div> */}
-</div>
-
-
-
     </>
   )
 }
