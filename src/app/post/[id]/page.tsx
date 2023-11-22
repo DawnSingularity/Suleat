@@ -175,7 +175,7 @@ export default function Post({ params }: { params: { id: string } }) {
                             e.preventDefault();
                             const textValue = SubCommentValue[comment.id] || ''; // Use empty string if undefined
                             if (textValue !== "") {
-                              mutateSubComment({ text: textValue, parentId: comment.id });
+                              mutateSubComment({ postId: params.id ,text: textValue, parentId: comment.id });
                             }
                           }
                         }}
@@ -188,7 +188,7 @@ export default function Post({ params }: { params: { id: string } }) {
                         }`}
                         onMouseDown={(e) => {
                           const textValue = SubCommentValue[comment.id] || ''; // Use empty string if undefined
-                          mutateSubComment({ text: textValue, parentId: comment.id });
+                          mutateSubComment({postId: params.id, text: textValue, parentId: comment.id });
                         }}
                         disabled={(SubCommentValue[comment.id] || '').trim() === ""}
                       >

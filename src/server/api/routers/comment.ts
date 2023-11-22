@@ -5,6 +5,7 @@ export const commentRouter = createTRPCRouter({
   createSub: userProcedure
     .input(
       z.object({
+        postId: z.string(),
         text: z.string().min(1).max(10000),
         parentId: z.string(),
       })
@@ -13,6 +14,7 @@ export const commentRouter = createTRPCRouter({
       if(ctx.auth.userId === null) return;
       const sub = await ctx.db.comment.create({
         data: {
+          postId: input.postId,
           text: input.text,
           authorId: ctx.auth.userId,
           parentId: input.parentId
@@ -20,6 +22,7 @@ export const commentRouter = createTRPCRouter({
       });
       return sub;
     }),
+    
     create: userProcedure
     .input(
       z.object({
