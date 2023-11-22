@@ -212,39 +212,29 @@ export function Landing() {
             </div>
           </div>
         </section> 
-        <section className="bg-gradient-to-r from-orange-500 to-red-500 py-16 px-4 sm:px-6 lg:px-8"  id = "contactUs">
-          <div className="grid grid-cols-3  gap-6 mb-3 text-center"> 
-            <div className="flex justify-center items-center">
+        <section className="bg-gradient-to-r from-orange-500 to-red-500 py-16 px-16" id="contactUs">
+          <div className="flex lg:flex-row flex-col text-center lg:justify-around items-center lg:items-start"> 
+            <div className="flex flex-col justify-center items-center lg:w-1/5 w-full lg:mb-0 mb-8">
               <img src="/addressIcon.png" width="150" height="100"></img>
-            </div>
-            <div className="flex justify-center items-center">
-              <img src="/phoneIcon.png" width="150" height="100"></img>
-            </div>
-            <div className="flex justify-center items-center">
-              <img src="/emailIcon.png" width="150" height="100"></img>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-6"> 
-            <div className="text-center"> 
               <p className="mt-1 text-2xl font-bold text-white ">ADDRESS</p>
               <p className="mt-1 text-xl font-regular text-white ">De La Salle University, 2401 Taft Avenue, Malate, Manila 1004, Metro Manila</p> 
-            </div> 
-            <div className="text-center">
+            </div>
+            <div className="flex flex-col justify-center items-center lg:w-1/5 w-full lg:mb-0 mb-8">
+              <img src="/phoneIcon.png" width="150" height="100"></img>
               <p className="mt-1 text-2xl font-bold text-white ">PHONE</p>
               <p className="mt-1 text-xl font-regular text-white ">Landline : 1234-567-8910<br></br>Smart : 1234-567-8910<br></br>Globe : 1234-567-8910</p> 
-            </div> 
-            <div className="text-center"> 
+            </div>
+            <div className="flex flex-col justify-center items-center lg:w-1/5 w-full lg:mb-0 mb-8">
+              <img src="/emailIcon.png" width="150" height="100"></img>
               <p className="mt-1 text-2xl font-bold text-white ">EMAIL</p>
-              <p className="mt-1 text-xl font-regular text-white ">Gmail : example@gmail.com<br></br>Yahoo : example@yahoo.com</p> 
-            </div> 
-          </div> 
-          
+              <p className="mt-1 text-xl font-regular text-white ">example@gmail.com<br></br>example@yahoo.com</p> 
+            </div>
+          </div>       
         </section>
         <footer className="bg-gradient-to-r from-orange-500 to-red-500">
-          <div className="grid grid-cols-2 gap-6">
-            <p className="text-center text-xs">© Suleat 2023. Lorem ipsum dolor sit amet.</p> 
-            <p className="text-center text-xs">Developed by 2324T1CSSWENGS15B</p>
+          <div className="flex lg:flex-row text-center justify-center lg:justify-start lg:ml-36">
+            <p className="text-center text-xs text-white">© Suleat 2023. &nbsp;</p> 
+            <p className="text-center text-xs text-white"> Developed by 2324T1CSSWENGS15B</p>
           </div>
         </footer>
         
