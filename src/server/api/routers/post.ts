@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, userProcedure } from "~/server/api/trpc";
 
-import { PrismaClient, Prisma } from "@prisma/client";
+import { PrismaClient, Prisma, Post, Comment } from "@prisma/client";
 import { elasticsearchFTS } from "~/prisma-fts/elasticsearch/index";
 import { Client } from "@elastic/elasticsearch";
 import { NextRequest } from "next/server";
@@ -79,7 +79,11 @@ export const postRouter = createTRPCRouter({
         author: true,
         photos: true,
         flavors: true,
-        comments: true,
+        _count: {
+          select: {
+            comments: true
+          }
+        }
       },
     });
   }),
@@ -95,7 +99,11 @@ export const postRouter = createTRPCRouter({
         author: true,
         photos: true,
         flavors: true,
-        comments: true,
+        _count: {
+          select: {
+            comments: true
+          }
+        }
       }
     });
   }),
@@ -107,10 +115,14 @@ export const postRouter = createTRPCRouter({
         id: input.id,
       },
       include: {
-        comments: true,
         author: true,
         photos: true,
         flavors: true,
+        _count: {
+          select: {
+            comments: true
+          }
+        }
       },
     });
 
@@ -151,7 +163,11 @@ export const postRouter = createTRPCRouter({
         author: true,
         photos: true,
         flavors: true,
-        comments: true,
+        _count: {
+          select: {
+            comments: true
+          }
+        }
       },
       orderBy: [
         { createdAt: "desc" },
@@ -217,6 +233,11 @@ export const postRouter = createTRPCRouter({
         author: true,
         photos: true,
         flavors: true,
+        _count: {
+          select: {
+            comments: true
+          }
+        }
       },
       take: input.limit,
     })

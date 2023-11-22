@@ -16,22 +16,16 @@ import ReactDOM from 'react-dom/client'
 import EmblaCarousel from '../carousel/EmblaCarousel'
 import { EmblaOptionsType } from 'embla-carousel-react'
 import Link from "next/link";
+import { RouterOutputs } from "~/trpc/shared";
 const OPTIONS: EmblaOptionsType = {}
 const SLIDE_COUNT = 5
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
+  
+export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostById"] }) {
+    if(post == null) {
+        return;
+    }
 
-const postDetailed = Prisma.validator<Prisma.PostDefaultArgs>()({
-    include: { 
-        author: true,
-        photos: true,
-        flavors: true,
-        comments: true,
-    },
-  })
-  
-type PostDetailed = Prisma.PostGetPayload<typeof postDetailed>
-  
-export function PostComponent({ post }: { post: PostDetailed }) {
     const auth = useAuth();
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [favoriteCount, setFavoriteCount] = React.useState(post.favoriteCount);
@@ -45,9 +39,7 @@ export function PostComponent({ post }: { post: PostDetailed }) {
         setIsFavorited((prev) => !prev);
     };
 
-    let comment_count = 0
-    if(post.comments)
-        comment_count = post.comments.length
+    let comment_count = post._count.comments
 
     return (
       <>
