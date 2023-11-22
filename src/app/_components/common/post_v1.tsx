@@ -17,6 +17,8 @@ import EmblaCarousel from '../carousel/EmblaCarousel'
 import { EmblaOptionsType } from 'embla-carousel-react'
 import Link from "next/link";
 import { RouterOutputs } from "~/trpc/shared";
+import { faveRouter } from '~/server/api/routers/fave';
+import { unfaveRouter } from '~/server/api/routers/unfave';
 const OPTIONS: EmblaOptionsType = {}
 const SLIDE_COUNT = 5
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
@@ -30,14 +32,30 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [favoriteCount, setFavoriteCount] = React.useState(post.favoriteCount);
 
-    const handleFavoriteClick = () => {
+    const handleFavoriteClick = async () => {
+        try {
+
+          if (isFavorited) {
+            // Unfavorite 
+            const response = await unfaveRouter.unfavePost({ postId: post.id });
+
+          } else {
+            // Favorite 
+            const response = await faveRouter.favePost({ postId: post.id });
+          }
+        } catch (error) {
+          console.error('Error fave-ing:', error);
+        }
+    
+        // Update UI 
         if (isFavorited) {
-            setFavoriteCount((prevCount) => prevCount - 1);
+          setFavoriteCount((prevCount) => prevCount - 1);
         } else {
-            setFavoriteCount((prevCount) => prevCount + 1);
+          setFavoriteCount((prevCount) => prevCount + 1);
         }
         setIsFavorited((prev) => !prev);
-    };
+      };
+    
 
     let comment_count = post._count.comments
 
