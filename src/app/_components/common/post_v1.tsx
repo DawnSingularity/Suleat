@@ -51,7 +51,7 @@ export function PostComponent({ post }: { post: PostDetailed }) {
 
     return (
       <>
-        <div className="py-4 bg-white sm:mb-4 mb-0.5 drop-shadow-md sm:rounded-md rounded">
+        <div className="py-4 bg-white sm:mb-4 mb-0.5 drop-shadow-md sm:rounded-lg rounded">
             <Link href={`/post/${post.id}`}>
                 <div className="px-5 flex flex-row items-center justify-between mb-4">
                     <div className="order-first flex flex-row items-center">

@@ -153,7 +153,7 @@ const CreatePostWizard = () =>{
           ))}
         </div>
           
-        <div className="cursor-pointer w-full flex group">
+        <div className="ml-1 cursor-pointer w-full flex group">
           <input onChange={reqAddImages} className="cursor-pointer z-20 opacity-0 w-12 h-5 rounded-lg absolute" id="coverPhoto" type="file" name="coverPhoto" accept="image/*" multiple/>
           <FontAwesomeIcon icon={faImages} style={{ color: "--var(suleat)" }} className="suleat" />
         </div>
@@ -161,8 +161,8 @@ const CreatePostWizard = () =>{
         
 
         <div className="mt-2">
-          <label htmlFor="flavors" className="pl-2 text-sm text-stone-500">Flavors</label><br></br>
-          <FlavorProfileSelector flavors={wholeListOfFlavors} flavorStates={flavorStates} setFlavorStates={setFlavorStates} className="pl-2 ml-1"/>
+          <label htmlFor="flavors" className="text-sm ml-1 text-stone-400">Flavors</label><br></br>
+          <FlavorProfileSelector flavors={wholeListOfFlavors} flavorStates={flavorStates} setFlavorStates={setFlavorStates} className="ml-1"/>
         </div>
 
         {caption !=="" && location !=="" && uploadedFiles.length > 0 && !isPosting && (
