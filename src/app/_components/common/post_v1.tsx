@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis, faLocationDot  } from "@fortawesome/free-solid-svg-icons";
 import { faMessage, faStar } from "@fortawesome/free-regular-svg-icons";
 
-import React from 'react'
+import React, {useEffect} from 'react'
 import ReactDOM from 'react-dom/client'
 import EmblaCarousel from '../carousel/EmblaCarousel'
 import { EmblaOptionsType } from 'embla-carousel-react'
@@ -30,21 +30,18 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [favoriteCount, setFavoriteCount] = React.useState(post._count.favedBy);
     const { mutate } = api.post.updatePostFavorite.useMutation();
-    
+    const postLikedId = post.id;
+    const userLikerId = auth.userId ?? "";
+
+    useEffect(() => {
+        setIsFavorited(post.favedBy.some( item => item.userLikerId === userLikerId));
+    }, [post.favedBy]) 
+
     const handleFavoriteClick = async () => {
         try {
-            const postId = post.id;
-            const faveState = false;
 
-          if (isFavorited) {
-            // Unfavorite 
-            const response = mutate( { postId, faved: faveState } );
-            
-          } else {
-            // Favorite 
-            
-            const response = mutate( { postId, faved: !faveState } );
-          }
+            const response = mutate( { postId: postLikedId, faved: !isFavorited } );
+          
         } catch (error) {
           console.error('Error fave-ing:', error);
         }
@@ -55,6 +52,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
         } else {
           setFavoriteCount((prevCount) => prevCount + 1);
         }
+
         setIsFavorited((prev) => !prev);
       };
     
@@ -82,7 +80,6 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
                         <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}} />
                     </div>
                 ) : (<></>)}
-                    
                 </div>
             </Link>
             
@@ -110,7 +107,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
                         </div>
                         <button
                             className="flex flex-row items-center"
-                          
+                            onClick={handleFavoriteClick}
                             style={{ color: isFavorited ? '#ff7f50' : '#000000' }}
                         >
                             <FontAwesomeIcon icon={faStar} className="pr-1" />

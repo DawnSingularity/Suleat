@@ -76,6 +76,11 @@ export const postRouter = createTRPCRouter({
         author: true,
         photos: true,
         flavors: true,
+        favedBy: {
+          where: {
+            userLikerId: ctx.auth.userId ?? ""
+          }
+        },
         _count: {
           select: {
             comments: true,
@@ -97,6 +102,11 @@ export const postRouter = createTRPCRouter({
         author: true,
         photos: true,
         flavors: true,
+        favedBy: {
+          where: {
+            userLikerId: ctx.auth.userId ?? ""
+          }
+        },
         _count: {
           select: {
             comments: true,
@@ -117,6 +127,11 @@ export const postRouter = createTRPCRouter({
         author: true,
         photos: true,
         flavors: true,
+        favedBy: {
+          where: {
+            userLikerId: ctx.auth.userId ?? ""
+          }
+        },
         _count: {
           select: {
             comments: true,
@@ -163,6 +178,11 @@ export const postRouter = createTRPCRouter({
         author: true,
         photos: true,
         flavors: true,
+        favedBy: {
+          where: {
+            userLikerId: ctx.auth.userId ?? ""
+          }
+        },
         _count: {
           select: {
             comments: true,
@@ -234,6 +254,11 @@ export const postRouter = createTRPCRouter({
         author: true,
         photos: true,
         flavors: true,
+        favedBy: {
+          where: {
+            userLikerId: ctx.auth.userId ?? ""
+          }
+        },
         _count: {
           select: {
             comments: true,
@@ -257,11 +282,18 @@ export const postRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       if(ctx.auth.userId === null) return;
 
-
       const userLiker = ctx.user.uuid;
-      if(input.faved) ctx.db.favorite.create({
-        userLikerId: userLiker,
-        postLikedId: input.postId
+      if(input.faved) await ctx.db.favorite.create({
+        data: {
+          userLikerId: userLiker,
+          postLikedId: input.postId
+        }
+      })
+      else await ctx.db.favorite.deleteMany({
+        where: {
+          userLikerId: userLiker,
+          postLikedId: input.postId
+        }
       })
 
         
