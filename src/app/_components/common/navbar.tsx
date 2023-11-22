@@ -20,10 +20,6 @@ export function Navbar() {
 
     const [showModal, setModal] = useState(false)
     const [searchKey, setSearchKey] = useState("")
-
-    // const handleSearchButtonClick = async () => {
-    //     window.html.replace 
-    // }
     
     let userIcon
     if(selfUserQuery.data != null) {
@@ -56,7 +52,7 @@ export function Navbar() {
       <>
         <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-5 mb-4">
             
-                <form className="order-first flex flex-row items-center py-2 md:w-7/12">
+                <form action="/" className="order-first flex flex-row items-center py-2 md:w-7/12">
                     {/* <FontAwesomeIcon icon={faBars} style={{color: "#101010",}} size="xl" className="pr-4"/> */}
                     <a className="flex flex-row items-center" href="/">
                         <Image src={suleatIcon} className="w-auto h-7 mr-3" alt="Suleat logo"></Image>
