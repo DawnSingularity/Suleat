@@ -173,7 +173,7 @@ export function Landing() {
                           <div className="rounded-full border-[6px] w-1 h-1 border-green-500 m-1 absolute left-[3.5rem]"></div>
                           <div className="bg-gray-200 border-4 border-gray-200 rounded-lg m-auto w-1/2 text-center my-2">Trending</div>
                       </div>
-                      <div className={`${postQuery.isSuccess ? "bg-[#FEEEE8]" : "bg-gray-300"} h-full rounded-lg flex-1 mb-2 p-2 overflow-y-scroll`}>
+                      <div className={`${postQuery.isSuccess ? "bg-[#FEEEE8]" : "bg-gray-300"} h-full flex-1 mb-2 p-2 overflow-y-scroll`}>
                         { postQuery.isSuccess ? previewPosts : (postQuery.isLoading ? loadingScreen : (<></>))  }
                       </div>
                   </div>
