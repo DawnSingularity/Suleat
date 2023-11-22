@@ -3,6 +3,8 @@ import { postRouter } from "~/server/api/routers/post";
 import { profileRouter } from "~/server/api/routers/profile";
 import { createTRPCRouter } from "~/server/api/trpc";
 import { commentRouter } from "~/server/api/routers/comment";
+import { faveRouter } from "./routers/fave";
+import { unfaveRouter } from "./routers/unfave";
 
 /**
  * This is the primary router for your server.
@@ -13,7 +15,9 @@ export const appRouter = createTRPCRouter({
   flavor: flavorRouter,
   post: postRouter,
   profile: profileRouter,
-  comment: commentRouter
+  comment: commentRouter,
+  fave: faveRouter,
+  unfave: unfaveRouter
 });
 
 // export type definition of API
