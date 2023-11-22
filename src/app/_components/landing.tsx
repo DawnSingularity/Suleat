@@ -165,7 +165,7 @@ export function Landing() {
                       <SignInOAuthButtons/>
                   </div>
               </div>
-              <div className="flex flex-row p-6 sm:mb-0 mb-36 max-w-[500px] min-[1064.5px]:min-w-[34rem] items-center shrink-0">
+              <div className="flex flex-row p-6 min-[1064.5px]:mb-0 mb-36 max-w-[500px] min-[1064.5px]:min-w-[34rem] items-center shrink-0">
                   <div id="frame-post" className="border-8 sm:mb-0 border-gray-300 h-[512px] w-full rounded-3xl flex flex-col">
                       <div className="flex flex-row items-center relative">
                           <div className="rounded-full border-[6px] w-1 h-1 border-red-500 m-1 absolute left-[1rem]"></div>
@@ -183,37 +183,34 @@ export function Landing() {
       )}
 
         <section className="bg-[url('/aboutUs.png')] bg-center" id ="aboutArea"> 
-          <div className="max-w-7xl mx-auto py-20 px-0 "> 
+          <div className="max-w-full mx-auto py-16 px-16 "> 
             <div className="text-left"> 
               <h1 className="mt-1 text-4xl font-extrabold text-white sm:text-5xl sm:tracking-tight lg:text-6xl">About Us</h1> 
               <p className="max-w-xl mt-5  text-xl text-white">Our focus is on providing a platform for users to share detailed information about their food experiences, emphasizing factors like taste, location, and satisfaction. We want to help people discover new restaurants, find the best dishes to try, and learn more about the food they love.</p> 
             </div> 
           </div> 
         </section> 
-        <section className="bg-gray-100 py-16 px-4 sm:px-6 lg:px-8"  id = "privacySafety">
+        <section className="bg-gray-100 py-16 px-16" id = "privacySafety">
           <p className="text-center text-5xl font-bold mb-10">Your Privacy is our Priority</p> 
           
-          <div className="grid grid-cols-4  gap-6 text-center mb-3"> 
-            <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Data Encryption</h2> 
-            <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Compliant with Standards</h2> 
-            <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Controlled Data Handling</h2> 
-            <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Transparency Matters</h2> 
+          <div className="flex lg:flex-row flex-col text-center lg:justify-between items-center lg:items-start"> 
+            <div className="privacy-text-1 lg:w-1/5 w-full lg:mb-0 mb-8">
+              <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Data Encryption</h2> 
+              <p className="mt-1 text-xl font-regular text-gray-900 ">Your information is shielded by robust encryption, keeping it secure from prying eyes.</p> 
+            </div>
+            <div className="privacy-text-2 lg:w-1/5 w-full lg:mb-0 mb-8">
+              <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Compliant with Standards</h2> 
+              <p className="mt-1 text-xl font-regular text-gray-900 ">We follow industry regulations, such as SOC 2 Type II compliance, showcasing our commitment to your privacy, as upheld by Clerk and PlanetScale.</p> 
+            </div>
+            <div className="privacy-text-3 lg:w-1/5 w-full lg:mb-0 mb-8">
+              <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Controlled Data Handling</h2> 
+              <p className="mt-1 text-xl font-regular text-gray-900 ">With access control measures, only authorized users can access your information, ensuring your privacy is respected.</p> 
+            </div>
+            <div className="privacy-text-4 lg:w-1/5 w-full lg:mb-0 mb-8">
+              <h2 className="text-2xl font-bold tracking-wide text-orange-600 ">Transparency Matters</h2> 
+              <p className="mt-1 text-xl font-regular text-gray-900 ">We conduct regular security checks and maintain transparent practices, following the lead of Clerk and PlanetScale, to ensure your privacy is safeguarded.</p> 
+            </div>
           </div>
-
-          <div className="grid grid-cols-4 gap-6 text-center"> 
-            <div className="text-center"> 
-            <p className="mt-1 text-xl font-regular text-gray-900 ">Your information is shielded by robust encryption, keeping it secure from prying eyes.</p> 
-            </div> 
-            <div className="text-center"> 
-            <p className="mt-1 text-xl font-regular text-gray-900 ">We follow industry regulations, such as SOC 2 Type II compliance, showcasing our commitment to your privacy, as upheld by Clerk and PlanetScale.</p> 
-            </div> 
-            <div className="text-center"> 
-            <p className="mt-1 text-xl font-regular text-gray-900 ">With access control measures, only authorized users can access your information, ensuring your privacy is respected.</p> 
-            </div> 
-            <div className="text-center"> 
-            <p className="mt-1 text-xl font-regular text-gray-900 ">We conduct regular security checks and maintain transparent practices, following the lead of Clerk and PlanetScale, to ensure your privacy is safeguarded.</p> 
-            </div> 
-          </div> 
         </section> 
         <section className="bg-gradient-to-r from-orange-500 to-red-500 py-16 px-4 sm:px-6 lg:px-8"  id = "contactUs">
           <div className="grid grid-cols-3  gap-6 mb-3 text-center"> 
