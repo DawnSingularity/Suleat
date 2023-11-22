@@ -15,10 +15,8 @@ export const unfaveRouter = createTRPCRouter({
       });
 
       return {
-        data: {
-          post: updatedPost,
-          liked: false,
-        },
+        post: updatedPost,
+        liked: false,
       };
     }),
 });
