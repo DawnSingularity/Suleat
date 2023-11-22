@@ -21,10 +21,13 @@ model Post {
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
     photos         Photo[]
-    favoriteCount  Int // TODO: Make Voting Schema
+    
+    favedBy             Favorite[] @relation("Liked")
+    
     flavors        Flavor[]
     isEdited       Boolean
     comments       Comment[] @relation("PostToComment")
+
 }
 
 model Comment {
@@ -61,6 +64,8 @@ model User {
     followers       Following[] @relation("Follower")
     following       Following[] @relation("Following")
 
+    favePosts       Favorite[] @relation("Liker")
+
     posts       Post[] @relation("Author")
     comments    Comment[] @relation("CommentAuthor")
 }
@@ -84,6 +89,16 @@ model Following {
     userFollowingId  String
     myUser           User        @relation("Following", fields: [myUserId], references: [uuid])
     myUserId         String
+}
+
+model Favorite {
+    @@id( [userLikerId, postLikedId]) // user A can like post X at most once
+
+    userLiker       User        @relation("Liker", fields: [userLikerId], references: [uuid])
+    userLikerId     String
+    postLiked       Post        @relation("Liked", fields: [postLikedId], references: [id])
+    postLikedId     String
+
 }
 
 model Photo {

@@ -44,8 +44,6 @@ const middleware = elasticsearchFTS(
 prisma.$use(middleware)
 
 export const postRouter = createTRPCRouter({
-
-
     create: userProcedure
     .input(
       z.object({
@@ -60,7 +58,6 @@ export const postRouter = createTRPCRouter({
             caption: input.caption,
             authorId: ctx.auth.userId,
             location: input.location,
-            favoriteCount: 0, // Provide default values for other fields
             isEdited: false,
           },
         });
@@ -81,7 +78,8 @@ export const postRouter = createTRPCRouter({
         flavors: true,
         _count: {
           select: {
-            comments: true
+            comments: true,
+            favedBy: true
           }
         }
       },
@@ -101,7 +99,8 @@ export const postRouter = createTRPCRouter({
         flavors: true,
         _count: {
           select: {
-            comments: true
+            comments: true,
+            favedBy: true
           }
         }
       }
@@ -120,7 +119,8 @@ export const postRouter = createTRPCRouter({
         flavors: true,
         _count: {
           select: {
-            comments: true
+            comments: true,
+            favedBy: true
           }
         }
       },
@@ -165,7 +165,8 @@ export const postRouter = createTRPCRouter({
         flavors: true,
         _count: {
           select: {
-            comments: true
+            comments: true,
+            favedBy: true
           }
         }
       },
@@ -235,7 +236,8 @@ export const postRouter = createTRPCRouter({
         flavors: true,
         _count: {
           select: {
-            comments: true
+            comments: true,
+            favedBy: true
           }
         }
       },
@@ -243,5 +245,25 @@ export const postRouter = createTRPCRouter({
     })
     console.log("Result: " +result)
     return result
-  })
+  }),
+
+  updatePostFavorite: userProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+        faved: z.boolean(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if(ctx.auth.userId === null) return;
+
+
+      const userLiker = ctx.user.uuid;
+      if(input.faved) ctx.db.favorite.create({
+        userLikerId: userLiker,
+        postLikedId: input.postId
+      })
+
+        
+  }),
 });
