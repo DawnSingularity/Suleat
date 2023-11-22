@@ -165,7 +165,7 @@ export function Landing() {
                       <SignInOAuthButtons/>
                   </div>
               </div>
-              <div className="flex flex-row p-6 mb-36 max-w-[500px] min-[1064.5px]:min-w-[34rem] items-center shrink-0">
+              <div className="flex flex-row p-6 sm:mb-0 mb-36 max-w-[500px] min-[1064.5px]:min-w-[34rem] items-center shrink-0">
                   <div id="frame-post" className="border-8 sm:mb-0 border-gray-300 h-[512px] w-full rounded-3xl flex flex-col">
                       <div className="flex flex-row items-center relative">
                           <div className="rounded-full border-[6px] w-1 h-1 border-red-500 m-1 absolute left-[1rem]"></div>
