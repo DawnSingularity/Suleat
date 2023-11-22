@@ -170,7 +170,7 @@ const CreatePostWizard = () =>{
           <FlavorProfileSelector flavors={wholeListOfFlavors} flavorStates={flavorStates} setFlavorStates={setFlavorStates} className="ml-1"/>
         </div>
 
-        {caption !=="" && location !=="" && uploadedFiles.length > 0 && !isPosting && (
+        {caption !=="" && location !=="" && uploadedFiles.length > 0 && flavorStates.size !== 0 && !isPosting && (
           <button 
           onClick={handlePostButtonClick}
           className="primaryButton bg-[#fc571a] mt-3 text-white font-bold p-1 rounded-lg"
