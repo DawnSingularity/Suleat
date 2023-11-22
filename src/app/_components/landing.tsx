@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useSignIn } from '@clerk/nextjs';
 import toast from "react-hot-toast";
 import { PostComponent } from "./common/post_v1"
+import { PostPreviewComponent } from "./common/post_v2"
 import { LoadingSpinner } from "./loading";
 
 interface ApiErrorResponse  {
@@ -110,7 +111,7 @@ export function Landing() {
   
   const postQuery = api.post.getPreview.useQuery()
 
-  const previewPosts = postQuery.data?.map((post) => <PostComponent post={post} />)
+  const previewPosts = postQuery.data?.map((post) => <PostPreviewComponent post={post} />)
   const loadingScreen = (<div className="h-full flex items-center justify-center"><LoadingSpinner size={100}/></div>)
   return (
     <div>
@@ -164,15 +165,15 @@ export function Landing() {
                       <SignInOAuthButtons/>
                   </div>
               </div>
-              <div className="flex flex-row p-6 min-[1064.5px]:w-1/2 min-[1064.5px]:max-w-3xl max-w-[500px] min-[1064.5px]:min-w-[34rem] h-screen items-center shrink-0">
-                  <div id="frame-post" className="border-8 border-gray-300 h-[512px] w-full rounded-3xl flex flex-col">
+              <div className="flex flex-row p-6 mb-36 max-w-[500px] min-[1064.5px]:min-w-[34rem] items-center shrink-0">
+                  <div id="frame-post" className="border-8 sm:mb-0 border-gray-300 h-[512px] w-full rounded-3xl flex flex-col">
                       <div className="flex flex-row items-center relative">
-                          <div className="rounded-full border-[6px] w-1 h-1 border-red-500 m-1 absolute left-[0.5rem]"></div>
-                          <div className="rounded-full border-[6px] w-1 h-1 border-yellow-400 m-1 absolute left-[1.75rem]"></div>
-                          <div className="rounded-full border-[6px] w-1 h-1 border-green-500 m-1 absolute left-[3rem]"></div>
+                          <div className="rounded-full border-[6px] w-1 h-1 border-red-500 m-1 absolute left-[1rem]"></div>
+                          <div className="rounded-full border-[6px] w-1 h-1 border-yellow-400 m-1 absolute left-[2.25rem]"></div>
+                          <div className="rounded-full border-[6px] w-1 h-1 border-green-500 m-1 absolute left-[3.5rem]"></div>
                           <div className="bg-gray-200 border-4 border-gray-200 rounded-lg m-auto w-1/2 text-center my-2">Trending</div>
                       </div>
-                      <div className={`${postQuery.isSuccess ? "bg-white" : "bg-gray-300"} h-full rounded-lg flex-1 mx-2 mb-2 p-2 pr-4 overflow-y-scroll`}>
+                      <div className={`${postQuery.isSuccess ? "bg-[#FEEEE8]" : "bg-gray-300"} h-full rounded-lg flex-1 mb-2 p-2 overflow-y-scroll`}>
                         { postQuery.isSuccess ? previewPosts : (postQuery.isLoading ? loadingScreen : (<></>))  }
                       </div>
                   </div>
@@ -246,7 +247,7 @@ export function Landing() {
         <footer className="bg-gradient-to-r from-orange-500 to-red-500">
           <div className="grid grid-cols-2 gap-6">
             <p className="text-center text-xs">© Suleat 2023. Lorem ipsum dolor sit amet.</p> 
-            <p className="text-center text-xs">Developed by 2223T1CSSWENGS15B</p>
+            <p className="text-center text-xs">Developed by 2324T1CSSWENGS15B</p>
           </div>
         </footer>
         
