@@ -13,7 +13,7 @@ import { ZodError } from "zod";
 
 import { getAuth, AuthObject, SignedInAuthObject, SignedOutAuthObject } from '@clerk/nextjs/server';
 import { User } from "prisma/prisma-client"
-import { db } from "~/server/db";
+import { db, esClient } from "~/server/db";
 
 /**
  * 1. CONTEXT
@@ -48,6 +48,7 @@ export const createInnerTRPCContext = (opts: CreateContextOptions) => {
     auth: opts.auth,
     user: opts.user,
     db,
+    esClient,
   };
 };
 

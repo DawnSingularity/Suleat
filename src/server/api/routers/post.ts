@@ -2,47 +2,6 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure, userProcedure } from "~/server/api/trpc";
 
-import { PrismaClient, Prisma, Post, Comment } from "@prisma/client";
-import { elasticsearchFTS } from "~/prisma-fts/elasticsearch/index";
-import { Client } from "@elastic/elasticsearch";
-import { NextRequest } from "next/server";
-
-const esClient = new Client({ 
-  node: 'http://localhost:9200',
-  auth: {
-    username: 'elastic',
-    password: 'vZptqzgfVNilxfw4HUVl'
-  }
-    // d6a40f0f4459def1ae56122410bebb6d0f493b4f00d681aa5c4c7dd2e8350410
-    // LTKlDBeyBh-GdvlFssIr
-    // eyJ2ZXIiOiI4LjExLjEiLCJhZHIiOlsiMTkyLjE2OC41Ni4xOjkyMDAiXSwiZmdyIjoiZDZhNDBmMGY0NDU5ZGVmMWFlNTYxMjI0MTBiZWJiNmQwZjQ5M2I0ZjAwZDY4MWFhNWM0YzdkZDJlODM1MDQxMCIsImtleSI6ImROOGZ6WXNCdTZRbWxObkhMb2s1OmJuZTFtRl9nU1FXN3pTMlJ1V1BHT1EifQ==
- });
-
-const prisma = new PrismaClient();
-const middleware = elasticsearchFTS(
-  esClient,
-  Prisma.dmmf,
-  {
-    User: {
-      docId: "uuid",
-      indexes: {
-        firstName: "user_index",
-        lastName: "user_index",
-        userName: "user_index"
-      }
-    },
-    Post: {
-      docId: "id",
-      indexes: {
-        caption: "post_index",
-        author: "post_index"  
-      }
-    }
-  }
-)
-
-prisma.$use(middleware)
-
 export const postRouter = createTRPCRouter({
     create: userProcedure
     .input(
@@ -207,7 +166,7 @@ export const postRouter = createTRPCRouter({
   .query(async ({ ctx, input }) => {
     console.log(input)
     const searchOptions = ` {"searchOptions": {"from": ${ input.cursor }}}`
-    const searchResults = await esClient.search({
+    const searchResults = await ctx.esClient.search({
       from: input.cursor,
       size: input.limit,
       query: {
@@ -243,7 +202,7 @@ export const postRouter = createTRPCRouter({
     })
 
     const idList = searchResults.hits.hits.map(({_id}) => _id)
-    const result = await prisma.post.findMany({
+    const result = await ctx.db.post.findMany({
       where: {
         id: {
           in: idList
