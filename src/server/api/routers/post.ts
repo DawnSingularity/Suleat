@@ -7,20 +7,26 @@ export const postRouter = createTRPCRouter({
     .input(
       z.object({
         caption: z.string().min(1).max(10000),
-        location: z.string(), // You can add more validation if needed
+        location: z.string(),
+        flavors: z.array(z.string()) // You can add more validation if needed
       })
     )
     .mutation(async ({ ctx, input }) => {
-      if(ctx.auth.userId === null) return;
-        const post = await ctx.db.post.create({
-          data: {
-            caption: input.caption,
-            authorId: ctx.auth.userId,
-            location: input.location,
-            isEdited: false,
+      if (ctx.auth.userId === null) return;
+      const post = await ctx.db.post.create({
+        data: {
+          caption: input.caption,
+          authorId: ctx.auth.userId,
+          location: input.location,
+          flavors: { 
+            connect: input.flavors.map((flavor, idx) => ({
+              name: flavor
+            }))
           },
-        });
-        return post;
+          isEdited: false,
+        },
+      });
+      return post;
   }),
 
 

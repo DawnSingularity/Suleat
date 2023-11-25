@@ -241,7 +241,7 @@ export const profileRouter = createTRPCRouter({
         },
         take: input.limit,
       })
-      console.log("Result: " + result)
+      console.log("Result: " + idList.toString())
       return result
     })
 });

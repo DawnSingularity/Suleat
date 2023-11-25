@@ -16,6 +16,7 @@ export function Infinite() {
             limit: 5,
         },
         {
+          staleTime: Infinity,
           getPreviousPageParam: undefined, // not implemented
           getNextPageParam: (lastPage) => {
             if(lastPage != null) {

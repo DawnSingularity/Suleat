@@ -7,7 +7,6 @@ import { UserButton, useUser } from "@clerk/clerk-react";
 import { api } from "~/trpc/react";
 import { Infinite } from "./common/infinite";
 import { InfiniteSearch } from "./common/infinitesearch"
-import { InfiniteSearchUsers } from "./common/infinitesearchusers"
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react';
 import { CreatePost } from "./create-post";
@@ -65,7 +64,7 @@ export function Home() {
             
             {/* {content} */}
             <div id="search-content">
-              {showUsers ? <InfiniteSearchUsers /> : <InfiniteSearch />}
+              {showUsers ? <InfiniteSearch category="users" /> : <InfiniteSearch category="posts" />}
             </div>
             
             
