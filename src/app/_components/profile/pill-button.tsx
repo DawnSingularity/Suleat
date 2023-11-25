@@ -44,9 +44,10 @@ export function PillButton({ id="", text = "", backgroundColor = "", disabledBac
     if(!className.match(/\bcolor-/)) {
         style.color = newColor
     }
-    return (<button className={`my-1 mr-4 text-xs py-1 px-2 rounded-full h-full border ${className}`} 
-        style={style} 
-        onClick={onClick} 
-        onMouseEnter={() => {setHovering(true)}}
-        onMouseLeave={() => {setHovering(false)}}>{text}</button>)
+    return (
+        <span className={`my-1 mr-4 text-xs py-1 px-2 rounded-full h-full border ${className}`} 
+            style={style} 
+            onClick={onClick}>{text}
+        </span>
+    )
 }

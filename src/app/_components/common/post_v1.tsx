@@ -56,7 +56,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
 
     let followButton = <></>, followText = <></>
     if(loggedInUsernameQuery.isSuccess && loggedInUsername !== post.author.userName) {
-        followText = <PillButton id="reserved" text={followIcon} backgroundColor="#49e66b" className="color-black" onChange={handleFollowButton} />
+        followText = <PillButton id="reserved" text={followIcon} backgroundColor="#49e66b" className="color-black cursor-pointer" onChange={handleFollowButton} />
         followButton = <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}}/>
     }
 
@@ -131,6 +131,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
                         {post.flavors?.map((flavor : Flavor, index : number) => (<PillButton
                             key={index.toString()}
                             id={flavor.name} text={flavor.name} backgroundColor={flavor.color}
+                            className="cursor-default"
                         />))}
                     </div>
                     <div className="order-last flex flex-row">

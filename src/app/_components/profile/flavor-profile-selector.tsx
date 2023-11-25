@@ -51,7 +51,7 @@ export function FlavorProfileSelector({ flavors, flavorStates, setFlavorStates, 
     return (
         <div className={"flavors " + className} id="flavors">
             { flavors.map(({name, color}, i) => {
-            return (<PillButton id={name} text={name} backgroundColor={color} value={flavorStates.has(name)} onChange={changeFlavor}/>);
+            return (<PillButton id={name} text={name} className="cursor-pointer" backgroundColor={color} value={flavorStates.has(name)} onChange={changeFlavor}/>);
             })}
         </div>  
     )

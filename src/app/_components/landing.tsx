@@ -125,9 +125,9 @@ export function Landing() {
             <img src="/suleat-icon.png" width="60" className="sm:ml-4"></img>
           </a>
           <div className="top-6 absolute text-md right-4 sm:block hidden">
-            <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 " ><a href="#aboutArea">About</a></button>
-            <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 "><a href="#privacySafety">Privacy & Safety</a></button>
-            <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 "><a href="#contactUs">Contact Us</a></button>
+            <a href="#aboutArea" className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 " >About</a>
+            <a href="#privacySafety" className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 ">Privacy & Safety</a>
+            <a href="#contactUs" className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 ">Contact Us</a>
             <button className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 " onClick={toggleModal}>Log In</button>
               {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-md">
@@ -173,7 +173,7 @@ export function Landing() {
                           <div className="rounded-full border-[6px] w-1 h-1 border-green-500 m-1 absolute left-[3.5rem]"></div>
                           <div className="bg-gray-200 border-4 border-gray-200 rounded-lg m-auto w-1/2 text-center my-2">Trending</div>
                       </div>
-                      <div className={`${postQuery.isSuccess ? "bg-[#FEEEE8]" : "bg-gray-300"} h-full flex-1 mb-2 p-2 overflow-y-scroll`}>
+                      <div className={`bg-[#FEEEE8] h-full flex-1 mb-2 p-2 overflow-y-scroll`}>
                         { postQuery.isSuccess ? previewPosts : (postQuery.isLoading ? loadingScreen : (<></>))  }
                       </div>
                   </div>

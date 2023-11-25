@@ -69,7 +69,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
     // edit button should only be visible in user's own profile
     if(loggedInUsernameQuery.isSuccess && loggedInUsername === data.userName) {
-      editProfileButton = <FontAwesomeIcon id="edit-profile-button" className="hover:cursor-pointer hover:text-white hover:drop-shadow-xl" icon={faEdit} onClick={handleEditProfileModal}/>
+      editProfileButton = <FontAwesomeIcon id="edit-profile-button" className="hover:cursor-pointer hover:text-[#fc571a] hover:drop-shadow-xl" icon={faEdit} onClick={handleEditProfileModal}/>
     }
 
   return (
@@ -84,7 +84,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
             <p className="text-base font-font-medium color-gray"> @{data.userName} </p>
           </div>
           <div className=" w-full max-w-screen flex flex-row ">
-            <div className="w-6/12 flex flex-col justify-center items-center px-0 rounded-full hover:bg-gray-200 transition-colors hover:cursor-pointer">
+            <div className="w-6/12 flex flex-col justify-center items-center px-0 rounded-full transition-colors cursor-default">
               <p className="text-xl font-extrabold"> 0 </p>
               <p className="text-base font-medium text-gray-500">posts</p>
             </div>
@@ -118,6 +118,7 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
               <PillButton
                 key={index.toString()}
                 id={flavor.name} text={flavor.name} backgroundColor={flavor.color}
+                className="cursor-default"
               />)}
           </div>
 

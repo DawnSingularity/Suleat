@@ -33,7 +33,7 @@ export function UserComponent({ user }: { user: UserWithFlavors }) {
             </div>
         { auth.isSignedIn ? (
             <div className="order-last flex flex-row items-center">
-                <PillButton id="reserved" text="Follow" backgroundColor="#49e66b" className="color-black" />
+                <PillButton id="reserved" text="Follow" backgroundColor="#49e66b" className="color-black cursor-pointer" />
                 <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}} />
             </div>
         ) : (<></>)}
@@ -43,6 +43,7 @@ export function UserComponent({ user }: { user: UserWithFlavors }) {
             <PillButton
               key={index.toString()}
               id={flavor.name} text={flavor.name} backgroundColor={flavor.color}
+              className="cursor-default"
             />)}
         </div>
       </div>
