@@ -95,11 +95,15 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
                         <UserIcon user={post.author} width="10" className="mr-3" />
                     </Link>
                     <div>
-                        <div className="text-sm">{ post.author.firstName } { post.author.lastName }</div>
-                        <div className="text-xs text-red-600">
-                            <FontAwesomeIcon icon={faLocationDot} className="mr-1" style={{ color: 'red' }} />
-                            { post.location }
-                        </div>
+                        <Link href={`/profile/${post.author.userName}`}>
+                            <div className="text-sm hover:underline hover:font-bold">{ post.author.firstName } { post.author.lastName }</div>
+                        </Link>
+                        <Link href={`/post/${post.id}`}>
+                            <div className="text-xs text-red-600 hover:underline">
+                                <FontAwesomeIcon icon={faLocationDot} className="mr-1  hover:text-black" style={{ color: 'red' }} />
+                                { post.location }
+                            </div>
+                        </Link>
                     </div>
                 </div>
             { auth.isSignedIn ? (
