@@ -39,6 +39,7 @@ export function InfiniteSearch({ category } : { category: string }) {
             searchKey: key
         },
         {
+          staleTime: Infinity,
           getPreviousPageParam: undefined, // not implemented
           getNextPageParam: (lastPage) => {
             if(lastPage != null) {
