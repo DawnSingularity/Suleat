@@ -88,33 +88,35 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
 
     return (
       <>
-        <div className="py-4 bg-white sm:mb-4 mb-0.5 drop-shadow-md sm:rounded-lg rounded">
-            <Link href={`/post/${post.id}`}>
-                <div className="px-5 flex flex-row items-center justify-between mb-4">
-                    <div className="order-first flex flex-row items-center">
+        <div className="py-4 bg-white sm:mb-4 mb-0.5 drop-shadow-md sm:rounded-lg rounded">  
+            <div className="px-5 flex flex-row items-center justify-between mb-4">
+                <div className="order-first flex flex-row items-center">
+                    <Link href={`/profile/${post.author.userName}`}>
                         <UserIcon user={post.author} width="10" className="mr-3" />
-                        <div>
-                            <div className="text-sm">{ post.author.firstName } { post.author.lastName }</div>
-                            <div className="text-xs text-red-600">
-                                <FontAwesomeIcon icon={faLocationDot} className="mr-1" style={{ color: 'red' }} />
-                                { post.location }
-                            </div>
+                    </Link>
+                    <div>
+                        <div className="text-sm">{ post.author.firstName } { post.author.lastName }</div>
+                        <div className="text-xs text-red-600">
+                            <FontAwesomeIcon icon={faLocationDot} className="mr-1" style={{ color: 'red' }} />
+                            { post.location }
                         </div>
                     </div>
-                { auth.isSignedIn ? (
-                    <div className="order-last flex flex-row items-center">
-                        {followText}
-                        {followButton}
-                    </div>
-                ) : (<></>)}
+                </div>
+            { auth.isSignedIn ? (
+                <div className="order-last flex flex-row items-center">
+                    {followText}
+                    {followButton}
+                </div>
+            ) : (<></>)}
+            </div>
+            
+            <Link href={`/post/${post.id}`}>
+                <div className="">
+                    {post.photos && post.photos.length > 0 && (
+                        <EmblaCarousel photos={post.photos} options={OPTIONS} />
+                    )}
                 </div>
             </Link>
-            
-            <div className="">
-                {post.photos && post.photos.length > 0 && (
-                    <EmblaCarousel photos={post.photos} options={OPTIONS} />
-                )}
-            </div>
 
             <div className="px-5 ">
                 <div className="text-sm mt-4">
