@@ -99,11 +99,12 @@ const CreatePostWizard = () =>{
 
   const handlePostButtonClick = async () => {
       // Trigger the post mutation 
-      mutate({ caption, location});
+      const flavors = flavorStates.toArray();
+      mutate({ location, flavors, caption });
   };
   
 
-  if(!user) return null;
+  if (!user) return null;
   return (
     <div className = "bg-white rounded-lg mb-4 p-6 flex flex-col drop-shadow-md">
       <div className ="flex w-full gap-1 flex-col">
@@ -161,9 +162,6 @@ const CreatePostWizard = () =>{
         <input id="dropzone-file" type="file" onChange={reqAddImages} className="cursor-pointer z-20 opacity-0 w-12 h-5 rounded-lg absolute" name="coverPhoto" accept="image/*" multiple />
       </label>
     </div>
-
-
-        
 
         <div className="mt-2">
           <label htmlFor="flavors" className="text-sm ml-1 text-stone-400">Flavors</label><br></br>
