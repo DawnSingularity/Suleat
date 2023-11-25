@@ -6,10 +6,12 @@ import { getQueryKey } from "@trpc/react-query";
 import { Fragment, useEffect } from "react";
 import { PostComponent } from "./post_v1";
 import { useSearchParams } from 'next/navigation'
+import { LoadingSpinner } from "../loading";
 
 export function InfiniteSearch() {
     const searchParams = useSearchParams()
     const searchKey = searchParams.get('search')
+    const loadingScreen = (<div className="h-full flex items-center justify-center"><LoadingSpinner size={20}/></div>)
 
     const { ref: scrollMonitorRef, inView: scrollMonitorInView } = useInView()
     console.log("Search Key: " + searchKey)
@@ -57,24 +59,25 @@ export function InfiniteSearch() {
   // remove possible duplicate posts
   // note: there might be a better way for this
   const renderedPosts = new Set()
+  const posts = infiniteQuery.data?.pages.map((page, index) => (
+    <Fragment key={index}>
+        {page.map((post) => {
+            if (!renderedPosts.has(post.id)) {
+                renderedPosts.add(post.id)
+                return <PostComponent post={post} />
+            } else {
+                // do nothing
+                return <></>
+            }
+        })}
+    </Fragment>
+  ))
 
   return (<div>
-    { 
-      infiniteQuery.data?.pages.map((page, index) => (
-        <Fragment key={index}>
-            {page.map((post) => {
-                if (!renderedPosts.has(post.id)) {
-                    renderedPosts.add(post.id)
-                    return <PostComponent post={post} />
-                } else {
-                    // do nothing
-                    return <></>
-                }
-            })}
-        </Fragment>
-    )) }
+    {
+        infiniteQuery.isSuccess ? posts : (infiniteQuery.isLoading ? loadingScreen : (<></>))
+    }
+    
     <div ref={scrollMonitorRef}></div>
   </div>)
 }
- 
- 
