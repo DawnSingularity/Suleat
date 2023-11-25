@@ -5,9 +5,11 @@ import { useInView } from "react-intersection-observer";
 import { getQueryKey } from "@trpc/react-query";
 import { Fragment, useEffect } from "react";
 import { PostComponent } from "./post_v1";
+import { LoadingSpinner } from "../loading";
 
 export function Infinite() {
     const { ref: scrollMonitorRef, inView: scrollMonitorInView } = useInView()
+    const loadingScreen = (<div className="h-full flex items-center justify-center"><LoadingSpinner size={20}/></div>)
 
     const infiniteQuery = api.post.getPosts.useInfiniteQuery(
         {
@@ -43,12 +45,16 @@ export function Infinite() {
         }
     })
 
+    const posts = infiniteQuery.data?.pages.map((page, index) => (
+      <Fragment key={index}>
+          {page.map((post) => (<PostComponent post={post} />))}
+      </Fragment>
+    ))
+
   return (<div>
-    { infiniteQuery.data?.pages.map((page, index) => (
-        <Fragment key={index}>
-            {page.map((post) => (<PostComponent post={post} />))}
-        </Fragment>
-    )) }
+    {
+        infiniteQuery.isSuccess ? posts : (infiniteQuery.isLoading ? loadingScreen : (<></>))
+    }
     <div ref={scrollMonitorRef}></div>
   </div>)
 }
