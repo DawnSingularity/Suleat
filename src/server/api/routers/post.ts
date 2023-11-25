@@ -217,7 +217,7 @@ export const postRouter = createTRPCRouter({
               match: {
                 firstname: {
                   query: input.searchKey,
-                  fuzziness: "AUTO",
+                  fuzziness: 2,
                 }
               },
             },
@@ -225,7 +225,7 @@ export const postRouter = createTRPCRouter({
               match: {
                 lastname: {
                   query: input.searchKey,
-                  fuzziness: "AUTO",
+                  fuzziness: 2,
                 }
               },
             },
@@ -233,7 +233,7 @@ export const postRouter = createTRPCRouter({
               match: {
                 caption: {
                   query: input.searchKey,
-                  fuzziness: "AUTO",
+                  fuzziness: 2,
                 }
               },
             },
