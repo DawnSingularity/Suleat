@@ -55,4 +55,7 @@ export const db =
   globalForPrisma.prisma ??
   createNewPrismaClient();
 
-if (env.NODE_ENV !== "production") globalForPrisma.prisma = db;
+if (env.NODE_ENV !== "production") {
+  globalForPrisma.prisma = db
+  globalForPrisma.esClient = esClient
+}
