@@ -9,7 +9,7 @@ import { LoadingSpinner } from "../loading";
 
 export function Infinite() {
     const { ref: scrollMonitorRef, inView: scrollMonitorInView } = useInView()
-    const loadingScreen = (<div className="h-full flex items-center justify-center"><LoadingSpinner size={40}/></div>)
+    const loadingScreen = (<div className="h-full flex items-center mt-5 justify-center"><LoadingSpinner size={40}/></div>)
 
     const infiniteQuery = api.post.getPosts.useInfiniteQuery(
         {

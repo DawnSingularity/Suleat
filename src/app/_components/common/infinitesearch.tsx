@@ -11,7 +11,7 @@ import { LoadingSpinner } from "../loading";
 export function InfiniteSearch() {
     const searchParams = useSearchParams()
     const searchKey = searchParams.get('search')
-    const loadingScreen = (<div className="h-full flex items-center justify-center"><LoadingSpinner size={40}/></div>)
+    const loadingScreen = (<div className="h-full flex items-center mt-8 justify-center"><LoadingSpinner size={40}/></div>)
 
     const { ref: scrollMonitorRef, inView: scrollMonitorInView } = useInView()
     console.log("Search Key: " + searchKey)
