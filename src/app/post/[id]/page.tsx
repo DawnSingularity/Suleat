@@ -3,7 +3,7 @@
 import { api } from "~/trpc/react";
 import { LoadingPage } from "~/app/_components/loading";
 import { Navbar } from "~/app/_components/common/navbar"
-import { InfiniteComment } from "~/app/_components/common/infiniteComment";
+// import { InfiniteComment } from "~/app/_components/common/infiniteComment";
 
 
 import { useInView } from "react-intersection-observer";
@@ -24,6 +24,7 @@ export default function Post({ params }: { params: { id: string } }) {
   const selfUserQuery = api.profile.getUserProfile.useQuery({})
   const [openCommentId, setOpenCommentId] = useState<string | null>(null);
   const [isReplyOpen, setReplyOpen] = useState(false);
+  // const loadingScreen = (<div className="h-full flex items-center justify-center"><LoadingSpinner size={40}/></div>)
 
   const toggleReplyButton = (commentId: string) => {
     setReplyOpen(!isReplyOpen);
@@ -97,7 +98,7 @@ export default function Post({ params }: { params: { id: string } }) {
      },
   })
 
-    if(isLoading || !data) return <LoadingPage/>;
+    if(isLoading || !data) return <LoadingPage size={60}/>;
   return (
     <>
     <Navbar />
