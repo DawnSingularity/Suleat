@@ -56,10 +56,10 @@ export function InfiniteSearch() {
         }
     })
 
-  // remove possible duplicate posts
-  // note: there might be a better way for this
-  const renderedPosts = new Set()
-  const posts = infiniteQuery.data?.pages.map((page, index) => (
+    // remove possible duplicate posts
+    // note: there might be a better way for this
+    const renderedPosts = new Set()
+    const posts = infiniteQuery.data?.pages.map((page, index) => (
     <Fragment key={index}>
         {page.map((post) => {
             if (!renderedPosts.has(post.id)) {
@@ -75,7 +75,7 @@ export function InfiniteSearch() {
 
   return (<div>
     {
-        infiniteQuery.isSuccess ? posts : (infiniteQuery.isLoading ? loadingScreen : (<></>))
+        infiniteQuery.isSuccess ? (receivedCount === 0 ? <div className="text-lg">No search results found.</div> : posts) : (infiniteQuery.isLoading ? loadingScreen : (<></>))
     }
     
     <div ref={scrollMonitorRef}></div>
