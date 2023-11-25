@@ -211,14 +211,30 @@ export const profileRouter = createTRPCRouter({
     }))
     .query(async ({ ctx, input }) => {
       console.log(input)
-      const searchOptions = ` {"searchOptions": {"from": ${ input.cursor }}}`
+      const searchResults = await ctx.esClient.search({
+        from: input.cursor,
+        size: input.limit,
+        query: {
+          bool: {
+            should: [
+              {
+                multi_match: {
+                  query: input.searchKey,
+                  fields: ["firstname", "lastname", "username"],
+                  fuzziness: 2,
+                }
+              }
+            ]
+          }
+        }
+      })
+  
+      const idList = searchResults.hits.hits.map(({_id}) => _id)
       const result = await ctx.db.user.findMany({
         where: {
-          OR: [
-            { firstName: "fts:" + input.searchKey + searchOptions },
-            { lastName: "fts:" + input.searchKey + searchOptions },
-            { userName: "fts:" + input.searchKey + searchOptions },
-          ]
+          uuid: {
+            in: idList
+          }
         },
         include: {
           flavors: true

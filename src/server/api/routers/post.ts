@@ -165,7 +165,6 @@ export const postRouter = createTRPCRouter({
   }))
   .query(async ({ ctx, input }) => {
     console.log(input)
-    const searchOptions = ` {"searchOptions": {"from": ${ input.cursor }}}`
     const searchResults = await ctx.esClient.search({
       from: input.cursor,
       size: input.limit,
@@ -173,29 +172,12 @@ export const postRouter = createTRPCRouter({
         bool: {
           should: [
             {
-              match: {
-                firstname: {
-                  query: input.searchKey,
-                  fuzziness: 2,
-                }
-              },
-            },
-            {
-              match: {
-                lastname: {
-                  query: input.searchKey,
-                  fuzziness: 2,
-                }
-              },
-            },
-            {
-              match: {
-                caption: {
-                  query: input.searchKey,
-                  fuzziness: 2,
-                }
-              },
-            },
+              multi_match: {
+                query: input.searchKey,
+                fields: ["firstname", "lastname", "caption"],
+                fuzziness: 2,
+              }
+            }
           ]
         }
       }
