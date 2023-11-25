@@ -55,7 +55,7 @@ export function Home() {
         <main className="flex flex-col items-center bg-gradient-to-b">
 
           <div className="w-full sm:w-[500px]">
-            <div className="mb-2 text-lg">Search Results</div>
+            <div className="mb-2 text-lg font-bold">Search Results</div>
             <div className="s">
             {/* Filter buttons */}
               <button id="showPostBtn" onClick={showPosts} type="button" className="text-sm text-[#fc571a] hover:text-[#fc571a] mb-4 font-bold mr-4">Posts</button>

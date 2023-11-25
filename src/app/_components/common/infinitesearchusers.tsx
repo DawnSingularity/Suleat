@@ -7,10 +7,12 @@ import { Fragment, useEffect } from "react";
 import { PostComponent } from "./post_v1";
 import { UserComponent } from "./user-search";
 import { useSearchParams } from 'next/navigation'
+import { LoadingSpinner } from "../loading";
 
 export function InfiniteSearchUsers() {
     const searchParams = useSearchParams()
     const searchKey = searchParams.get('search')
+    const loadingScreen = (<div className="h-full flex items-center justify-center"><LoadingSpinner size={20}/></div>)
 
     const { ref: scrollMonitorRef, inView: scrollMonitorInView } = useInView()
     console.log("Search Key: " + searchKey)
@@ -55,14 +57,10 @@ export function InfiniteSearchUsers() {
         }
     })
 
-  // remove possible duplicate posts
-  // note: there might be a better way for this
-  const renderedUsers = new Set()
-
-  return (
-    <div>
-    { 
-      infiniteQuery.data?.pages.map((page, index) => (
+    // remove possible duplicate posts
+    // note: there might be a better way for this
+    const renderedUsers = new Set()
+    const users = infiniteQuery.data?.pages.map((page, index) => (
         <Fragment key={index}>
             {page.map((user) => {
                 if (!renderedUsers.has(user.uuid)) {
@@ -74,9 +72,15 @@ export function InfiniteSearchUsers() {
                 }
             })}
         </Fragment>
-    )) }
-    <div ref={scrollMonitorRef}></div>
-    </div>)
+    ))
+
+    return (<div>
+        {
+            infiniteQuery.isSuccess ? (receivedCount === 0 ? <div className="text-lg">No search results found.</div> : users) : (infiniteQuery.isLoading ? loadingScreen : (<></>))
+        }
+        
+        <div ref={scrollMonitorRef}></div>
+      </div>)
 }
  
  
