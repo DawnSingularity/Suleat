@@ -27,17 +27,6 @@ export function PostPreviewComponent({ post }: { post: RouterOutputs["post"]["ge
     }
 
     const auth = useAuth();
-    const [isFavorited, setIsFavorited] = React.useState(false);
-    const [favoriteCount, setFavoriteCount] = React.useState(post.favoriteCount);
-
-    const handleFavoriteClick = () => {
-        if (isFavorited) {
-            setFavoriteCount((prevCount) => prevCount - 1);
-        } else {
-            setFavoriteCount((prevCount) => prevCount + 1);
-        }
-        setIsFavorited((prev) => !prev);
-    };
 
     let comment_count = post._count.comments
 

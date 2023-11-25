@@ -6,7 +6,7 @@ import { UserButton, useUser } from "@clerk/clerk-react";
 import { api } from "~/trpc/react";
 import { PillButton } from "./../profile/pill-button" 
 import { UserIcon } from "./user-icon"
-import { Flavor, Post, Prisma } from "prisma/prisma-client"
+import { Flavor, Post, Prisma, User } from "prisma/prisma-client"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis, faLocationDot  } from "@fortawesome/free-solid-svg-icons";
 import { faMessage, faStar } from "@fortawesome/free-regular-svg-icons";
@@ -17,6 +17,8 @@ import EmblaCarousel from '../carousel/EmblaCarousel'
 import { EmblaOptionsType } from 'embla-carousel-react'
 import Link from "next/link";
 import { RouterOutputs } from "~/trpc/shared";
+import { useQueryClient } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
 const OPTIONS: EmblaOptionsType = {}
 const SLIDE_COUNT = 5
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
@@ -26,12 +28,37 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
         return;
     }
 
+    const queryClient = useQueryClient()
     const auth = useAuth();
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [favoriteCount, setFavoriteCount] = React.useState(post._count.favedBy);
     const { mutate } = api.post.updatePostFavorite.useMutation();
     const postLikedId = post.id;
     const userLikerId = auth.userId ?? "";
+
+    const loggedInUsernameQuery = api.profile.getCurrentUser.useQuery()
+    const followMutation = api.profile.updateFollowState.useMutation()
+    const loggedInUsername = loggedInUsernameQuery.data ?? ""
+    const followers = api.profile.getFollowers.useQuery({username: post.author.userName}).data as User[];
+    
+    const isFollowing = followers?.some((user) => user.userName === loggedInUsername);
+    const followIcon = isFollowing ? "Unfollow" : "Follow";
+
+    const handleFollowButton = () => {
+      // TODO: Handle follow functionality here
+      followMutation.mutate({username: post.author.userName, state: !isFollowing}, {
+        onSuccess: () => {
+          const queryKey = getQueryKey(api.profile.getFollowers, {username: post.author.userName});
+          queryClient.invalidateQueries({queryKey});
+        }
+      })
+    };
+
+    let followButton = <></>, followText = <></>
+    if(loggedInUsernameQuery.isSuccess && loggedInUsername !== post.author.userName) {
+        followText = <PillButton id="reserved" text={followIcon} backgroundColor="#49e66b" className="color-black" onChange={handleFollowButton} />
+        followButton = <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}}/>
+    }
 
     useEffect(() => {
         setIsFavorited(post.favedBy.some( item => item.userLikerId === userLikerId));
@@ -76,8 +103,8 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
                     </div>
                 { auth.isSignedIn ? (
                     <div className="order-last flex flex-row items-center">
-                        <PillButton id="reserved" text="Follow" backgroundColor="#49e66b" className="color-black" />
-                        <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}} />
+                        {followText}
+                        {followButton}
                     </div>
                 ) : (<></>)}
                 </div>
