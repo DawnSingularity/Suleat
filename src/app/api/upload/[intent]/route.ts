@@ -1,7 +1,7 @@
 import fs from 'fs-extra';
 import { fileTypeFromBuffer } from 'file-type';
 import { writeFile } from 'fs/promises'
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 import { PrismaClient } from "@prisma/client";
 import { getAuth } from '@clerk/nextjs/server';
@@ -68,6 +68,16 @@ export async function POST(req: NextRequest,
                 const postid = formData.get("id") as Blob
                 const postId = (await new Response(postid).text());
                 console.log(postId)
+
+                // security check
+                const postAuthorInfo = await prisma.post.findUnique({
+                    where: { id: postId },
+                    include: { author: true }
+                })
+                if(user.uuid !== postAuthorInfo?.author.uuid) {
+                    return NextResponse.json({ status: 401 })
+                }
+                
                 const updatedPost = await prisma.post.update({
                     where: { id: postId},
                     data: {
