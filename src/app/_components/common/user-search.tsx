@@ -33,12 +33,12 @@ export function UserComponent({ user }: { user: UserWithFlavors }) {
             </div>
         { auth.isSignedIn ? (
             <div className="order-last flex flex-row items-center">
-                <PillButton id="reserved" text="Follow" backgroundColor="#49e66b" className="color-black cursor-pointer" />
+                <PillButton id="reserved" text="Follow" backgroundColor="linear-gradient(to bottom, #005cb1, #005cb1)" className="color-white text-white font-bold cursor-pointer" />
                 <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}} />
             </div>
         ) : (<></>)}
         </div>
-        <div className="flex flex-wrap px-1 ml-10">
+        <div className="flex flex-wrap px-1 ml-12">
           {user.flavors?.map((flavor : Flavor, index : Number) => 
             <PillButton
               key={index.toString()}

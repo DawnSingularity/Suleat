@@ -56,7 +56,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
 
     let followButton = <></>, followText = <></>
     if(loggedInUsernameQuery.isSuccess && loggedInUsername !== post.author.userName) {
-        followText = <PillButton id="reserved" text={followIcon} backgroundColor="#49e66b" className="color-black cursor-pointer" onChange={handleFollowButton} />
+        followText = <PillButton id="reserved" text={followIcon} backgroundColor="linear-gradient(to bottom, #005cb1, #005cb1)" className="color-white text-white font-bold cursor-pointer" onChange={handleFollowButton} />
         followButton = <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}}/>
     }
 
