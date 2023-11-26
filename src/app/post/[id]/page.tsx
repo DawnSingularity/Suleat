@@ -168,6 +168,43 @@ export default function Post({ params }: { params: { id: string } }) {
                     <p className="text-gray-700 text-[13px] mt-2">{comment.text}</p>
                   </div>
                 </div>
+
+                {/* Render subcomments if available */}
+                {comment.subcomments && comment.subcomments.length > 0 && (
+                  <div className="mt-1 mb-3">
+                    <button
+                      className="text-sky-500 ml-12 text-sm hover:underline"
+                      onClick={() => toggleReplyButton(comment.id)}
+                      hidden={!isReplyOpen || openCommentId !== comment.id}
+                    >
+                      Hide Replies
+                    </button>
+                    <button
+                      className="text-sky-500 ml-12 text-sm hover:underline"
+                      onClick={() => toggleReplyButton(comment.id)}
+                      hidden={isReplyOpen && openCommentId === comment.id}
+                    >
+                      View Replies
+                    </button>
+                  </div>
+                )}
+
+                {isReplyOpen && openCommentId === comment.id && comment.subcomments && comment.subcomments.length > 0 && (
+                  <div className="ml-12">
+                    {comment.subcomments.map((subcomment) => (
+                      <div key={subcomment.id} className="flex items-start mb-2">
+                        <div className="mr-4">
+                          <UserIcon user={subcomment.author} width="8" />
+                        </div>
+                        <div className="flex flex-col border rounded-lg w-full p-2">
+                          <p className="text-sm font-semibold">{subcomment.author.firstName}&nbsp;{subcomment.author.lastName}</p>
+                          <p className="text-[12px] text-gray-400">{dayjs(subcomment.createdAt).fromNow()}</p>
+                          <p className="text-gray-700 text-[13px] mt-2">{subcomment.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
                       
                 <div className="flex ml-12">
                   <div className="mr-2 w-11">
@@ -212,50 +249,13 @@ export default function Post({ params }: { params: { id: string } }) {
                     Post
                   </button>
                 </div>
-
-                {/* Render subcomments if available */}
-                {comment.subcomments && comment.subcomments.length > 0 && (
-                  <div className="my-3">
-                    <button
-                      className="text-sky-500 ml-12 text-sm hover:underline"
-                      onClick={() => toggleReplyButton(comment.id)}
-                      hidden={!isReplyOpen || openCommentId !== comment.id}
-                    >
-                      Hide Replies
-                    </button>
-                    <button
-                      className="text-sky-500 ml-12 text-sm hover:underline"
-                      onClick={() => toggleReplyButton(comment.id)}
-                      hidden={isReplyOpen && openCommentId === comment.id}
-                    >
-                      View Replies
-                    </button>
-                  </div>
-                )}
-
-                {isReplyOpen && openCommentId === comment.id && comment.subcomments && comment.subcomments.length > 0 && (
-                  <div className="ml-12">
-                    {comment.subcomments.map((subcomment) => (
-                      <div key={subcomment.id} className="flex items-start mb-2">
-                        <div className="mr-4">
-                          <UserIcon user={subcomment.author} width="8" />
-                        </div>
-                        <div className="flex flex-col border rounded-lg w-full p-2">
-                          <p className="text-sm font-semibold">{subcomment.author.firstName}&nbsp;{subcomment.author.lastName}</p>
-                          <p className="text-[12px] text-gray-400">{dayjs(subcomment.createdAt).fromNow()}</p>
-                          <p className="text-gray-700 text-[13px] mt-2">{subcomment.text}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             ))}
           </Fragment>
         )) }
 
         {infiniteQuery.hasNextPage && (
-          <div className="flex my-4">
+          <div className="flex mt-4">
             <button
               onClick={() => infiniteQuery.fetchNextPage()}
               className="text-sky-500 text-sm"

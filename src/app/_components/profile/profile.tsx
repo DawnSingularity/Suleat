@@ -73,6 +73,11 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
       editProfileButton = <FontAwesomeIcon id="edit-profile-button" className="hover:cursor-pointer hover:text-[#fc571a] hover:drop-shadow-xl" icon={faEdit} onClick={handleEditProfileModal}/>
     }
 
+    const bio = data.bio === "" ? "This user has no bio." : data.bio
+    const loc = data.location === "" ? "This user has no location." : data.location
+    const bioClass = data.bio === "" ? "mt-2 text-gray-400" : "mt-2 text-black"
+    const locClass = data.location === "" ? "text-gray-400" : "mt-2 text-[#fc571a]"
+
   return (
     <main className={`h-full`}>
       <Navbar />
@@ -135,11 +140,11 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
         
         <div className="w-full md:w-3/12 order-2 md:order-3 mt-6 md:mt-1">
           <h2 className="text-base font-semibold">About {data.firstName} </h2>
-          <h3 className="mt-2 font-light">
-          <FontAwesomeIcon icon={faLocationDot} className="mr-2" style={{ color: 'red' }} /> {data.location}
+          <h3 className="mt-2">
+          <FontAwesomeIcon icon={faLocationDot} className="mr-2" style={{ color: 'red' }} /> <span className={locClass}>{ loc }</span>
           </h3>
-          <p className="mt-2">
-            { data.bio }
+          <p className={bioClass}>
+            { bio }
           </p>
         </div>
       </div>
