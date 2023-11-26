@@ -181,7 +181,7 @@ export const postRouter = createTRPCRouter({
               multi_match: {
                 query: input.searchKey,
                 fields: ["firstname", "lastname", "caption"],
-                fuzziness: 2,
+                fuzziness: "AUTO",
               }
             }
           ]

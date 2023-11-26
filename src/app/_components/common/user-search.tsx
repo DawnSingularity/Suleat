@@ -1,10 +1,13 @@
 import Link from "next/link"
-import { Flavor, Post, Prisma } from "prisma/prisma-client"
+import { Flavor, Post, Prisma, User } from "prisma/prisma-client"
 import { useAuth } from "@clerk/nextjs";
 import { UserIcon } from "./user-icon"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEllipsis, faLocationDot  } from "@fortawesome/free-solid-svg-icons";
 import { PillButton } from "../profile/pill-button" 
+import { api } from "~/trpc/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
 
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
     include: { flavors: true },
@@ -15,6 +18,31 @@ const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
 export function UserComponent({ user }: { user: UserWithFlavors }) {
   const auth = useAuth();
   console.log("Flavors: " + user.flavors)
+
+  const loggedInUsernameQuery = api.profile.getCurrentUser.useQuery()
+  const followMutation = api.profile.updateFollowState.useMutation()
+  const loggedInUsername = loggedInUsernameQuery.data ?? ""
+  const followers = api.profile.getFollowers.useQuery({username: user.userName}).data as User[];
+  const queryClient = useQueryClient()
+
+  const isFollowing = followers?.some((user) => user.userName === loggedInUsername);
+  const followIcon = isFollowing ? "Unfollow" : "Follow";
+
+  const handleFollowButton = () => {
+    // TODO: Handle follow functionality here
+    followMutation.mutate({username: user.userName, state: !isFollowing}, {
+      onSuccess: () => {
+        const queryKey = getQueryKey(api.profile.getFollowers, {username: user.userName});
+        queryClient.invalidateQueries({queryKey});
+      }
+    })
+  };
+
+  let followButton = <></>, followText = <></>
+    if(loggedInUsernameQuery.isSuccess && loggedInUsername !== user.userName) {
+        followText = <PillButton id="reserved" text={followIcon} backgroundColor="linear-gradient(to bottom, #005cb1, #005cb1)" className="color-white text-white font-bold cursor-pointer" onChange={handleFollowButton} />
+        followButton = <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}}/>
+    }
 
   return (
     <>
@@ -33,8 +61,8 @@ export function UserComponent({ user }: { user: UserWithFlavors }) {
             </div>
         { auth.isSignedIn ? (
             <div className="order-last flex flex-row items-center">
-                <PillButton id="reserved" text="Follow" backgroundColor="linear-gradient(to bottom, #005cb1, #005cb1)" className="color-white text-white font-bold cursor-pointer" />
-                <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}} />
+                {followText}
+                {followButton}
             </div>
         ) : (<></>)}
         </div>
