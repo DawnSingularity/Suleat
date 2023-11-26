@@ -6,8 +6,10 @@ import { getQueryKey } from "@trpc/react-query";
 import { Fragment, useEffect } from "react";
 import { PostComponent } from "./post_v1";
 import { LoadingSpinner } from "../loading";
+import { CustomList } from "@uidotdev/usehooks";
+import { RouterOutputs } from "~/trpc/shared";
 
-export function Infinite() {
+export function Infinite({ extraPostsList } : { extraPostsList? : (RouterOutputs["post"]["create"])[] }) {
     const { ref: scrollMonitorRef, inView: scrollMonitorInView } = useInView()
     const loadingScreen = (<div className="h-full flex items-center mt-5 justify-center"><LoadingSpinner size={40}/></div>)
 
@@ -46,11 +48,20 @@ export function Infinite() {
         }
     })
 
-    const posts = infiniteQuery.data?.pages.map((page, index) => (
+    const extraPosts : (JSX.Element | undefined)[] = extraPostsList?.toReversed().map((post, index) => (
+      post != null ? <Fragment key={-index - 1}>
+          <PostComponent post={post} />
+      </Fragment> : <></>
+    )) ?? []
+
+    const infinitePosts = infiniteQuery.data?.pages.map((page, index) => (
       <Fragment key={index}>
           {page.map((post) => (<PostComponent post={post} />))}
       </Fragment>
     ))
+
+    const posts = extraPosts?.concat(infinitePosts)
+    console.log(extraPostsList)
 
   return (<div id="timelineContainer">
     {

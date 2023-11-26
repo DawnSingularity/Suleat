@@ -68,7 +68,7 @@ export async function POST(req: NextRequest,
                 const postid = formData.get("id") as Blob
                 const postId = (await new Response(postid).text());
                 console.log(postId)
-                await prisma.post.update({
+                const updatedPost = await prisma.post.update({
                     where: { id: postId},
                     data: {
                     photos: {
@@ -77,8 +77,13 @@ export async function POST(req: NextRequest,
                         },
                       }
                     },
+                    include: {
+                        photos: true
+                    }
                 });
-                break;
+
+                // return updated photos object
+                return new Response(JSON.stringify(updatedPost.photos))
         }
     }
 

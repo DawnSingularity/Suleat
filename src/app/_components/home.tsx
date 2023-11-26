@@ -10,6 +10,8 @@ import { InfiniteSearch } from "./common/infinitesearch"
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react';
 import { CreatePost } from "./create-post";
+import { useList } from "@uidotdev/usehooks";
+import { RouterOutputs } from "~/trpc/shared";
 
 export function Home() {
   const { sessionId, userId, getToken } = useAuth();
@@ -19,6 +21,9 @@ export function Home() {
   const searchParams = useSearchParams()
   const searchKey = searchParams.get('search')
   console.log(searchKey)
+
+  // store the created posts here so infinite can obtain them
+  const [newPostList, newPostOps] = useList<RouterOutputs["post"]["create"]>()
 
   const [showUsers, setShowUsers] = useState(false);
 
@@ -87,8 +92,8 @@ export function Home() {
         <Navbar />
         <main className="flex flex-col items-center bg-gradient-to-b">
           <div className="w-full sm:w-[500px]">
-            <CreatePost />
-            <Infinite />
+            <CreatePost onCreate={newPostOps.push} />
+            <Infinite extraPostsList={newPostList}/>
           </div>
           
         </main>

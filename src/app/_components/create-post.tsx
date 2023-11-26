@@ -14,13 +14,15 @@ import { PostComponent } from "./common/post_v1";
 
 import { ImageUploadPreview } from "./image-upload-preview";
 import { FlavorProfileSelector, useFlavorStates } from "./profile/flavor-profile-selector";
+import { RouterOutputs } from "~/trpc/shared";
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { flavors: true },
 })
 
+type NewPost = RouterOutputs["post"]["create"]
 type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
 
-const CreatePostWizard = () =>{
+export const CreatePost = ({ onCreate } : { onCreate? : (post : NewPost) => void }) =>{
   const user = useUser();
   const [location, setLocation] = useState("");
   const [caption, setCaption] = useState("");
@@ -61,18 +63,28 @@ const CreatePostWizard = () =>{
   const {mutate, isLoading: isPosting, data: newPost} = api.post.create.useMutation({
     onSuccess: async  (data)=>{
       console.log(data)
-      await Promise.all(
-        uploadedFiles.map(async (file) => {
-          const formData = new FormData();
-          formData.append("id", String(data?.id));
-          formData.append("file", file);
-          const response = await fetch("/api/upload/post", {
-            method: "POST",
-            body: formData,
-          });
-        })
-      );
 
+      if(data != null) {
+        await Promise.all(
+          uploadedFiles.map(async (file) => {
+            const formData = new FormData();
+            formData.append("id", String(data.id));
+            formData.append("file", file);
+            const response = await fetch("/api/upload/post", {
+              method: "POST",
+              body: formData,
+            });
+  
+            // update photos list of data object
+            data.photos = await response.json()
+          })
+        );
+      }
+
+      // add to the list of posts to show on screen
+      if(onCreate != null) {
+        onCreate(data)
+      }
       setCaption("");
       setLocation("");
       FILES = {}
@@ -102,7 +114,7 @@ const CreatePostWizard = () =>{
       // Trigger the post mutation 
       const flavors = flavorStates.toArray();
       mutate({ location, flavors, caption });
-      let postToAppend;
+      /*let postToAppend;
       if(newPost)
         postToAppend = `<PostComponent post=${newPost}></PostComponent>`
       
@@ -111,7 +123,7 @@ const CreatePostWizard = () =>{
         newElement.append(postToAppend)
 
       const timeline = document.getElementById("timelineContainer")
-      timeline?.insertBefore(newElement, timeline?.firstChild)
+      timeline?.insertBefore(newElement, timeline?.firstChild)*/
 
       console.log("DONE!")
   };
@@ -197,8 +209,3 @@ const CreatePostWizard = () =>{
     </div>
   );
 };
-
-
-export function CreatePost() {
-  return CreatePostWizard();
-}
