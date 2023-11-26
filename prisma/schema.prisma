@@ -68,6 +68,8 @@ model User {
 
     posts       Post[] @relation("Author")
     comments    Comment[] @relation("CommentAuthor")
+
+    favNotifications    FavNotification[]
 }
 
 
@@ -99,6 +101,8 @@ model Favorite {
     postLiked       Post        @relation("Liked", fields: [postLikedId], references: [id])
     postLikedId     String
 
+    favNotification FavNotification[]
+
 }
 
 model Photo {
@@ -108,8 +112,19 @@ model Photo {
 }
 
 
-// model FavNotification {
-//     id              Int     @id @default(autoincrement())
-//     favorite        Favorite @relation("FavoriteObj", fields: [favoriteId], references: [[userLikerId, postLikedId]])
-//     favoriteId      String
-// }
+model FavNotification {
+    id              Int     @id @default(autoincrement())
+    favorite        Favorite @relation(fields: [favUserLikerId, favPostLikedId], references: [userLikerId, postLikedId])
+    favUserLikerId  String
+    favPostLikedId  String
+    userNotified    User @relation(fields: [userId], references: [uuid])
+    userId          String
+
+    system          NotificationSystem @relation(fields: [systemId], references: [id])
+    systemId        Int
+}
+
+model NotificationSystem {
+    id                  Int     @id @default(autoincrement())
+    favNotifications    FavNotification[]
+}
