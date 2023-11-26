@@ -255,7 +255,7 @@ export default function Post({ params }: { params: { id: string } }) {
         )) }
 
         {infiniteQuery.hasNextPage && (
-          <div className="flex bg-red-200 my-4">
+          <div className="flex my-4">
             <button
               onClick={() => infiniteQuery.fetchNextPage()}
               className="text-sky-500 text-sm"
