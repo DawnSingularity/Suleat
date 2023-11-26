@@ -16,6 +16,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { CreatePost } from "../create-post";
 
 
+
 const userWithFlavors = Prisma.validator<Prisma.UserDefaultArgs>()({
   include: { flavors: true },
 })
