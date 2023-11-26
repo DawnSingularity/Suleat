@@ -52,7 +52,7 @@ export function Infinite() {
       </Fragment>
     ))
 
-  return (<div>
+  return (<div id="timelineContainer">
     {
         infiniteQuery.isSuccess ? posts : (infiniteQuery.isLoading ? loadingScreen : (<></>))
     }

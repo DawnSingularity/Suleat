@@ -25,6 +25,22 @@ export const postRouter = createTRPCRouter({
           },
           isEdited: false,
         },
+        include: {
+          author: true,
+          photos: true,
+          flavors: true,
+          favedBy: {
+            where: {
+              userLikerId: ctx.auth.userId ?? ""
+            }
+          },
+          _count: {
+            select: {
+              comments: true,
+              favedBy: true
+            }
+          }
+        },
       });
       return post;
   }),

@@ -10,6 +10,7 @@ import { faImages } from "@fortawesome/free-solid-svg-icons";
 import { Prisma, User, Flavor, PrismaClient } from "@prisma/client";
 import { api } from "~/trpc/react";
 import { LoadingSpinner } from "./loading";
+import { PostComponent } from "./common/post_v1";
 
 import { ImageUploadPreview } from "./image-upload-preview";
 import { FlavorProfileSelector, useFlavorStates } from "./profile/flavor-profile-selector";
@@ -57,7 +58,7 @@ const CreatePostWizard = () =>{
     }
   };
 
-  const {mutate, isLoading: isPosting} = api.post.create.useMutation({
+  const {mutate, isLoading: isPosting, data: newPost} = api.post.create.useMutation({
     onSuccess: async  (data)=>{
       console.log(data)
       await Promise.all(
@@ -101,6 +102,18 @@ const CreatePostWizard = () =>{
       // Trigger the post mutation 
       const flavors = flavorStates.toArray();
       mutate({ location, flavors, caption });
+      let postToAppend;
+      if(newPost)
+        postToAppend = `<PostComponent post=${newPost}></PostComponent>`
+      
+      const newElement = document.createElement('div');
+      if(postToAppend)
+        newElement.append(postToAppend)
+
+      const timeline = document.getElementById("timelineContainer")
+      timeline?.insertBefore(newElement, timeline?.firstChild)
+
+      console.log("DONE!")
   };
   
 
@@ -176,7 +189,7 @@ const CreatePostWizard = () =>{
             Post
           </button>)}
         {isPosting && (
-          <div className="flex justify-center item-center">
+          <div className="flex justify-center item-center mt-5">
             <LoadingSpinner size={20}/>
           </div>
         )}
