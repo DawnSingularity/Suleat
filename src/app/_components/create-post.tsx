@@ -6,6 +6,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImages } from "@fortawesome/free-solid-svg-icons";
+import { FlavorStates } from '~/app/_components/profile/flavor-profile-selector'
 
 import { Prisma, User, Flavor, PrismaClient } from "@prisma/client";
 import { api } from "~/trpc/react";
@@ -87,6 +88,8 @@ export const CreatePost = ({ onCreate } : { onCreate? : (post : NewPost) => void
       }
       setCaption("");
       setLocation("");
+      setFlavorStates(new FlavorStates());
+      
       FILES = {}
       setUploadedFiles([])
       void ctx.post.getByUser.invalidate();  //add refresh if necessary

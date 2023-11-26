@@ -4,7 +4,7 @@ import { PillButton } from "./pill-button";
 import { Flavor } from "@prisma/client";
 
 // Set but with toArray function
-class FlavorStates extends Set<string> {
+export class FlavorStates extends Set<string> {
     toArray = () => Array.from(this.values())
 }
 
