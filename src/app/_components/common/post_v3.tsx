@@ -23,7 +23,7 @@ const OPTIONS: EmblaOptionsType = {}
 const SLIDE_COUNT = 5
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
   
-export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostById"] }) {
+export function PostPageComponent({ post }: { post: RouterOutputs["post"]["getPostById"] }) {
     if(post == null) {
         return;
     }
@@ -88,7 +88,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
 
     return (
       <>
-        <div className="py-4 bg-white sm:mb-4 mb-0.5 drop-shadow-md sm:rounded-lg rounded">  
+        <div className="py-4 bg-white rounded-t-lg drop-shadow-md">  
             <div className="px-5 flex flex-row items-center justify-between mb-4">
                 <div className="order-first flex flex-row items-center">
                     <Link href={`/profile/${post.author.userName}`}>
@@ -149,7 +149,9 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
                          </button>
                     </div>
                 </div>
-            </div>    
+            </div> 
+            <div className="border-b mt-4">
+            </div>   
         </div>   
       </>
     );

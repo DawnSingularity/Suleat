@@ -8,13 +8,15 @@ import { Navbar } from "~/app/_components/common/navbar"
 
 import { useInView } from "react-intersection-observer";
 import { getQueryKey } from "@trpc/react-query";
-import { Fragment, SetStateAction, useEffect, useState } from "react";
+import { Fragment, SetStateAction, useEffect, useState, useRef } from "react";
+import useAutosizeTextArea from "~/app/_components/common/useAutosizeTextArea";
 import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
 import { UserIcon } from "~/app/_components/common/user-icon";
-import { PostComponent } from "~/app/_components/common/post_v1";
+import { PostPageComponent } from "~/app/_components/common/post_v3";
 import toast from "react-hot-toast";
 import { useUser } from "@clerk/clerk-react";
+import { comment } from "postcss";
 dayjs.extend(relativeTime);
 
 export default function Post({ params }: { params: { id: string } }) {
@@ -98,158 +100,173 @@ export default function Post({ params }: { params: { id: string } }) {
      },
   })
 
-    if(isLoading || !data) return <LoadingPage size={60}/>;
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
+  useAutosizeTextArea(textAreaRef.current, CommentValue);
+
+  const handleChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const val = evt.target?.value;
+
+    setCommentValue(val);
+  };
+
+  if(isLoading || !data) return <LoadingPage size={60}/>;
   return (
     <>
     <Navbar />
-    <div className="max-w-2xl mx-auto  my-4 rounded-lg">
+    <div className="max-w-2xl mx-auto my-4 rounded-lg">
       
-      <PostComponent post={data} />
+      <PostPageComponent post={data} />
 
-      <div className="flex items-start">
-          <div className="mr-4">
-            {(selfUserQuery.data !== null) && <img className={`rounded-full h-${10} w-${10}`} src={selfUserQuery.data?.pfpURL} alt="" />}
-          </div>
-          <div className="w-full flex items-center mt-2">
+      <div className="bg-white drop-shadow-md rounded-b-lg px-5 pb-4">
+        <div className="flex items-start pb-4">
+          {(selfUserQuery.data !== null) && <img className={`rounded-full h-${10} w-${10} mr-2`} src={selfUserQuery.data?.pfpURL} alt="" />}
+          <div className="w-full flex items-center my-auto">
             <textarea
               name="comment-text"
               id="comment-text"
               value={CommentValue}
-              onChange={(e)=>setCommentValue(e.target.value)}
-              className="w-full border-none resize-none bg-transparent outline-none"
-              placeholder="post..."
+              ref={textAreaRef}
+              onChange={handleChange}
+              className="w-full resize-none my-auto bg-transparent outline-none border p-2 text-sm rounded-md overflow-hidden"
+              placeholder="Write a comment..."
               onKeyDown = {(e) =>{
-                  if(e.key === "Enter"){
+                if(e.key === "Enter" && !e.shiftKey){
                   e.preventDefault();
                   if(CommentValue !== ""){
                     mutateComment({text: CommentValue, postId: params.id})
                   }
-                  }
+                }
               }}
-              />
+            />
             <button
-                className={`ml-2 px-4 py-2 rounded-md ${
-                    CommentValue.trim() === ""
-                    ? "text-sky-700 cursor-not-allowed"
-                    : "text-sky-500 hover:text-sky-500"
-                }`}
-                onMouseDown={(e) => {
-                  mutateComment({text: CommentValue, postId: params.id})
-                }}
-                disabled={CommentValue.trim() === ""}
-                >
-                Post
-              </button>
+              className={`ml-3 self-end ${
+                CommentValue.trim() === ""
+                  ? "text-gray-300 cursor-not-allowed"
+                  : "text-sky-500 hover:text-sky-500"
+              }`}
+              onMouseDown={(e) => {
+                mutateComment({text: CommentValue, postId: params.id})
+              }}
+              disabled={CommentValue.trim() === ""}
+            >
+              Post
+            </button>
           </div>
-      </div>
-    { infiniteQuery.data?.pages.map((page, index) => (
-        <Fragment key={index}>
-            {page.map((comment) => (
-                <div key={comment.id} className="mb-8">
-                    <div className="flex items-start">
-                        <div className="mr-4">
-                            <UserIcon user={comment.author} width="10" />
-                        </div>
-                        <div className="flex flex-col">
-                            <p className="text-gray-700">{comment.text}</p>
-                            <p className="mt-1 text-sm text-gray-400">{dayjs(comment.createdAt).fromNow()}</p>
-                        </div>
-                    </div>
-        
-                    
-                    <div className="flex items-center mt-2 ml-16">
-                      <textarea
-                        name="comment-text"
-                        id="comment-text"
-                        value={SubCommentValue[comment.id] || ''}
-                        onChange={(e) => {
-                          const newValue = e.target.value;
-                          setSubCommentValue((prevValues) => ({
-                            ...prevValues,
-                            [comment.id]: newValue,
-                          }));
-                        }}
-                        className="w-full border-none resize-none bg-transparent outline-none"
-                        placeholder="reply..."
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            const textValue = SubCommentValue[comment.id] || ''; // Use empty string if undefined
-                            if (textValue !== "") {
-                              mutateSubComment({ postId: params.id ,text: textValue, parentId: comment.id });
-                            }
-                          }
-                        }}
-                      />
-                      <button
-                        className={`ml-2 px-4 py-2 rounded-md ${
-                            (SubCommentValue[comment.id] || '').trim() === ""
-                            ? "text-sky-700 cursor-not-allowed"
-                            : "text-sky-500 hover:text-sky-500"
-                        }`}
-                        onMouseDown={(e) => {
-                          const textValue = SubCommentValue[comment.id] || ''; // Use empty string if undefined
-                          mutateSubComment({postId: params.id, text: textValue, parentId: comment.id });
-                        }}
-                        disabled={(SubCommentValue[comment.id] || '').trim() === ""}
-                      >
-                        Post
-                      </button>
-                    </div>
-
-            
-                    {/* Render subcomments if available */}
-                    {comment.subcomments && comment.subcomments.length > 0 && (
-                      <div className="mb-6">
-                        <button
-                          className="text-gray-400 ml-16 text-sm"
-                          onClick={() => toggleReplyButton(comment.id)}
-                          hidden={!isReplyOpen || openCommentId !== comment.id}
-                        >
-                          ----- hide reply
-                        </button>
-                        <button
-                          className="text-gray-400 ml-16 text-sm"
-                          onClick={() => toggleReplyButton(comment.id)}
-                          hidden={isReplyOpen && openCommentId === comment.id}
-                        >
-                          ----- view reply
-                        </button>
-                      </div>
-                    )}
-
-                    {isReplyOpen && openCommentId === comment.id && comment.subcomments && comment.subcomments.length > 0 && (
-                      <div className="ml-10">
-                        {comment.subcomments.map((subcomment) => (
-                          <div key={subcomment.id} className="flex items-start ml-4 mb-5">
-                            <div className="mr-4">
-                              <UserIcon user={subcomment.author} width="10" />
-                            </div>
-                            <div className="flex flex-col">
-                              <p className="text-gray-700">{subcomment.text}</p>
-                              <p className="mt-1 text-gray-400 text-sm ">{dayjs(subcomment.createdAt).fromNow()}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-            </div>
-          ))}
-        </Fragment>
-    )) }
-    {infiniteQuery.hasNextPage && (
-        <div className="flex justify-center my-4">
-          <button
-            onClick={() => infiniteQuery.fetchNextPage()}
-            className="text-gray-500 ml-16 text-sm"
-          >
-            Load More
-          </button>
         </div>
-      )}
-  </div>
-  </>
-    );
+        { infiniteQuery.data?.pages.map((page, index) => (
+          <Fragment key={index}>
+            {page.map((comment) => (
+              <div key={comment.id} className="">
+                <div className="flex items-start  py-2">
+                  <div className="mr-2 w-11">
+                    <UserIcon user={comment.author} width="10" />
+                  </div>
+                  <div className="flex flex-col border rounded-lg w-full p-2">
+                    <p className="text-sm font-semibold">{comment.author.firstName}&nbsp;{comment.author.lastName}</p>
+                    <p className="text-[12px] text-gray-400">{dayjs(comment.createdAt).fromNow()}</p>
+                    <p className="text-gray-700 text-[13px] mt-2">{comment.text}</p>
+                  </div>
+                </div>
+                      
+                <div className="flex ml-12">
+                  <div className="mr-2 w-11">
+                    {(selfUserQuery.data !== null) && <img className={`rounded-full h-${8} w-${8} mr-4`} src={selfUserQuery.data?.pfpURL} alt="" />}
+                  </div>
+                  <textarea
+                    name="comment-text"
+                    id="comment-text"
+                    value={SubCommentValue[comment.id] || ''}
+                    onChange={(e) => {
+                      const newValue = e.target.value;
+                      setSubCommentValue((prevValues) => ({
+                        ...prevValues,
+                        [comment.id]: newValue,
+                      }));
+                    }}
+                    rows="1"
+                    className="w-full resize-none my-auto bg-transparent outline-none border p-2 text-sm rounded-md overflow-hidden"
+                    placeholder="Reply to comment..."
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        const textValue = SubCommentValue[comment.id] || ''; // Use empty string if undefined
+                        if (textValue !== "") {
+                          mutateSubComment({ postId: params.id ,text: textValue, parentId: comment.id });
+                        }
+                      }
+                    }}
+                  />
+                  <button
+                    className={`ml-3 self-end text-sm ${
+                      (SubCommentValue[comment.id] || '').trim() === ""
+                      ? "text-gray-300 cursor-not-allowed"
+                      : "text-sky-500 hover:text-sky-500"
+                    }`}
+                    onMouseDown={(e) => {
+                      const textValue = SubCommentValue[comment.id] || ''; // Use empty string if undefined
+                      mutateSubComment({postId: params.id, text: textValue, parentId: comment.id });
+                    }}
+                    disabled={(SubCommentValue[comment.id] || '').trim() === ""}
+                  >
+                    Post
+                  </button>
+                </div>
 
+                {/* Render subcomments if available */}
+                {comment.subcomments && comment.subcomments.length > 0 && (
+                  <div className="my-3">
+                    <button
+                      className="text-sky-500 ml-12 text-sm hover:underline"
+                      onClick={() => toggleReplyButton(comment.id)}
+                      hidden={!isReplyOpen || openCommentId !== comment.id}
+                    >
+                      Hide Replies
+                    </button>
+                    <button
+                      className="text-sky-500 ml-12 text-sm hover:underline"
+                      onClick={() => toggleReplyButton(comment.id)}
+                      hidden={isReplyOpen && openCommentId === comment.id}
+                    >
+                      View Replies
+                    </button>
+                  </div>
+                )}
+
+                {isReplyOpen && openCommentId === comment.id && comment.subcomments && comment.subcomments.length > 0 && (
+                  <div className="ml-12">
+                    {comment.subcomments.map((subcomment) => (
+                      <div key={subcomment.id} className="flex items-start mb-2">
+                        <div className="mr-4">
+                          <UserIcon user={subcomment.author} width="8" />
+                        </div>
+                        <div className="flex flex-col border rounded-lg w-full p-2">
+                          <p className="text-sm font-semibold">{subcomment.author.firstName}&nbsp;{subcomment.author.lastName}</p>
+                          <p className="text-[12px] text-gray-400">{dayjs(subcomment.createdAt).fromNow()}</p>
+                          <p className="text-gray-700 text-[13px] mt-2">{subcomment.text}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </Fragment>
+        )) }
+
+        {infiniteQuery.hasNextPage && (
+          <div className="flex bg-red-200 my-4">
+            <button
+              onClick={() => infiniteQuery.fetchNextPage()}
+              className="text-sky-500 text-sm"
+            >
+              View More Comments...
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+    </>
+  );
 }
   

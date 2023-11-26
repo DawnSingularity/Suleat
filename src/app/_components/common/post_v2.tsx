@@ -38,7 +38,7 @@ export function PostPreviewComponent({ post }: { post: RouterOutputs["post"]["ge
                     <div className="order-first flex flex-row items-center">
                         <UserIcon user={post.author} width="10" className="mr-3" />
                         <div>
-                            <div className="text-sm">{ post.author.firstName } { post.author.lastName }</div>
+                            <div className="text-sm font-semibold">{ post.author.firstName } { post.author.lastName }</div>
                             <div className="text-xs text-red-600">
                                 <FontAwesomeIcon icon={faLocationDot} className="mr-1" style={{ color: 'red' }} />
                                 { post.location }

@@ -43,7 +43,7 @@ export const commentRouter = createTRPCRouter({
     }),
 
 
-    getCommentByPostId: publicProcedure
+  getCommentByPostId: publicProcedure
   .input(z.object({
     postId: z.string(),
     limit: z.number().min(1).max(50).default(10),
@@ -57,6 +57,7 @@ export const commentRouter = createTRPCRouter({
     return await ctx.db.comment.findMany({
       where: {
         postId: input.postId,
+        parentComment: null,
         OR: [
           {
             createdAt: {
