@@ -12,10 +12,12 @@ import { UserPopover } from "./user-popover"
 import { useEffect, useState } from "react";
 import { FloatingFocusManager, FloatingOverlay, FloatingPortal, useFloating } from "@floating-ui/react";
 import { Modal } from "./modal";
+import { useRouter } from "next/navigation";
 import { Notification } from "./notification"
 
 export function Navbar() {
     const auth = useAuth();
+    const router = useRouter();
     const {context} = useFloating();
     const selfUserQuery = api.profile.getUserProfile.useQuery({})
 
@@ -41,7 +43,7 @@ export function Navbar() {
                     <FontAwesomeIcon icon={faGear} style={{color: "#fc571a"}} className="mr-4" />
                     <span>Settings</span>
                 </div>
-                <div className="flex flex-row items-center py-2 px-6 hover:bg-zinc-200 cursor-pointer" onClick={async () => {await auth.signOut()}}>
+                <div className="flex flex-row items-center py-2 px-6 hover:bg-zinc-200 cursor-pointer" onClick={async () => {await auth.signOut(() => router.push("/"))}}>
                     <FontAwesomeIcon icon={faRightFromBracket} style={{color: "#fc571a"}} className="mr-4" />
                     <span>Sign-out</span>
                 </div>

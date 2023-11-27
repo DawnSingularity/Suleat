@@ -23,7 +23,6 @@ dayjs.extend(relativeTime);
 export default function Post({ params }: { params: { id: string } }) {
   const ctx = api.useUtils();
   const { data, isLoading } = api.post.getPostById.useQuery({id:params.id});
-  const { ref: scrollMonitorRef, inView: scrollMonitorInView } = useInView()
   const selfUserQuery = api.profile.getUserProfile.useQuery({})
   const [openCommentId, setOpenCommentId] = useState<string | null>(null);
   const [isReplyOpen, setReplyOpen] = useState(false);
@@ -33,17 +32,19 @@ export default function Post({ params }: { params: { id: string } }) {
     setReplyOpen(!isReplyOpen);
     setOpenCommentId(commentId);
   };
+
+  const COMMENTS_PER_PAGE = 5;
     const infiniteQuery = api.comment.getCommentByPostId.useInfiniteQuery(
         {
-            limit: 5,
+            limit: COMMENTS_PER_PAGE + 1,
             postId: params.id
         },
         {
           getPreviousPageParam: undefined, // not implemented
           getNextPageParam: (lastPage) => {
             if(lastPage != null) {
-                if(lastPage.length > 0) {
-                    const lastPost = lastPage[lastPage.length - 1]
+                if(lastPage.length > COMMENTS_PER_PAGE) {
+                    const lastPost = lastPage[COMMENTS_PER_PAGE - 1]
                     return {
                         createdAt: lastPost?.createdAt,
                         id: lastPost?.id,
@@ -61,11 +62,6 @@ export default function Post({ params }: { params: { id: string } }) {
           },
         },
       )
-    useEffect(() => {
-        if(scrollMonitorInView && infiniteQuery.hasNextPage) {
-            infiniteQuery.fetchNextPage()
-        }
-    })
 
     //creating subcomment
      const [SubCommentValue, setSubCommentValue] = useState<{ [key: string]: string }>({});
@@ -157,7 +153,7 @@ export default function Post({ params }: { params: { id: string } }) {
         </div>
         { infiniteQuery.data?.pages.map((page, index) => (
           <Fragment key={index}>
-            {page.map((comment) => (
+            {page.slice(0, COMMENTS_PER_PAGE).map((comment) => (
               <div key={comment.id} className="">
                 <div className="flex items-start  py-2">
                   <div className="mr-2 w-11">
