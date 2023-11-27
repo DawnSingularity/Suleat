@@ -33,6 +33,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
     const [isFavorited, setIsFavorited] = React.useState(false);
     const [favoriteCount, setFavoriteCount] = React.useState(post._count.favedBy);
     const { mutate } = api.post.updatePostFavorite.useMutation();
+    const notifMutation = api.post.createFavNotif.useMutation();
     const postLikedId = post.id;
     const userLikerId = auth.userId ?? "";
 
@@ -42,7 +43,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
     const followers = api.profile.getFollowers.useQuery({username: post.author.userName}).data as User[];
     
     const isFollowing = followers?.some((user) => user.userName === loggedInUsername);
-    const followIcon = isFollowing ? "Unfollow" : "Follow";
+    const followIcon = isFollowing ? "Following" : "Follow";
 
     const handleFollowButton = () => {
       // TODO: Handle follow functionality here
@@ -67,10 +68,11 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
     const handleFavoriteClick = async () => {
         try {
             const response = mutate( { postId: postLikedId, faved: !isFavorited } );
-            if(isFavorited) {
+            console.log("Done mutating")
+            if(!isFavorited) {
                 console.log("Did it reach here?")
-                const { mutate } = api.post.createFavNotif.useMutation();
-                const response = mutate({ postId: postLikedId })
+                
+                const response = notifMutation.mutate({ postId: postLikedId })
                 console.log("Successfully made notif")
             }
           

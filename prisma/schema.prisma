@@ -114,12 +114,13 @@ model Photo {
 
 
 model FavNotification {
-    id              Int     @id @default(autoincrement())
+    @@id([favUserLikerId, favPostLikedId, userId])          
     favorite        Favorite @relation(fields: [favUserLikerId, favPostLikedId], references: [userLikerId, postLikedId])
     favUserLikerId  String
     favPostLikedId  String
     userNotified    User @relation(fields: [userId], references: [uuid])
     userId          String
+    isViewed        Boolean @default(false)
 
     system          NotificationSystem @relation(fields: [systemId], references: [id])
     systemId        Int

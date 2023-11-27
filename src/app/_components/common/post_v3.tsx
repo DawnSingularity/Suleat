@@ -42,7 +42,7 @@ export function PostPageComponent({ post }: { post: RouterOutputs["post"]["getPo
     const followers = api.profile.getFollowers.useQuery({username: post.author.userName}).data as User[];
     
     const isFollowing = followers?.some((user) => user.userName === loggedInUsername);
-    const followIcon = isFollowing ? "Unfollow" : "Follow";
+    const followIcon = isFollowing ? "Following" : "Follow";
 
     const handleFollowButton = () => {
       // TODO: Handle follow functionality here

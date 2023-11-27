@@ -253,12 +253,31 @@ export const postRouter = createTRPCRouter({
             postLikedId: input.postId
           }
         })
-      } else { await ctx.db.favorite.deleteMany({
+      } else {
+        const postLiked = await ctx.db.post.findUnique({
+          where: {
+            id: input.postId
+          },
+          include: {
+            author: true
+          }
+        })
+        if(postLiked) {
+          await ctx.db.favNotification.deleteMany({
+            where: {
+              favUserLikerId: userLiker,
+              favPostLikedId: input.postId,
+              userId: postLiked.authorId
+            }
+          }) 
+        }
+        await ctx.db.favorite.deleteMany({
           where: {
             userLikerId: userLiker,
             postLikedId: input.postId
           }
         })  
+        
       }
     }),
 
@@ -297,7 +316,8 @@ export const postRouter = createTRPCRouter({
               favUserLikerId: userLiker,
               favPostLikedId: input.postId,
               userId: postLiked?.authorId,
-              systemId: notifSystem?.id
+              systemId: notifSystem?.id,
+              isViewed: false
             },
             include: {
               favorite: true,
