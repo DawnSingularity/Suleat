@@ -39,7 +39,7 @@ export default function UserList({ follower }: { follower: User }) {
   }
 
   return (
-    <div className={`flex flex-row w-full gap-3 ${followQuery.data ? 'bg-white border-blue-600' : 'bg-white'}`}>
+    <div className={`flex flex-row w-full sm:gap-3 gap-2.5 ${followQuery.data ? 'bg-white border-blue-600' : 'bg-white'}`}>
       <div className="w-12">
         <img className="rounded-full h-10 w-10" src={follower.pfpURL} alt="" />
       </div>

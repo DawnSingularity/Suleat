@@ -104,6 +104,20 @@ export function Landing() {
           >
             Already have an account? Log in instead.
           </button>
+          {isModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-md">
+            <div className="modal-bg fixed inset-0 opacity-50"></div>
+            <div className="modal-content bg-transparent p-8 rounded z-50 flex flex-col">
+              <SignIn />
+              <button
+                className="mt-4 mr-7 bg-blue-700 hover:bg-blue-900 text-white py-2 px-4 rounded self-end"
+                onClick={toggleModal}
+              >
+                Close
+              </button>
+            </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -122,7 +136,7 @@ export function Landing() {
         </div>
         <div className="">
           <a className="sm:top-6 top-10 absolute sm:left-4 left-1/2 sm:translate-x-0 transform -translate-x-1/2" href="/">
-            <img src="/suleat-icon.png" width="60" className="sm:ml-4"></img>
+            <img src="/suleat-icon.png"  className="sm:w-[60px] w-[65px] sm:ml-4"></img>
           </a>
           <div className="top-6 absolute text-md right-4 sm:block hidden">
             <a href="#aboutArea" className=" rounded hover:font-normal hover:bg-[#fc571a] hover:text-white font-semibold py-2 px-4 " >About</a>
@@ -173,7 +187,7 @@ export function Landing() {
                           <div className="rounded-full border-[6px] w-1 h-1 border-green-500 m-1 absolute left-[3.5rem]"></div>
                           <div className="bg-gray-200 border-4 border-gray-200 rounded-lg m-auto w-1/2 text-center my-2">Trending</div>
                       </div>
-                      <div className={`bg-[#FEEEE8] h-full flex-1 mb-2 p-2 overflow-y-scroll`}>
+                      <div className={`bg-[#FEEEE8] h-full flex-1 rounded-b-2xl p-2 overflow-y-scroll`}>
                         { postQuery.isSuccess ? previewPosts : (postQuery.isLoading ? loadingScreen : (<></>))  }
                       </div>
                   </div>

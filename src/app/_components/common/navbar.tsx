@@ -56,7 +56,7 @@ export function Navbar() {
                     {/* <FontAwesomeIcon icon={faBars} style={{color: "#101010",}} size="xl" className="pr-4"/> */}
                     <a className="flex flex-row items-center" href="/">
                         <Image src={suleatIcon} className="w-auto h-7 mr-3" alt="Suleat logo"></Image>
-                        <span className="text-[#fc571a] text-[22px] font-['Poppins'] font-medium">Suleat</span>
+                        <span className="text-[#fc571a] text-[22px] font-poppins font-medium">Suleat</span>
                     </a>
                     <span className="ml-8 flex px-4 group w-full">
                         <div className="ease-in-out duration-500 group-focus-within:w-full flex items-center w-0 rounded-full group-focus-within:border-black border-white group-focus-within:border sticky">

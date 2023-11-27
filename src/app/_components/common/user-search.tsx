@@ -43,19 +43,22 @@ export function UserComponent({ user }: { user: UserWithFlavors }) {
         followText = <PillButton id="reserved" text={followIcon} backgroundColor="linear-gradient(to bottom, #005cb1, #005cb1)" className="color-white text-white font-bold cursor-pointer" onChange={handleFollowButton} />
         followButton = <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}}/>
     }
+  
+  const loc = user.location === "" ? "This user has no location." : user.location
+  const locClass = user.location === "" ? "text-gray-400" : "mt-2 text-[#fc571a]"
 
   return (
     <>
     <Link href={`/profile/${user.userName}`}>
-      <div className="bg-white mb-3 p-4 rounded-lg drop-shadow-md">
+      <div className="bg-white mb-3 p-4 sm:rounded-lg drop-shadow-md">
         <div className=" flex flex-row items-center justify-between">
             <div className="order-first flex flex-row items-center">
                 <UserIcon user={user} width="10" className="mr-3" />
                 <div>
-                    <div className="text-sm">{ user.firstName } { user.lastName }</div>
+                    <div className="text-sm font-semibold">{ user.firstName } { user.lastName }</div>
                     <div className="text-xs text-red-600">
                         <FontAwesomeIcon icon={faLocationDot} className="mr-1" style={{ color: 'red' }} />
-                        { user.location }
+                        <span className={locClass}>{loc}</span>
                     </div>
                 </div>
             </div>

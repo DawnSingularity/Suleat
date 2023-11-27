@@ -107,7 +107,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
 
   <div id="defaultModal" tabIndex={-1} aria-hidden="true" className="fixed top-0 left-0 right-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-50">
     {/* Modal (Box) itself */}
-    <div className="w-full max-w-2xl pb-6 pl-6 pr-6 pt-2 m-5 bg-white rounded-lg shadow-lg">
+    <div className="sm:w-full w-11/12 max-w-2xl pb-6 pl-6 pr-6 pt-2 m-5 bg-white rounded-lg shadow-lg">
       {/* Modal content */}
       <div className="relative">
         {/* Modal header */}
@@ -165,7 +165,7 @@ export function EditProfileModal({ onClose, data }: { onClose: () => void, data:
                 </div>
                 <div className="mt-2">
                   <label htmlFor="flavors" className="pl-2 text-sm text-stone-500">Flavors</label><br></br>
-                  <FlavorProfileSelector flavors={wholeListOfFlavors} flavorStates={flavorStates} setFlavorStates={setFlavorStates} className="pl-2 ml-1"/>
+                  <FlavorProfileSelector flavors={wholeListOfFlavors} flavorStates={flavorStates} setFlavorStates={setFlavorStates} className="pl-2 ml-1 flex flex-wrap"/>
                 </div>    
               </div>
             </form>

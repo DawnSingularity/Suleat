@@ -108,7 +108,7 @@ export function InfiniteSearch({ category } : { category: string }) {
 
     return (<div>
         {
-            infiniteQuery.isSuccess ? (receivedCount === 0 ? <div className="text-lg">No search results found.</div> : renderedResults) : (infiniteQuery.isLoading ? loadingScreen : (<></>))
+            infiniteQuery.isSuccess ? (receivedCount === 0 ? <div className="px-5 text-lg">No search results found.</div> : renderedResults) : (infiniteQuery.isLoading ? loadingScreen : (<></>))
         }
         
         <div ref={scrollMonitorRef}></div>
