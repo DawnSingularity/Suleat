@@ -246,19 +246,67 @@ export const postRouter = createTRPCRouter({
       if(ctx.auth.userId === null) return;
 
       const userLiker = ctx.user.uuid;
-      if(input.faved) await ctx.db.favorite.create({
-        data: {
-          userLikerId: userLiker,
-          postLikedId: input.postId
-        }
-      })
-      else await ctx.db.favorite.deleteMany({
-        where: {
-          userLikerId: userLiker,
-          postLikedId: input.postId
-        }
-      })
+      if(input.faved) {
+        const favorite = await ctx.db.favorite.create({
+          data: {
+            userLikerId: userLiker,
+            postLikedId: input.postId
+          }
+        })
+      } else { await ctx.db.favorite.deleteMany({
+          where: {
+            userLikerId: userLiker,
+            postLikedId: input.postId
+          }
+        })  
+      }
+    }),
 
-        
+  createFavNotif: userProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (ctx.auth.userId === null) return;
+
+      const userLiker = ctx.user.uuid
+      const postLiked = await ctx.db.post.findUnique({
+        where: {
+          id: input.postId
+        },
+        include: {
+          author: true
+        }
+      })
+      if(postLiked !== null) {
+        const notifSystem = await ctx.db.notificationSystem.upsert({
+          where: {
+            userId: postLiked?.authorId
+          },
+          update: {},
+          create: {
+            userId: postLiked?.authorId
+          }
+        })
+
+        if(notifSystem !== null) {
+          const favNotif = await ctx.db.favNotification.create({
+            data: {
+              favUserLikerId: userLiker,
+              favPostLikedId: input.postId,
+              userId: postLiked?.authorId,
+              systemId: notifSystem?.id
+            },
+            include: {
+              favorite: true,
+              system: true
+            },
+          });
+          return favNotif
+        }
+      }
+      
   }),
 });

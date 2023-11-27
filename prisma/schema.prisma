@@ -70,6 +70,7 @@ model User {
     comments    Comment[] @relation("CommentAuthor")
 
     favNotifications    FavNotification[]
+    notifSystem         NotificationSystem?
 }
 
 
@@ -127,4 +128,6 @@ model FavNotification {
 model NotificationSystem {
     id                  Int     @id @default(autoincrement())
     favNotifications    FavNotification[]
+    systemOwner         User    @relation(fields: [userId], references: [uuid])
+    userId              String  @unique
 }

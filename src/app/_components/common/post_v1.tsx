@@ -66,8 +66,13 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
 
     const handleFavoriteClick = async () => {
         try {
-
             const response = mutate( { postId: postLikedId, faved: !isFavorited } );
+            if(isFavorited) {
+                console.log("Did it reach here?")
+                const { mutate } = api.post.createFavNotif.useMutation();
+                const response = mutate({ postId: postLikedId })
+                console.log("Successfully made notif")
+            }
           
         } catch (error) {
           console.error('Error fave-ing:', error);
