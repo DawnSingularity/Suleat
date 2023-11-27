@@ -115,11 +115,11 @@ export default function Post({ params }: { params: { id: string } }) {
   return (
     <>
     <Navbar />
-    <div className="max-w-2xl mx-auto my-4 rounded-lg">
+    <div className="max-w-2xl mx-auto sm:my-4 sm:rounded-lg">
       
       <PostPageComponent post={data} />
 
-      <div className="bg-white drop-shadow-md rounded-b-lg px-5 pb-4">
+      <div className="bg-white drop-shadow-md sm:rounded-b-lg px-5 pb-4">
         <div className="flex items-start pb-4">
           {(selfUserQuery.data !== null) && <Link href={`/profile/${selfUserQuery.data?.userName}`}><img className={`rounded-full h-${10} w-${10} mr-2`} src={selfUserQuery.data?.pfpURL} alt="" /></Link>}
           <div className="w-full flex items-center my-auto">
