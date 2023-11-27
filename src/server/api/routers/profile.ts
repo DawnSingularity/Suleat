@@ -21,6 +21,18 @@ export const profileRouter = createTRPCRouter({
           }
       }),
 
+      getUserById: publicProcedure
+      .input(z.object({ uuid: z.string() }))
+      .query(async ({ctx, input}) => {
+        if(input.uuid != null) {
+          return await ctx.db.user.findUnique({
+            where: {"uuid": input.uuid},
+          });
+        } else {
+          return null;
+        }
+        }),
+
       getFollowers: publicProcedure
       .input(z.object({ username: z.string() }))
       .query(async ({ctx, input}) => {
@@ -243,6 +255,21 @@ export const profileRouter = createTRPCRouter({
       })
       console.log("Result: " + idList.toString())
       return result
-    })
+    }),
+
+    getUserNotifs: publicProcedure
+    .input(z.object({ uuid: z.string() }))
+    .query(async ({ctx, input}) => {
+          if(input.uuid != null) {
+            return await ctx.db.notificationSystem.findUnique({
+              where: {"userId": input.uuid},
+              include: { 
+                favNotifications: true // add more notif types here soon
+              },
+            });
+          } else {
+            return null;
+          }
+      }),
 });
 

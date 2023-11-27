@@ -121,6 +121,7 @@ model FavNotification {
     userNotified    User @relation(fields: [userId], references: [uuid])
     userId          String
     isViewed        Boolean @default(false)
+    category        String
 
     system          NotificationSystem @relation(fields: [systemId], references: [id])
     systemId        Int

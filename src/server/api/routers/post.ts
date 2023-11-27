@@ -317,7 +317,8 @@ export const postRouter = createTRPCRouter({
               favPostLikedId: input.postId,
               userId: postLiked?.authorId,
               systemId: notifSystem?.id,
-              isViewed: false
+              isViewed: false,
+              category: "favorite"
             },
             include: {
               favorite: true,
