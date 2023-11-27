@@ -17,6 +17,7 @@ import { PostPageComponent } from "~/app/_components/common/post_v3";
 import toast from "react-hot-toast";
 import { useUser } from "@clerk/clerk-react";
 import { comment } from "postcss";
+import Link from "next/link"
 dayjs.extend(relativeTime);
 
 export default function Post({ params }: { params: { id: string } }) {
@@ -120,7 +121,7 @@ export default function Post({ params }: { params: { id: string } }) {
 
       <div className="bg-white drop-shadow-md rounded-b-lg px-5 pb-4">
         <div className="flex items-start pb-4">
-          {(selfUserQuery.data !== null) && <img className={`rounded-full h-${10} w-${10} mr-2`} src={selfUserQuery.data?.pfpURL} alt="" />}
+          {(selfUserQuery.data !== null) && <Link href={`/profile/${selfUserQuery.data?.userName}`}><img className={`rounded-full h-${10} w-${10} mr-2`} src={selfUserQuery.data?.pfpURL} alt="" /></Link>}
           <div className="w-full flex items-center my-auto">
             <textarea
               name="comment-text"
@@ -160,12 +161,16 @@ export default function Post({ params }: { params: { id: string } }) {
               <div key={comment.id} className="">
                 <div className="flex items-start  py-2">
                   <div className="mr-2 w-11">
-                    <UserIcon user={comment.author} width="10" />
+                    <Link href={`/profile/${comment.author.userName}`}>
+                      <UserIcon user={comment.author} width="10" />
+                    </Link>
                   </div>
                   <div className="flex flex-col border rounded-lg w-full p-2">
-                    <p className="text-sm font-semibold">{comment.author.firstName}&nbsp;{comment.author.lastName}</p>
+                    <Link href={`/profile/${comment.author.userName}`}>
+                      <div className="hover:underline text-sm font-semibold break-all">{comment.author.firstName}&nbsp;{comment.author.lastName}</div>
+                    </Link>
                     <p className="text-[12px] text-gray-400">{dayjs(comment.createdAt).fromNow()}</p>
-                    <p className="text-gray-700 text-[13px] mt-2">{comment.text}</p>
+                    <p className="text-gray-700 text-[13px] mt-2 break-all">{comment.text}</p>
                   </div>
                 </div>
 
@@ -194,12 +199,16 @@ export default function Post({ params }: { params: { id: string } }) {
                     {comment.subcomments.map((subcomment) => (
                       <div key={subcomment.id} className="flex items-start mb-2">
                         <div className="mr-4">
-                          <UserIcon user={subcomment.author} width="8" />
+                          <Link href={`/profile/${subcomment.author.userName}`}>
+                            <UserIcon user={subcomment.author} width="8" />
+                          </Link>
                         </div>
                         <div className="flex flex-col border rounded-lg w-full p-2">
-                          <p className="text-sm font-semibold">{subcomment.author.firstName}&nbsp;{subcomment.author.lastName}</p>
+                          <Link href={`/profile/${subcomment.author.userName}`}>
+                            <p className="text-sm font-semibold">{subcomment.author.firstName}&nbsp;{subcomment.author.lastName}</p>
+                          </Link>
                           <p className="text-[12px] text-gray-400">{dayjs(subcomment.createdAt).fromNow()}</p>
-                          <p className="text-gray-700 text-[13px] mt-2">{subcomment.text}</p>
+                          <p className="text-gray-700 text-[13px] mt-2 break-all">{subcomment.text}</p>
                         </div>
                       </div>
                     ))}
@@ -208,7 +217,7 @@ export default function Post({ params }: { params: { id: string } }) {
                       
                 <div className="flex ml-12">
                   <div className="mr-2 w-11">
-                    {(selfUserQuery.data !== null) && <img className={`rounded-full h-${8} w-${8} mr-4`} src={selfUserQuery.data?.pfpURL} alt="" />}
+                    {(selfUserQuery.data !== null) && <Link href={`/profile/${selfUserQuery.data?.userName}`}><img className={`rounded-full h-${8} w-${8} mr-4`} src={selfUserQuery.data?.pfpURL} alt="" /></Link>}
                   </div>
                   <textarea
                     name="comment-text"
