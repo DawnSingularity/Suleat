@@ -108,8 +108,8 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
         </div>
       </div>
 
-      <div className="container px-5 md:mx-auto pt-5 flex justify-center flex-col md:flex-row w-full h-full max-w-screen-lg">
-        <div className="w-full md:w-3/12 order-1">
+      <div className="container md:mx-auto pt-5 flex justify-center flex-col md:flex-row w-full h-full max-w-screen-lg">
+        <div className="px-5 w-full md:w-3/12 order-1">
           <h2 className="text-sm font-bold flex items-center">
             <span className="mr-2 h-4 w-4">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -131,14 +131,16 @@ type UserWithFlavors = Prisma.UserGetPayload<typeof userWithFlavors>
         </div>
 
         <div className="w-full md:w-6/12 order-3 md:order-2 mt-6 md:mt-1">
-          <h2 className="text-lg font-bold">Posts</h2>
-          <hr className="mb-2 w-full md:w-11/12 mt-2 border-1 border-gray-300" />
-          <div className="md:w-11/12 w-full">
+          <div className="sm:px-5 px-0">
+            <h2 className="sm:block hidden text-lg font-bold">Posts</h2>
+            <hr className="sm:block hidden mb-2 w-full md:w-11/12 mt-2 border-1 border-gray-300" />
+          </div>
+          <div className="sm:px-5 px-0 md:w-11/12 w-full mb-2">
             <ProfilePosts username={data.userName} />
           </div>
         </div>
         
-        <div className="w-full md:w-3/12 order-2 md:order-3 mt-6 md:mt-1">
+        <div className="px-5 w-full md:w-3/12 order-2 md:order-3 mt-6 md:mt-1">
           <h2 className="text-base font-semibold">About {data.firstName} </h2>
           <h3 className="mt-2">
           <FontAwesomeIcon icon={faLocationDot} className="mr-2" style={{ color: 'red' }} /> <span className={locClass}>{ loc }</span>

@@ -134,7 +134,7 @@ export const CreatePost = ({ onCreate } : { onCreate? : (post : NewPost) => void
 
   if (!user) return null;
   return (
-    <div className = "bg-white rounded-lg mb-4 p-6 flex flex-col drop-shadow-md">
+    <div className = "bg-white sm:rounded-lg sm:mb-4 mb-1 p-6 flex flex-col drop-shadow-md">
       <div className ="flex w-full gap-1 flex-col">
         
       <h1 className="font-bold text-lg text-[#fc571a]">Create Post</h1>

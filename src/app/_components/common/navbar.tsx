@@ -7,7 +7,7 @@ import { UserButton, UserProfile, useUser } from "@clerk/clerk-react";
 import { api } from "~/trpc/react";
 import { UserIcon } from "./user-icon"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faGear, faRightFromBracket, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faGear, faRightFromBracket, faMagnifyingGlass, faBell } from "@fortawesome/free-solid-svg-icons";
 import { UserPopover } from "./user-popover"
 import { useEffect, useState } from "react";
 import { FloatingFocusManager, FloatingOverlay, FloatingPortal, useFloating } from "@floating-ui/react";
@@ -50,7 +50,7 @@ export function Navbar() {
     
     return (
       <>
-        <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-5 mb-4">
+        <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-5 sm:mb-4 mb-1">
             
                 <form action="/" className="order-first flex flex-row items-center py-2 md:w-7/12">
                     {/* <FontAwesomeIcon icon={faBars} style={{color: "#101010",}} size="xl" className="pr-4"/> */}
@@ -82,9 +82,16 @@ export function Navbar() {
                         </div>
                     </span>
                 </form>
-            <div className="order-last flex flex-row items-center py-1">
-                {userIcon}
+            <div className="flex flex-row items-center">
+                <div className="items-center justify-center mr-3 sm:mr-5">
+                    <FontAwesomeIcon icon={faBell} style={{height: "25px", color: "#fc571a", }}/>
+                    <div className="absolute rounded-full bg-blue-950 h-2.5 w-2.5 transform -translate-y-7 translate-x-2.5"></div>
+                </div>
+                <div className="order-last flex flex-row items-center py-1">
+                    {userIcon}
+                </div>
             </div>
+            
         </nav>
         {showModal && (
             <Modal open={showModal} onOpenChange={setModal} title="Settings">

@@ -59,13 +59,16 @@ export function Home() {
         <main className="flex flex-col items-center bg-gradient-to-b">
 
           <div className="w-full sm:w-[500px]">
-            <div className="mb-2 text-xl font-bold text-[#fc571a]">Search Results</div>
-            <div className="s">
-            {/* Filter buttons */}
-              <button id="showPostBtn" onClick={showPosts} type="button" className="text-sm text-[#fc571a] hover:text-black mb-4 font-bold mr-4">Posts</button>
-              <button id="showUserBtn" onClick={showSearchedUsers} type="button" className="text-sm text-stone-400 hover:text-black mb-4 font-bold mr-4">Users</button>
-              <div className="w-full mb-3 border-black border-b-2"></div>
+            <div className="sm:p-0 pt-3 px-5">
+              <div className="mb-2 text-xl font-bold text-[#fc571a]">Search Results</div>
+              <div className="s">
+              {/* Filter buttons */}
+                <button id="showPostBtn" onClick={showPosts} type="button" className="text-sm text-[#fc571a] hover:text-black mb-4 font-bold mr-4">Posts</button>
+                <button id="showUserBtn" onClick={showSearchedUsers} type="button" className="text-sm text-stone-400 hover:text-black mb-4 font-bold mr-4">Users</button>
+                <div className="w-full mb-3 border-black border-b-2"></div>
+              </div>
             </div>
+            
             
             {/* {content} */}
             <div id="search-content">
@@ -74,7 +77,7 @@ export function Home() {
             
             
           </div>
-          <div className="mb-6">
+          <div className="sm:mb-6 mb-1">
 
           </div>
           

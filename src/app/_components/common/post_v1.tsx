@@ -95,7 +95,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
 
     return (
       <>
-        <div className="py-4 bg-white sm:mb-4 mb-0.5 drop-shadow-md sm:rounded-lg rounded">  
+        <div className="py-4 bg-white sm:mb-3 mb-0.5 drop-shadow-md sm:rounded-lg">  
             <div className="px-5 flex flex-row items-center justify-between mb-4">
                 <div className="order-first flex flex-row items-center">
                     <Link href={`/profile/${post.author.userName}`}>
