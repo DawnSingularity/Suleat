@@ -29,7 +29,7 @@ export function Navbar() {
         userIcon = <UserPopover button={(
             <UserIcon user={selfUserQuery.data} width="10" clickable={false} />
         )} popover={(
-            <div className="mx-4 py-6 bg-white flex flex-col shadow-lg rounded-lg">
+            <div className="py-6 bg-white flex flex-col shadow-lg rounded-lg">
                 <a href={`/profile/${selfUserQuery.data.userName}`} className="py-4 pl-4 pr-6 hover:bg-zinc-200">
                     <div className="flex flex-row items-center">
                         <UserIcon user={selfUserQuery.data} width="12" clickable={false} className="mr-3" />
@@ -66,7 +66,7 @@ export function Navbar() {
     
     return (
       <>
-        <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-5 sm:mb-4 mb-1">
+        <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-5 pr-4 sm:mb-4 mb-1">
             <form action="/" className="order-first flex flex-row items-center py-2 md:w-7/12">
                 {/* <FontAwesomeIcon icon={faBars} style={{color: "#101010",}} size="xl" className="pr-4"/> */}
                 <a className="flex flex-row items-center" href="/">

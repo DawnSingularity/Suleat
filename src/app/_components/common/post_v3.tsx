@@ -20,6 +20,8 @@ import Link from "next/link";
 import { RouterOutputs } from "~/trpc/shared";
 import { useQueryClient } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
+import toast from "react-hot-toast";
+
 const OPTIONS: EmblaOptionsType = {}
 const SLIDE_COUNT = 5
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
@@ -61,8 +63,8 @@ export function PostPageComponent({ post }: { post: RouterOutputs["post"]["getPo
         followButton = <UserPopover button={(
             <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000", }}/>
         )} popover={( //flex flex-col
-            <div className="mx-4 py-6 bg-white flex-col shadow-lg rounded- z-40">
-                <div className="flex flex-row items-center py-2 px-6 hover:bg-zinc-200 cursor-pointer" onClick={() => {navigator.clipboard.writeText(`${window.location.origin}/post/${post.id}`)}}>
+            <div className="py-1 bg-white shadow-lg rounded text-sm">
+                <div className="flex flex-row items-center py-2 px-6 hover:bg-zinc-200 cursor-pointer" onClick={() => {navigator.clipboard.writeText(`${window.location.origin}/post/${post.id}`); toast.success("Link copied to clipboard.")}}>
                     <FontAwesomeIcon icon={faShare} style={{color: "#fc571a",}} className="mr-4" />
                     <span>Share</span>
                 </div>
