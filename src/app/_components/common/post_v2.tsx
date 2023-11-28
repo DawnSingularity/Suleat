@@ -66,7 +66,7 @@ export function PostPreviewComponent({ post }: { post: RouterOutputs["post"]["ge
                 { post.caption }
                 </div>
                 <div className="mt-2 flex flex-row items-center justify-between">
-                    <div className="order-first">
+                    <div className="order-first flex flex-wrap">
                         {post.flavors?.map((flavor : Flavor, index : number) => (<PillButton
                             key={index.toString()}
                             id={flavor.name} text={flavor.name} backgroundColor={flavor.color}
