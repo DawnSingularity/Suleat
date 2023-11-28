@@ -64,7 +64,7 @@ export const commentRouter = createTRPCRouter({
               commentId: comment.id,
               systemId: notifSystem?.id,
               isViewed: false,
-              category: "favorite"
+              category: "comment"
             },
           });
         }
@@ -87,7 +87,7 @@ export const commentRouter = createTRPCRouter({
         id: input.commentId,
       },
       include:{
-        author: true
+        author: true,
       }
     })
   }),
