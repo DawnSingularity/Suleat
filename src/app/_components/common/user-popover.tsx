@@ -2,13 +2,16 @@ import { useFloating, useTransitionStyles, autoUpdate, offset, flip, shift, useC
 import { ReactNode, useState } from "react"
 
 // Based from https://floating-ui.com/docs/popover
-export function UserPopover({button, popover} : {button : ReactNode, popover : ReactNode}) { 
+export function UserPopover({button, popover, autoposition = true} : {button : ReactNode, popover : ReactNode, autoposition?: boolean}) { 
     const [isOpen, setIsOpen] = useState(false);
  
+    const autoPositionMiddleware = autoposition ? [flip(), shift()] : [];
+    
     const {refs, floatingStyles, context} = useFloating({
       open: isOpen,
       onOpenChange: setIsOpen,
-      middleware: [offset(8), flip(), shift()],
+      placement: "bottom-end",
+      middleware: [offset(8), ...autoPositionMiddleware],
       whileElementsMounted: autoUpdate,
     });
 
@@ -32,7 +35,7 @@ export function UserPopover({button, popover} : {button : ReactNode, popover : R
         </button>
         {isOpen && (
             <FloatingFocusManager context={context} modal={false}>
-                <div ref={refs.setFloating} style={floatingStyles} {...getFloatingProps()}>
+                <div ref={refs.setFloating} style={{...floatingStyles, zIndex: 999 /* set z-index because floating-ui doesn't */}} {...getFloatingProps()}>
                     <div style={transitionStyles}>
                         {popover}
                     </div>
