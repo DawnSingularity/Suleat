@@ -309,7 +309,7 @@ export const postRouter = createTRPCRouter({
             userId: postLiked?.authorId
           }
         })
-
+        
         if(notifSystem !== null) {
           const favNotif = await ctx.db.favNotification.create({
             data: {

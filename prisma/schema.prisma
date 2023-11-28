@@ -42,8 +42,9 @@ model Comment {
     parentId       String?
 
     subcomments    Comment[] @relation("Subcomments")
-
+    notification    CommentNotification[]
     @@index([postId])
+
 }
 
 
@@ -147,6 +148,20 @@ model NotificationSystem {
     id                  Int     @id @default(autoincrement())
     favNotifications    FavNotification[]
     followNotifications FollowNotification[]
+    commentNotifications CommentNotification[]
     systemOwner         User    @relation(fields: [userId], references: [uuid])
     userId              String  @unique
+}
+
+model CommentNotification{
+    @@id([commentId]) 
+    comment     Comment @relation(fields: [commentId], references: [id])
+    commentId   String
+    isViewed        Boolean @default(false)
+    category        String
+    createdAt       DateTime @default(now())
+
+    system          NotificationSystem @relation(fields: [systemId], references: [id])
+    systemId        Int
+
 }

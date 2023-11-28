@@ -32,6 +32,7 @@ export const commentRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       if(ctx.auth.userId === null) return;
+
       const comment = await ctx.db.comment.create({
         data: {
           text: input.text,
@@ -39,9 +40,57 @@ export const commentRouter = createTRPCRouter({
           postId: input.postId
         }
       });
+      const post = await ctx.db.post.findUnique({
+        where:{
+          id: input.postId,
+        },
+        include:{
+          author: true,
+        }
+      })
+      if(post !== null){
+        const notifSystem = await ctx.db.notificationSystem.upsert({
+          where: {
+            userId: post?.author.uuid
+          },
+          update: {},
+          create: {
+            userId: post?.authorId
+          }
+        })
+        if(notifSystem !== null){
+            await ctx.db.commentNotification.create({
+            data: {
+              commentId: comment.id,
+              systemId: notifSystem?.id,
+              isViewed: false,
+              category: "favorite"
+            },
+          });
+        }
+      }
+
+      
       return comment;
     }),
 
+
+
+
+  getCommentById: publicProcedure
+  .input(z.object({
+    commentId: z.string()
+  }))
+  .query(async({ctx, input})=>{
+    return await ctx.db.comment.findUnique({
+      where:{
+        id: input.commentId,
+      },
+      include:{
+        author: true
+      }
+    })
+  }),
 
   getCommentByPostId: publicProcedure
   .input(z.object({

@@ -1,4 +1,5 @@
 import { FavNotification } from "@prisma/client";
+import { CommentNotification } from "@prisma/client";
 import { api } from "~/trpc/react";
 import Link from "next/link";
 import { UserIcon } from "./user-icon"
@@ -6,12 +7,11 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
-export function Notification({notif}: {notif: FavNotification}) { // add || to add more types of notifs
+export function Notification({notif}: {notif: FavNotification | CommentNotification}) { // add || to add more types of notifs
 
     let showComment = false
     let action = ""
-
-    if(notif.category === "favorite") {
+    if(notif.category === "favorite" && 'favUserLikerId' in notif) {
         const userLiker = api.profile.getUserById.useQuery({uuid: notif.favUserLikerId})
         if(userLiker.data) {
             return (
@@ -57,11 +57,31 @@ export function Notification({notif}: {notif: FavNotification}) { // add || to a
         //         </>
         //     )
         // }
-    } else if(notif.category === "comment") {
+    } else if(notif.category === "comment" && 'commentId' in notif) {
         action = " commented on your post: "
         showComment = true
-
         // handle trim comment here
+        const userLiker = api.comment.getCommentById.useQuery({commentId: notif.commentId})
+        if(userLiker.data) {
+            return (
+                <>
+                    <Link href={`/post/${notif}`}>
+                        <div className="flex flex-row w-full h-[70px] hover:brightness-90 bg-white p-5 mb-1 items-center">
+                            <span id ="pfp" className="w-[58px] w- mr-3 flex flex-row items-center object-cover">
+                                <UserIcon user={userLiker?.data.author} width="12" className="self-center" />
+                            </span>
+                            
+                            <div className="w-full">
+                                <span id="text" className="text-sm line-clamp-2 ">
+                                    <span className="font-semibold">{userLiker.data?.author.firstName}&nbsp;{userLiker.data?.author.lastName}</span> {action}
+                                </span>
+                                <p className="text-[12px] text-gray-400">{dayjs(notif.createdAt).fromNow()}</p>
+                            </div>
+                        </div>
+                    </Link>
+                </>
+            )
+        }
 
     } else if(notif.category === "reply") {
         // handle if-else of notifying post author or comment author here

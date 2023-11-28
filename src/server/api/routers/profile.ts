@@ -332,7 +332,8 @@ export const profileRouter = createTRPCRouter({
               where: {"userId": input.uuid},
               include: { 
                 favNotifications: true, // add more notif types here soon
-                followNotifications: true
+                followNotifications: true,
+                commentNotifications: true
               },
             });
           } else {
