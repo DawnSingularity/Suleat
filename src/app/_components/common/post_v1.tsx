@@ -8,8 +8,9 @@ import { PillButton } from "./../profile/pill-button"
 import { UserIcon } from "./user-icon"
 import { Flavor, Post, Prisma, User } from "prisma/prisma-client"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faLocationDot  } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsis, faLocationDot, faShare  } from "@fortawesome/free-solid-svg-icons";
 import { faMessage, faStar } from "@fortawesome/free-regular-svg-icons";
+import { UserPopover } from "./user-popover";
 
 import React, {useEffect} from 'react'
 import ReactDOM from 'react-dom/client'
@@ -19,6 +20,7 @@ import Link from "next/link";
 import { RouterOutputs } from "~/trpc/shared";
 import { useQueryClient } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
+import { hostname } from "os";
 const OPTIONS: EmblaOptionsType = {}
 const SLIDE_COUNT = 5
 const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
@@ -58,7 +60,16 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
     let followButton = <></>, followText = <></>
     if(loggedInUsernameQuery.isSuccess && loggedInUsername !== post.author.userName) {
         followText = <PillButton id="reserved" text={followIcon} backgroundColor="linear-gradient(to bottom, #005cb1, #005cb1)" className="color-white text-white font-bold cursor-pointer" onChange={handleFollowButton} />
-        followButton = <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}}/>
+        followButton = <UserPopover button={(
+            <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000", }}/>
+        )} popover={( //flex flex-col
+            <div className="mx-4 py-6 bg-white sm:absolute shadow-lg rounded-">
+                <div className="flex flex-row items-center py-2 px-6 hover:bg-zinc-200 cursor-pointer" onClick={() => {navigator.clipboard.writeText(`${window.location.origin}/post/${post.id}`)}}>
+                    <FontAwesomeIcon icon={faShare} style={{color: "#fc571a",}} className="mr-4" />
+                    <span>Share</span>
+                </div>
+            </div>
+         )}/>
     }
 
     useEffect(() => {

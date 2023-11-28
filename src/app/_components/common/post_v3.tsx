@@ -8,8 +8,9 @@ import { PillButton } from "./../profile/pill-button"
 import { UserIcon } from "./user-icon"
 import { Flavor, Post, Prisma, User } from "prisma/prisma-client"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faLocationDot  } from "@fortawesome/free-solid-svg-icons";
+import { faEllipsis, faLocationDot, faShare  } from "@fortawesome/free-solid-svg-icons";
 import { faMessage, faStar } from "@fortawesome/free-regular-svg-icons";
+import { UserPopover } from "./user-popover";
 
 import React, {useEffect} from 'react'
 import ReactDOM from 'react-dom/client'
@@ -57,7 +58,16 @@ export function PostPageComponent({ post }: { post: RouterOutputs["post"]["getPo
     let followButton = <></>, followText = <></>
     if(loggedInUsernameQuery.isSuccess && loggedInUsername !== post.author.userName) {
         followText = <PillButton id="reserved" text={followIcon} backgroundColor="linear-gradient(to bottom, #005cb1, #005cb1)" className="color-white text-white font-bold cursor-pointer" onChange={handleFollowButton} />
-        followButton = <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000",}}/>
+        followButton = <UserPopover button={(
+            <FontAwesomeIcon icon={faEllipsis} rotation={90} style={{color: "#000000", }}/>
+        )} popover={( //flex flex-col
+            <div className="mx-4 py-6 bg-white flex-col shadow-lg rounded- z-40">
+                <div className="flex flex-row items-center py-2 px-6 hover:bg-zinc-200 cursor-pointer" onClick={() => {navigator.clipboard.writeText(`${window.location.origin}/post/${post.id}`)}}>
+                    <FontAwesomeIcon icon={faShare} style={{color: "#fc571a",}} className="mr-4" />
+                    <span>Share</span>
+                </div>
+            </div>
+         )}/>
     }
 
     useEffect(() => {
