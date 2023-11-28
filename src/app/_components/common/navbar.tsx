@@ -1,5 +1,6 @@
 "use client";
 
+import { FavNotification, FollowNotification, CommentNotification } from "@prisma/client";
 import suleatIcon from "~/../public/suleat-icon.png"
 import Image from "next/image"
 import { useAuth } from "@clerk/nextjs";
@@ -59,11 +60,26 @@ export function Navbar() {
 
     // get all notifications for now... (apply infinite scrolling ? ;-;)
     let uuid = ""
+    
+
     if(selfUserQuery?.data?.uuid)
         uuid = selfUserQuery?.data?.uuid
 
     const allNotifsQuery = api.profile.getUserNotifs.useQuery({uuid: uuid})
-    
+    const favNotifs = allNotifsQuery?.data?.favNotifications ?? []
+    const followNotifs = allNotifsQuery?.data?.followNotifications ?? []
+    const commentNotifs = allNotifsQuery?.data?.commentNotifications ?? []
+
+    const multipleNotifTypes: (FavNotification | CommentNotification | FollowNotification)[] = []
+    for(let x of favNotifs)
+        multipleNotifTypes.push(x)
+    for(let y of commentNotifs)
+        multipleNotifTypes.push(y)
+    for(let y of followNotifs)
+        multipleNotifTypes.push(y)
+
+    multipleNotifTypes.sort((a, b) => { return( Number(b.createdAt) - Number(a.createdAt))})
+
     return (
       <>
         <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-5 pr-4 sm:mb-4 mb-1">
@@ -111,12 +127,8 @@ export function Navbar() {
             <div className="sm:fixed sm:top-[46px] fixed sm:transform sm:translate-y-2 drop-shadow-md rounded-md z-50 sm:w-[350px] sm:h-5/6 w-screen h-screen sm:right-5 bg-white">
                 <div id="notifTitle" className="text-xl font-bold px-5 mt-5 mb-2 text-[#fc571a]">Notifications</div>
                 <>
-                    {allNotifsQuery?.data?.favNotifications.map((notif) => <Notification notif={notif}/>)}
+                    {multipleNotifTypes.map((notif) => <Notification notif={notif}/>)}
                 </>
-                
-                {/* <Notification/>
-                <Notification/>
-                <Notification/> */}
             </div>
         }
 

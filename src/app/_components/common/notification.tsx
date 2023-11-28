@@ -1,5 +1,4 @@
-import { FavNotification } from "@prisma/client";
-import { CommentNotification } from "@prisma/client";
+import { FavNotification, FollowNotification, CommentNotification } from "@prisma/client";
 import { api } from "~/trpc/react";
 import Link from "next/link";
 import { UserIcon } from "./user-icon"
@@ -7,7 +6,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
 
-export function Notification({notif}: {notif: FavNotification | CommentNotification}) { // add || to add more types of notifs
+export function Notification({notif}: {notif: FavNotification | CommentNotification | FollowNotification}) { // add || to add more types of notifs
 
     let showComment = false
     let action = ""
@@ -33,30 +32,29 @@ export function Notification({notif}: {notif: FavNotification | CommentNotificat
                 </>
             )
         }
-    } else if(notif.category === "follow") {
-        // WIP
-        // const follower = api.profile.getUserById.useQuery({uuid: notif.followerId})
+    } else if(notif.category === "follow" && 'followerId' in notif) {
+        const follower = api.profile.getUserById.useQuery({uuid: notif.followerId})
 
-        // if(follower.data) {
-        //     return (
-        //         <>
-        //             <Link href={`/profile/${follower.data.userName}`}>
-        //                 <div className="flex flex-row w-full h-[70px] hover:brightness-90 bg-white p-5 mb-1 items-center">
-        //                     <span id ="pfp" className="w-[58px] w- mr-3 flex flex-row items-center object-cover">
-        //                         <UserIcon user={follower?.data} width="12" className="self-center" />
-        //                     </span>
+        if(follower.data) {
+            return (
+                <>
+                    <Link href={`/profile/${follower.data.userName}`}>
+                        <div className="flex flex-row w-full h-[70px] hover:brightness-90 bg-white p-5 mb-1 items-center">
+                            <span id ="pfp" className="w-[58px] w- mr-3 flex flex-row items-center object-cover">
+                                <UserIcon user={follower?.data} width="12" className="self-center" />
+                            </span>
                             
-        //                     <div className="w-full">
-        //                         <span id="text" className="text-sm line-clamp-2 ">
-        //                             <span className="font-semibold">{follower.data?.firstName}&nbsp;{follower.data?.lastName}</span> followed you.
-        //                         </span>
-        //                         <p className="text-[12px] text-gray-400">{dayjs(notif.createdAt).fromNow()}</p>
-        //                     </div>
-        //                 </div>
-        //             </Link>
-        //         </>
-        //     )
-        // }
+                            <div className="w-full">
+                                <span id="text" className="text-sm line-clamp-2 ">
+                                    <span className="font-semibold">{follower.data?.firstName}&nbsp;{follower.data?.lastName}</span> followed you.
+                                </span>
+                                <p className="text-[12px] text-gray-400">{dayjs(notif.createdAt).fromNow()}</p>
+                            </div>
+                        </div>
+                    </Link>
+                </>
+            )
+        }
     } else if(notif.category === "comment" && 'commentId' in notif) {
         action = " commented on your post: "
         showComment = true
