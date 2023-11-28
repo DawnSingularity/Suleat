@@ -65,7 +65,7 @@ export function Navbar() {
     if(selfUserQuery?.data?.uuid)
         uuid = selfUserQuery?.data?.uuid
 
-    const allNotifsQuery = api.profile.getUserNotifs.useQuery({uuid: uuid}, {refetchInterval:30000}, {refetchInterval:30000})
+    const allNotifsQuery = api.profile.getUserNotifs.useQuery({uuid: uuid}, {refetchInterval:30000})
     const favNotifs = allNotifsQuery?.data?.favNotifications ?? []
     const followNotifs = allNotifsQuery?.data?.followNotifications ?? []
     const commentNotifs = allNotifsQuery?.data?.commentNotifications ?? []
