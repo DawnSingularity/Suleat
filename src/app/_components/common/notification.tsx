@@ -70,7 +70,7 @@ export function Notification({notif}: {notif: FavNotification | CommentNotificat
                             </span>
                             
                             <div className="w-full">
-                                <span id="text" className="text-sm line-clamp-2 ">
+                                <span id="text" className="text-sm line-clamp-2 break-all">
                                     <span className="font-semibold">{userLiker.data?.author.firstName}&nbsp;{userLiker.data?.author.lastName}</span> {action} {userLiker.data.text}
                                 </span>
                                 <p className="text-[12px] text-gray-400">{dayjs(notif.createdAt).fromNow()}</p>

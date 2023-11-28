@@ -24,11 +24,22 @@ export function Navbar() {
 
     const [showModal, setModal] = useState(false)
     const [searchKey, setSearchKey] = useState("")
+    const [mostRecentNotif, setMostRecentNotif] = useState(Date.now())
+
+    // show notification system
+    const [showNotifSystem, setShowNotifSystem] = useState(false);
+    const handleNotifBellClick = () => {
+        setShowNotifSystem(!showNotifSystem)
+    }
+
+    const handleNotifBellClick2 = () => {
+        setShowNotifSystem(false)
+    }
     
     let userIcon
     if(selfUserQuery.data != null) {
         userIcon = <UserPopover button={(
-            <UserIcon user={selfUserQuery.data} width="10" clickable={false} />
+            <UserIcon onClick={handleNotifBellClick2} user={selfUserQuery.data} width="10" clickable={false} />
         )} popover={(
             <div className="py-6 bg-white flex flex-col shadow-lg rounded-lg">
                 <a href={`/profile/${selfUserQuery.data.userName}`} className="py-4 pl-4 pr-6 hover:bg-zinc-200">
@@ -52,9 +63,10 @@ export function Navbar() {
         )}/>
     }
 
-    // show notification system
-    const [showNotifSystem, setShowNotifSystem] = useState(false);
-    const handleNotifBellClick = () => {
+
+    
+    const handleUserModalOpen = () => {
+        setModal(!showModal)
         setShowNotifSystem(!showNotifSystem)
     }
 
@@ -64,7 +76,7 @@ export function Navbar() {
 
     if(selfUserQuery?.data?.uuid)
         uuid = selfUserQuery?.data?.uuid
-
+    
     const allNotifsQuery = api.profile.getUserNotifs.useQuery({uuid: uuid}, {refetchInterval:30000})
     const favNotifs = allNotifsQuery?.data?.favNotifications ?? []
     const followNotifs = allNotifsQuery?.data?.followNotifications ?? []
@@ -79,6 +91,13 @@ export function Navbar() {
         multipleNotifTypes.push(y)
 
     multipleNotifTypes.sort((a, b) => { return( Number(b.createdAt) - Number(a.createdAt))})
+    const currentNotif = multipleNotifTypes[0]
+
+    useEffect(() => {
+        if(mostRecentNotif !== Number(multipleNotifTypes[0]?.createdAt))
+            setMostRecentNotif(Number(multipleNotifTypes[0]?.createdAt))
+    })
+    
 
     return (
       <>
@@ -116,7 +135,9 @@ export function Navbar() {
             <div className="flex flex-row items-center">
                 <div className="items-center justify-center mr-3 sm:mr-5">
                     <FontAwesomeIcon icon={faBell} style={{height: "25px", color: "#fc571a", }} onClick={handleNotifBellClick}/>
-                    <div className="absolute rounded-full bg-blue-950 h-2.5 w-2.5 transform -translate-y-7 translate-x-2.5"></div>
+                    {!currentNotif?.isViewed &&
+                        <div className="absolute rounded-full bg-blue-950 h-2.5 w-2.5 transform -translate-y-7 translate-x-2.5"></div>
+                    }
                 </div>
                 <div className="order-last flex flex-row items-center py-1">
                     {userIcon}
@@ -127,7 +148,7 @@ export function Navbar() {
             <div className="sm:fixed sm:top-[46px] fixed sm:transform sm:translate-y-2 drop-shadow-md rounded-md z-50 sm:w-[350px] sm:h-5/6 w-screen h-screen sm:right-5 bg-white">
                 <div id="notifTitle" className="text-xl font-bold px-5 mt-5 mb-2 text-[#fc571a]">Notifications</div>
                 <>
-                    {allNotifsQuery?.data?.commentNotifications.map((notif) => <Notification notif={notif}/>) /*Do this for all notification */}
+                    {multipleNotifTypes.map((notif) => <Notification notif={notif}/>) /*Do this for all notification */}
                 </>
             </div>
         }
