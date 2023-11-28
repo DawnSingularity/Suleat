@@ -109,7 +109,7 @@ export function Navbar() {
         </nav>
         {showNotifSystem &&
             <div className="sm:fixed sm:top-[46px] fixed sm:transform sm:translate-y-2 drop-shadow-md rounded-md z-50 sm:w-[350px] sm:h-5/6 w-screen h-screen sm:right-5 bg-white">
-                <div id="notifTitle" className="text-xl font-bold px-5 mt-5 text-[#fc571a]">Notifications</div>
+                <div id="notifTitle" className="text-xl font-bold px-5 mt-5 mb-2 text-[#fc571a]">Notifications</div>
                 <>
                     {allNotifsQuery?.data?.favNotifications.map((notif) => <Notification notif={notif}/>)}
                 </>

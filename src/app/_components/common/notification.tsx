@@ -19,7 +19,7 @@ export function Notification({notif}: {notif: FavNotification}) { // add || to a
             return (
                 <>
                     <Link href={`/post/${notif.favPostLikedId}`}>
-                        <div className="flex flex-row w-full h-[70px] hover:brightness-90 p-5 mb-1 items-center">
+                        <div className="flex flex-row w-full h-[70px] hover:brightness-90 bg-white p-5 mb-1 items-center">
                             <span id ="pfp" className="w-[58px] w- mr-3 flex flex-row items-center object-cover">
                                 <UserIcon user={userLiker?.data} width="12" className="self-center" />
                             </span>
