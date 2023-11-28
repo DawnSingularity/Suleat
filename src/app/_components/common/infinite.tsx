@@ -48,7 +48,8 @@ export function Infinite({ extraPostsList } : { extraPostsList? : (RouterOutputs
         }
     })
 
-    const extraPosts : (JSX.Element | undefined)[] = extraPostsList?.toReversed().map((post, index) => (
+    // it sometimes says extraPostsList?.toReversed() is not a function???
+    const extraPosts : (JSX.Element | undefined)[] = extraPostsList?.toReversed?.().map((post, index) => (
       post != null ? <Fragment key={-index - 1}>
           <PostComponent post={post} />
       </Fragment> : <></>
