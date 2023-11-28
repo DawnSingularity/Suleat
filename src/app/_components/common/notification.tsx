@@ -11,8 +11,6 @@ export function Notification({notif}: {notif: FavNotification}) { // add || to a
     let showComment = false
     let action = ""
 
-
-
     if(notif.category === "favorite") {
         const userLiker = api.profile.getUserById.useQuery({uuid: notif.favUserLikerId})
         if(userLiker.data) {
@@ -36,7 +34,29 @@ export function Notification({notif}: {notif: FavNotification}) { // add || to a
             )
         }
     } else if(notif.category === "follow") {
-        action = " followed you."
+        // WIP
+        // const follower = api.profile.getUserById.useQuery({uuid: notif.followerId})
+
+        // if(follower.data) {
+        //     return (
+        //         <>
+        //             <Link href={`/profile/${follower.data.userName}`}>
+        //                 <div className="flex flex-row w-full h-[70px] hover:brightness-90 bg-white p-5 mb-1 items-center">
+        //                     <span id ="pfp" className="w-[58px] w- mr-3 flex flex-row items-center object-cover">
+        //                         <UserIcon user={follower?.data} width="12" className="self-center" />
+        //                     </span>
+                            
+        //                     <div className="w-full">
+        //                         <span id="text" className="text-sm line-clamp-2 ">
+        //                             <span className="font-semibold">{follower.data?.firstName}&nbsp;{follower.data?.lastName}</span> followed you.
+        //                         </span>
+        //                         <p className="text-[12px] text-gray-400">{dayjs(notif.createdAt).fromNow()}</p>
+        //                     </div>
+        //                 </div>
+        //             </Link>
+        //         </>
+        //     )
+        // }
     } else if(notif.category === "comment") {
         action = " commented on your post: "
         showComment = true

@@ -70,6 +70,7 @@ model User {
     comments    Comment[] @relation("CommentAuthor")
 
     favNotifications    FavNotification[]
+    followNotifications    FollowNotification[]
     notifSystem         NotificationSystem?
 }
 
@@ -128,9 +129,24 @@ model FavNotification {
     systemId        Int
 }
 
+model FollowNotification {
+    @@id([followedId, followerId])
+    followedId      String
+    followedNotified    User @relation(fields: [followerId], references: [uuid])
+    followerId      String
+
+    isViewed        Boolean @default(false)
+    category        String
+    createdAt       DateTime @default(now())
+
+    system          NotificationSystem @relation(fields: [systemId], references: [id])
+    systemId        Int
+}
+
 model NotificationSystem {
     id                  Int     @id @default(autoincrement())
     favNotifications    FavNotification[]
+    followNotifications FollowNotification[]
     systemOwner         User    @relation(fields: [userId], references: [uuid])
     userId              String  @unique
 }

@@ -114,6 +114,35 @@ export const profileRouter = createTRPCRouter({
           await ctx.db.following.create({
             data: { userFollowingId, myUserId }
           })
+
+          // Create follow notification
+          const followedId = userFollowingId
+          const followerId = ctx.user.uuid
+          const notifSystem = await ctx.db.notificationSystem.upsert({
+            where: {
+              userId: followedId
+            },
+            update: {},
+            create: {
+              userId: followedId
+            }
+          })
+
+          if(notifSystem !== null) {
+            const followNotif = await ctx.db.followNotification.create({
+              data: {
+                followedId: followedId,
+                followerId: followerId,
+                systemId: notifSystem?.id,
+                isViewed: false,
+                category: 'follow',
+              },
+              include: {
+                system: true // Include related NotificationSystem data
+              },
+            });
+          }
+
         } else {
           await ctx.db.following.delete({
             where: { 
@@ -125,6 +154,44 @@ export const profileRouter = createTRPCRouter({
       }
 
       return {}
+    }),
+
+      createFollowNotif: userProcedure
+      .input(
+        z.object({
+          followedId: z.string(),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        if (ctx.auth.userId === null) return;
+
+        const followedId = input.followedId
+        const followerId = ctx.user.uuid
+        const notifSystem = await ctx.db.notificationSystem.upsert({
+          where: {
+            userId: followedId
+          },
+          update: {},
+          create: {
+            userId: followedId
+          }
+        })
+
+        if(notifSystem !== null) {
+          const followNotif = await ctx.db.followNotification.create({
+            data: {
+              followedId: followedId,
+              followerId: followerId,
+              systemId: notifSystem?.id,
+              isViewed: false,
+              category: 'follow',
+            },
+            include: {
+              system: true // Include related NotificationSystem data
+            },
+          });
+          return followNotif
+        }
     }),
 
     updateUserProfile: userProcedure
@@ -264,7 +331,8 @@ export const profileRouter = createTRPCRouter({
             return await ctx.db.notificationSystem.findUnique({
               where: {"userId": input.uuid},
               include: { 
-                favNotifications: true // add more notif types here soon
+                favNotifications: true, // add more notif types here soon
+                followNotifications: true
               },
             });
           } else {
