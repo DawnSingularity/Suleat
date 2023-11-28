@@ -8,8 +8,8 @@ import { PillButton } from "./../profile/pill-button"
 import { UserIcon } from "./user-icon"
 import { Flavor, Post, Prisma, User } from "prisma/prisma-client"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEllipsis, faLocationDot, faShare  } from "@fortawesome/free-solid-svg-icons";
-import { faMessage, faStar } from "@fortawesome/free-regular-svg-icons";
+import { faEllipsis, faLocationDot, faShare, faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
+import { faMessage, faStar as regularStar} from "@fortawesome/free-regular-svg-icons";
 import { UserPopover } from "./user-popover";
 
 import React, {useEffect} from 'react'
@@ -162,7 +162,7 @@ export function PostComponent({ post }: { post: RouterOutputs["post"]["getPostBy
                             onClick={handleFavoriteClick}
                             style={{ color: isFavorited ? '#ff7f50' : '#000000' }}
                         >
-                            <FontAwesomeIcon icon={faStar} className="pr-1" />
+                            <FontAwesomeIcon icon={isFavorited ? solidStar : regularStar} className="pr-1" />
                             <span>{favoriteCount}</span>
                          </button>
                     </div>
