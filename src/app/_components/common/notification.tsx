@@ -63,7 +63,7 @@ export function Notification({notif}: {notif: FavNotification | CommentNotificat
         if(userLiker.data) {
             return (
                 <>
-                    <Link href={`/post/${notif}`}>
+                    <Link href={`/post/${userLiker.data.postId}`}>
                         <div className="flex flex-row w-full h-[70px] hover:brightness-90 bg-white p-5 mb-1 items-center">
                             <span id ="pfp" className="w-[58px] w- mr-3 flex flex-row items-center object-cover">
                                 <UserIcon user={userLiker?.data.author} width="12" className="self-center" />
@@ -71,7 +71,7 @@ export function Notification({notif}: {notif: FavNotification | CommentNotificat
                             
                             <div className="w-full">
                                 <span id="text" className="text-sm line-clamp-2 ">
-                                    <span className="font-semibold">{userLiker.data?.author.firstName}&nbsp;{userLiker.data?.author.lastName}</span> {action}
+                                    <span className="font-semibold">{userLiker.data?.author.firstName}&nbsp;{userLiker.data?.author.lastName}</span> {action} {userLiker.data.text}
                                 </span>
                                 <p className="text-[12px] text-gray-400">{dayjs(notif.createdAt).fromNow()}</p>
                             </div>
