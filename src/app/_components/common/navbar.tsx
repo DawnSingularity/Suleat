@@ -231,7 +231,7 @@ export function Navbar() {
                 <>
                     {multipleNotifTypes.map((notif) => <Notification key={notif.category + notif.id} notif={notif}/>) /*Do this for all notification */}
 
-                    <div className="text-sky-500 px-5 mb-1 text-sm">
+                    <div className="text-sky-500 px-5 mb-4 text-sm">
                         {allNotifsQuery.hasNextPage && <button onClick={() => {allNotifsQuery.fetchNextPage()}}>See more notifications.</button>}
                     </div>
                 </>
