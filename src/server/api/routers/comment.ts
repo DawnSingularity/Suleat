@@ -137,10 +137,6 @@ export const commentRouter = createTRPCRouter({
           });
         }
       }
-<<<<<<< HEAD
-=======
-
->>>>>>> 999c774e78de2bd46d95e7bd974323b0e8254e09
       return comment;
     }),
 
