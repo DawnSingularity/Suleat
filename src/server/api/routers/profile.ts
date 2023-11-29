@@ -1,3 +1,5 @@
+import { CreateMultipartUploadCommand } from "@aws-sdk/client-s3";
+import { FavNotification, FollowNotification, CommentNotification, Prisma } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, userProcedure } from "~/server/api/trpc";
 
@@ -144,6 +146,15 @@ export const profileRouter = createTRPCRouter({
           }
 
         } else {
+          // if(postLiked) {
+          //   await ctx.db.favNotification.deleteMany({
+          //     where: {
+          //       favUserLikerId: userLiker,
+          //       favPostLikedId: input.postId,
+          //       userId: postLiked.authorId
+          //     }
+          //   }) 
+          // }
           await ctx.db.following.delete({
             where: { 
               userFollowingId_myUserId: { userFollowingId, myUserId }
@@ -325,20 +336,131 @@ export const profileRouter = createTRPCRouter({
     }),
 
     getUserNotifs: publicProcedure
-    .input(z.object({ uuid: z.string() }))
+    .input(z.object({
+      uuid: z.string(),
+      limit: z.number().default(10),
+      cursor: z.object({
+        mode: z.enum(["prev", "next"]).default("next"),
+        createdAt: z.coerce.date().default(() => new Date()),
+        id: z.object({
+          favNotifications: z.string().default(""),
+          followNotifications: z.string().default(""),
+          commentNotifications: z.string().default(""),
+        }).default({}),
+      }).default({})
+    }))
     .query(async ({ctx, input}) => {
-          if(input.uuid != null) {
-            return await ctx.db.notificationSystem.findUnique({
-              where: {"userId": input.uuid},
-              include: { 
-                favNotifications: true, // add more notif types here soon
-                followNotifications: true,
-                commentNotifications: true
-              },
-            });
+      if(input.uuid != null) {
+          // based on post infinite scrolling
+          // NOTE: all types of notifications will share the same createdAt cursor
+         const notificationIncludeSettings = ({id} : {id: string}) => {
+          if(input.cursor.mode === "next") {
+            // get earlier notifs
+            return {
+              take: input.limit,
+              where: {
+                 OR: [ {
+                     createdAt: { lt: input.cursor.createdAt, }
+                   }, {
+                     createdAt: input.cursor.createdAt,
+                     id: { gt: id, }
+                   }, ]
+               },
+              orderBy: [
+               { createdAt: Prisma.SortOrder.desc },
+               { id: Prisma.SortOrder.asc },
+              ],
+            }
           } else {
-            return null;
+            // get newer notifs (no count and tie-breaking for now)
+            return {
+              //take: input.limit,
+              where: { createdAt: { gt: input.cursor.createdAt, } },
+              orderBy: [
+               { createdAt: Prisma.SortOrder.desc },
+              ],
+            }
           }
-      }),
+        };
+
+        const data = await ctx.db.notificationSystem.findUnique({
+          where: {"userId": input.uuid},
+          include: {
+            favNotifications: notificationIncludeSettings({id: input.cursor.id.favNotifications}),
+            followNotifications: notificationIncludeSettings({id: input.cursor.id.followNotifications}),
+            commentNotifications: notificationIncludeSettings({id: input.cursor.id.commentNotifications}),
+          },
+        });
+
+        const favNotifs = data?.favNotifications ?? []
+        const followNotifs = data?.followNotifications ?? []
+        const commentNotifs = data?.commentNotifications ?? []
+    
+        const multipleNotifTypes: (FavNotification | CommentNotification | FollowNotification)[] = []
+        for(let x of favNotifs)
+            multipleNotifTypes.push(x)
+        for(let y of commentNotifs)
+            multipleNotifTypes.push(y)
+        for(let y of followNotifs)
+            multipleNotifTypes.push(y)
+          
+        multipleNotifTypes.sort((a, b) => { return( Number(b.createdAt) - Number(a.createdAt))})
+        
+        if(input.cursor.mode == "next") {
+          return multipleNotifTypes.slice(0, input.limit)
+        } else {
+          return multipleNotifTypes
+        }
+      } else {
+        return null;
+      }
+  }),
+  
+    updateIsViewedNotif: publicProcedure
+    .input(z.object({
+      mainId: z.string(),
+      secondaryId: z.string().optional(),
+      tertiaryId: z.string().optional(),
+      type: z.string()
+    }))
+    .mutation(async({ctx, input}) => {
+      if(input.mainId && input.type) {
+        if(input.type === "favorite" && input.secondaryId && input.tertiaryId) {
+          const response = await ctx.db.favNotification.update({
+            where: {
+              favUserLikerId_favPostLikedId_userId: {
+                favUserLikerId: input.mainId,
+                favPostLikedId: input.secondaryId,
+                userId: input.tertiaryId
+              }
+            },
+            data: {
+              isViewed: true
+            }
+          })
+        } else if(input.type === "comment") {
+          const response = await ctx.db.commentNotification.update({
+            where: {
+              id: input.mainId
+            },
+            data: {
+              isViewed: true
+            }
+          })
+        } else if(input.type === "follow" && input.secondaryId) {
+          const response = await ctx.db.followNotification.update({
+            where: {
+              followedId_followerId: {
+                followedId: input.mainId,
+                followerId: input.secondaryId
+              }
+            },
+            data: {
+              isViewed: true
+            }
+          })
+        }
+      }
+    })
 });
 

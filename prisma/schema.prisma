@@ -117,7 +117,8 @@ model Photo {
 
 model FavNotification {
     @@id([favUserLikerId, favPostLikedId, userId])          
-    favorite        Favorite @relation(fields: [favUserLikerId, favPostLikedId], references: [userLikerId, postLikedId])
+    id              String @unique @default(cuid())
+    favorite        Favorite? @relation(fields: [favUserLikerId, favPostLikedId], references: [userLikerId, postLikedId])
     favUserLikerId  String
     favPostLikedId  String
     userNotified    User @relation(fields: [userId], references: [uuid])
@@ -132,6 +133,7 @@ model FavNotification {
 
 model FollowNotification {
     @@id([followedId, followerId])
+    id              String @unique @default(cuid())
     followedId      String
     followedNotified    User @relation(fields: [followerId], references: [uuid])
     followerId      String
@@ -154,14 +156,14 @@ model NotificationSystem {
 }
 
 model CommentNotification{
-    @@id([commentId]) 
+    id          String @id @default(cuid())
     comment     Comment @relation(fields: [commentId], references: [id])
     commentId   String
     isViewed        Boolean @default(false)
     category        String
     createdAt       DateTime @default(now())
+    notifyWho       String @default("")
 
     system          NotificationSystem @relation(fields: [systemId], references: [id])
     systemId        Int
-
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { FavNotification, FollowNotification, CommentNotification } from "@prisma/client";
 import suleatIcon from "~/../public/suleat-icon.png"
 import Image from "next/image"
 import { useAuth } from "@clerk/nextjs";
@@ -15,6 +16,10 @@ import { Modal } from "./modal";
 import { useRouter } from "next/navigation";
 import { Notification } from "./notification"
 
+const NOTIFS_PER_PAGE = 10;
+
+type MultiNotification = FavNotification | CommentNotification | FollowNotification;
+
 export function Navbar() {
     const auth = useAuth();
     const router = useRouter();
@@ -23,11 +28,135 @@ export function Navbar() {
 
     const [showModal, setModal] = useState(false)
     const [searchKey, setSearchKey] = useState("")
+    const [mostRecentNotif, setMostRecentNotif] = useState(Number(new Date('2000-01-01')))
+
+    // get all notifications for now... (apply infinite scrolling ? ;-;)
+    let uuid = ""
+
+    if(selfUserQuery?.data?.uuid)
+        uuid = selfUserQuery?.data?.uuid
+    
+    const allNotifsQuery = api.profile.getUserNotifs.useInfiniteQuery(
+        {
+            uuid: uuid,
+            limit: NOTIFS_PER_PAGE + 1, // get 1 extra notification just to check if there is a next page
+        },
+        {
+            staleTime: Infinity,
+            getPreviousPageParam: ((firstPage, allPages) => {
+                for (const page of allPages) {
+                    // find first page with content
+                    if(page && page.length > 0) {
+                        const cursor = {
+                            mode: "prev",
+                            createdAt: page[0]?.createdAt,  // latest (displayed) notif's creation time 
+                        }
+        
+                        return cursor
+                    }
+                }
+
+                // no pages yet, get first page by sending empty object to server
+                return {};
+            }),
+            getNextPageParam: ((lastPage, allPages) => {
+                if(lastPage != null) {
+                    if(lastPage.length > NOTIFS_PER_PAGE) {
+                        const cursor = {
+                            mode: "next",
+                            createdAt: lastPage[ NOTIFS_PER_PAGE - 1 ]?.createdAt, // earliest (displayed) notif's creation time
+                            id: {
+                                favNotifications: "",
+                                followNotifications: "",
+                                commentNotifications: "",
+                            }
+                        }
+                        
+                        // set tiebreaking
+                        for(const page of allPages ?? []) {
+                            for(const notif of page ?? []) {
+                                switch(notif.category) {
+                                    case "favorite":
+                                        cursor.id.favNotifications = notif.id
+                                        break
+                                    case "follow":
+                                        cursor.id.followNotifications = notif.id
+                                        break
+                                    case "comment":
+                                        cursor.id.commentNotifications = notif.id
+                                        break
+                                }
+                            }
+                        }
+        
+                        return cursor
+                    } else {
+                        // no more pages, tell tanstack by returning undefined
+                        return undefined;
+                    }
+                } else {
+                    // no pages yet, get first page by sending empty object to server
+                    return {};
+                }
+            }),
+        }
+    )
+
+    // refresh interval
+    // https://stackoverflow.com/questions/65049812/how-to-call-a-function-every-minute-in-a-react-component
+    useEffect(() => {
+      const interval = setInterval(() => { allNotifsQuery.fetchPreviousPage() }, 30000);
+      return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+    }, [])
+      
+    
+    const multipleNotifTypes: MultiNotification[] = []
+    for(let x of allNotifsQuery.data?.pages ?? [])
+        for(let y of x?.slice(0, NOTIFS_PER_PAGE) ?? [])
+            multipleNotifTypes.push(y)
+
+    const currentNotifDateTime = Number(multipleNotifTypes[0]?.createdAt)
+    const [showBlueCircle, setShowBlueCircle] = useState(false)
+    const mostRecent = multipleNotifTypes[0]
+
+    console.log(mostRecent)
+
+    useEffect(() => {
+        if(mostRecentNotif < currentNotifDateTime && !mostRecent?.isViewed) {
+            setShowBlueCircle(!showBlueCircle)
+            setMostRecentNotif(currentNotifDateTime)
+        }
+    })
+
+    const {mutate} = api.profile.updateIsViewedNotif.useMutation({})
+    // show notification system
+    const [showNotifSystem, setShowNotifSystem] = useState(false);
+    const handleNotifBellClick = () => {
+        setShowNotifSystem(!showNotifSystem)
+        setShowBlueCircle(false)
+        
+        let type = ""
+        // update isViewed
+        if(mostRecent?.category === "favorite" && "favUserLikerId" in mostRecent) {
+            console.log("REACHED FAV")
+            mutate({mainId: mostRecent.favUserLikerId, secondaryId: mostRecent.favPostLikedId, tertiaryId: mostRecent.userId, type: "favorite"})
+        } else if(mostRecent?.category === "follow" && "followedId" in mostRecent) {
+            console.log("REACHED FOLLOW")
+            mutate({mainId: mostRecent.followedId, secondaryId: mostRecent.followerId, type: "follow"})
+        } else if((mostRecent?.category === "comment" || mostRecent?.category === "reply") && "commentId" in mostRecent) {
+            console.log("REACHED COMMENT")
+            mutate({mainId: mostRecent.commentId, type: "comment"})
+        }
+    }
+
+    const handleNotifBellClick2 = () => {
+        setShowNotifSystem(false)
+    }
     
     let userIcon
     if(selfUserQuery.data != null) {
         userIcon = <UserPopover button={(
-            <UserIcon user={selfUserQuery.data} width="10" clickable={false} />
+            <UserIcon onClick={handleNotifBellClick2} user={selfUserQuery.data} width="10" clickable={false} />
         )} popover={(
             <div className="py-6 bg-white flex flex-col shadow-lg rounded-lg">
                 <a href={`/profile/${selfUserQuery.data.userName}`} className="py-4 pl-4 pr-6 hover:bg-zinc-200">
@@ -51,19 +180,6 @@ export function Navbar() {
         )}/>
     }
 
-    // show notification system
-    const [showNotifSystem, setShowNotifSystem] = useState(false);
-    const handleNotifBellClick = () => {
-        setShowNotifSystem(!showNotifSystem)
-    }
-
-    // get all notifications for now... (apply infinite scrolling ? ;-;)
-    let uuid = ""
-    if(selfUserQuery?.data?.uuid)
-        uuid = selfUserQuery?.data?.uuid
-
-    const allNotifsQuery = api.profile.getUserNotifs.useQuery({uuid: uuid}, {refetchInterval:30000})
-    
     return (
       <>
         <nav className="z-50 sticky h-14 top-0 drop-shadow-md bg-white flex flex-row justify-between px-5 pr-4 sm:mb-4 mb-1">
@@ -100,7 +216,9 @@ export function Navbar() {
             <div className="flex flex-row items-center">
                 <div className="items-center justify-center mr-3 sm:mr-5">
                     <FontAwesomeIcon icon={faBell} style={{height: "25px", color: "#fc571a", }} onClick={handleNotifBellClick}/>
-                    <div className="absolute rounded-full bg-blue-950 h-2.5 w-2.5 transform -translate-y-7 translate-x-2.5"></div>
+                    {showBlueCircle &&
+                        <div className="absolute rounded-full bg-blue-950 h-2.5 w-2.5 transform -translate-y-7 translate-x-2.5"></div>
+                    }
                 </div>
                 <div className="order-last flex flex-row items-center py-1">
                     {userIcon}
@@ -108,15 +226,15 @@ export function Navbar() {
             </div>     
         </nav>
         {showNotifSystem &&
-            <div className="sm:fixed sm:top-[46px] fixed sm:transform sm:translate-y-2 drop-shadow-md rounded-md z-50 sm:w-[350px] sm:h-5/6 w-screen h-screen sm:right-5 bg-white">
+            <div className="overflow-y-scroll sm:fixed sm:top-[46px] fixed sm:transform sm:translate-y-2 drop-shadow-md rounded-md z-50 sm:w-[350px] sm:h-5/6 w-screen h-screen sm:right-5 bg-white">
                 <div id="notifTitle" className="text-xl font-bold px-5 mt-5 mb-2 text-[#fc571a]">Notifications</div>
                 <>
-                    {allNotifsQuery?.data?.commentNotifications.map((notif) => <Notification notif={notif}/>) /*Do this for all notification */}
+                    {multipleNotifTypes.map((notif) => <Notification key={notif.category + notif.id} notif={notif}/>) /*Do this for all notification */}
+
+                    <div className="text-sky-500 px-5 mb-1 text-sm">
+                        {allNotifsQuery.hasNextPage && <button onClick={() => {allNotifsQuery.fetchNextPage()}}>See more notifications.</button>}
+                    </div>
                 </>
-                
-                {/* <Notification/>
-                <Notification/>
-                <Notification/> */}
             </div>
         }
 
