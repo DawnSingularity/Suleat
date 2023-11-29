@@ -226,7 +226,7 @@ export default function Post({ params }: { params: { id: string } }) {
                         [comment.id]: newValue,
                       }));
                     }}
-                    rows="1"
+                    rows={1}
                     className="w-full resize-none my-auto bg-transparent outline-none border p-2 text-sm rounded-md overflow-hidden"
                     placeholder="Reply to comment..."
                     onKeyDown={(e) => {
