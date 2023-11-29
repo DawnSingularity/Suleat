@@ -49,7 +49,7 @@ export const commentRouter = createTRPCRouter({
               systemId: notifSystemPostAuthor?.id,
               isViewed: false,
               category: "reply",
-              notifyWho: "postAuthor"
+              notifyWho: "postAuthor" 
             },
           });
         }
