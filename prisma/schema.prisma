@@ -154,7 +154,7 @@ model NotificationSystem {
 }
 
 model CommentNotification{
-    @@id([commentId]) 
+    id          Int   @id @default(autoincrement()) 
     comment     Comment @relation(fields: [commentId], references: [id])
     commentId   String
     isViewed        Boolean @default(false)
