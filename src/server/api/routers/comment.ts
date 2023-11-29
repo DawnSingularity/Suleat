@@ -55,9 +55,40 @@ export const commentRouter = createTRPCRouter({
         }
       }
 
-
+      // notify parent comment author
+      const parentComment = await ctx.db.comment.findUnique({
+        where:{
+          id: input.parentId,
+        },
+        include:{
+          author: true,
+        }
+      })
+      if(parentComment !== null){
+        const notifySystemtPCommentAuthor = await ctx.db.notificationSystem.upsert({
+          where: {
+            userId: parentComment?.author.uuid
+          },
+          update: {},
+          create: {
+            userId: parentComment?.authorId
+          }
+        })
+        if(notifySystemtPCommentAuthor !== null){
+            await ctx.db.commentNotification.create({
+            data: {
+              commentId: sub.id,
+              systemId: notifySystemtPCommentAuthor?.id,
+              isViewed: false,
+              category: "reply",
+              notifyWho: "parentCommentAuthor"
+            },
+          });
+        }
+      }
 
       return sub;
+      
     }),
     
     create: userProcedure
