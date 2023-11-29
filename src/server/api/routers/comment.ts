@@ -12,6 +12,8 @@ export const commentRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       if(ctx.auth.userId === null) return;
+
+      // create subcomment
       const sub = await ctx.db.comment.create({
         data: {
           postId: input.postId,
@@ -20,6 +22,41 @@ export const commentRouter = createTRPCRouter({
           parentId: input.parentId
         }
       });
+
+      // notify post author
+      const post = await ctx.db.post.findUnique({
+        where:{
+          id: input.postId,
+        },
+        include:{
+          author: true,
+        }
+      })
+      if(post !== null){
+        const notifSystemPostAuthor = await ctx.db.notificationSystem.upsert({
+          where: {
+            userId: post?.author.uuid
+          },
+          update: {},
+          create: {
+            userId: post?.authorId
+          }
+        })
+        if(notifSystemPostAuthor !== null){
+            await ctx.db.commentNotification.create({
+            data: {
+              commentId: sub.id,
+              systemId: notifSystemPostAuthor?.id,
+              isViewed: false,
+              category: "reply",
+              notifyWho: "postAuthor"
+            },
+          });
+        }
+      }
+
+
+
       return sub;
     }),
     
@@ -70,12 +107,8 @@ export const commentRouter = createTRPCRouter({
         }
       }
 
-      
       return comment;
     }),
-
-
-
 
   getCommentById: publicProcedure
   .input(z.object({

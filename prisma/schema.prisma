@@ -160,8 +160,8 @@ model CommentNotification{
     isViewed        Boolean @default(false)
     category        String
     createdAt       DateTime @default(now())
+    notifyWho       String @default("")
 
     system          NotificationSystem @relation(fields: [systemId], references: [id])
     systemId        Int
-
 }
