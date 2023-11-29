@@ -26,14 +26,14 @@ npm install
 ```
 npx next dev
 ```
-4. Access the app to your browser
+4. Access the app in your browser
 ```
 http://localhost:3000/
 ```
 
 ## Credits
 
-This social networking service is conceptualized and requested by [ARDY UBANOS](https://www.linkedin.com/in/ardy-ubanos/) and developed by Team B of CSSWENG S15 course of De La Salle University (T1 2023-2024)
+This social networking service is conceptualized and requested by [ARDY UBANOS](https://www.linkedin.com/in/ardy-ubanos/) and developed by Team B of CSSWENG S15 course of De La Salle University (T1 2023-2024).
 ### Members
 * [ASPECTO, DON LAUDE ANDRES](https://github.com/Loouudee)
 * [CHUA, HARVEY SHAWN ANG](https://github.com/3liteking148)
