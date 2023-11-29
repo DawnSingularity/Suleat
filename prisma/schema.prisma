@@ -12,7 +12,6 @@ generator client {
   previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
-
 model Post {
     id             String   @id @default(cuid())
     caption        String   @db.VarChar(10000) @default("")

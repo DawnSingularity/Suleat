@@ -9,17 +9,10 @@
     --font-family: 'Lato', sans-serif;
     --text-color: #333333;
     --suleat: #fc571a;
-<<<<<<< HEAD
     --font-poppins: 'Poppins', sans-serif;
   }
 
   .cl-internal-b3fm6y, .cl-headerSubtitle, .cl-footerAction{
-=======
-  }
-
-  
-.cl-internal-b3fm6y, .cl-headerSubtitle, .cl-footerAction{
->>>>>>> f9a6186615f415d21794f61890d3bbef0f8d7a54
     visibility: hidden;
 }
 .cl-headerSubtitle{
