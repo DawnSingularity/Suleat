@@ -25,6 +25,7 @@ export const commentRouter = createTRPCRouter({
 
       // notify post author
       const post = await ctx.db.post.findUnique({
+
         where:{
           id: input.postId,
         },
@@ -32,7 +33,7 @@ export const commentRouter = createTRPCRouter({
           author: true,
         }
       })
-      if(post !== null){
+      if(post !== null && sub.authorId !== post.authorId){
         const notifSystemPostAuthor = await ctx.db.notificationSystem.upsert({
           where: {
             userId: post?.author.uuid
@@ -64,7 +65,7 @@ export const commentRouter = createTRPCRouter({
           author: true,
         }
       })
-      if(parentComment !== null){
+      if(parentComment !== null && sub.authorId !== parentComment.authorId){
         const notifySystemtPCommentAuthor = await ctx.db.notificationSystem.upsert({
           where: {
             userId: parentComment?.author.uuid
@@ -116,7 +117,7 @@ export const commentRouter = createTRPCRouter({
           author: true,
         }
       })
-      if(post !== null){
+      if(post !== null && comment.authorId !== post.authorId){
         const notifSystem = await ctx.db.notificationSystem.upsert({
           where: {
             userId: post?.author.uuid
