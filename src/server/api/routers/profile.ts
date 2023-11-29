@@ -375,7 +375,7 @@ export const profileRouter = createTRPCRouter({
         } else if(input.type === "comment") {
           const response = await ctx.db.commentNotification.update({
             where: {
-              id: Number(input.mainId)
+              id: input.mainId
             },
             data: {
               isViewed: true
