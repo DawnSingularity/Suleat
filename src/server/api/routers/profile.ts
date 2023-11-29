@@ -1,4 +1,5 @@
-import { Prisma } from "@prisma/client";
+import { CreateMultipartUploadCommand } from "@aws-sdk/client-s3";
+import { FavNotification, FollowNotification, CommentNotification, Prisma } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, userProcedure } from "~/server/api/trpc";
 
@@ -339,6 +340,7 @@ export const profileRouter = createTRPCRouter({
       uuid: z.string(),
       limit: z.number().default(10),
       cursor: z.object({
+        mode: z.enum(["prev", "next"]).default("next"),
         createdAt: z.coerce.date().default(() => new Date()),
         id: z.object({
           favNotifications: z.string().default(""),
@@ -351,23 +353,37 @@ export const profileRouter = createTRPCRouter({
       if(input.uuid != null) {
           // based on post infinite scrolling
           // NOTE: all types of notifications will share the same createdAt cursor
-         const notificationIncludeSettings = ({id} : {id: string}) => ({
-           take: input.limit,
-           where: {
-             OR: [ {
-                 createdAt: { lt: input.cursor.createdAt, }
-               }, {
-                 createdAt: input.cursor.createdAt,
-                 id: { gt: id, }
-               }, ]
-           },
-           orderBy: [
-             { createdAt: Prisma.SortOrder.desc },
-             { id: Prisma.SortOrder.asc },
-           ],
-         });
+         const notificationIncludeSettings = ({id} : {id: string}) => {
+          if(input.cursor.mode === "next") {
+            // get earlier notifs
+            return {
+              take: input.limit,
+              where: {
+                 OR: [ {
+                     createdAt: { lt: input.cursor.createdAt, }
+                   }, {
+                     createdAt: input.cursor.createdAt,
+                     id: { gt: id, }
+                   }, ]
+               },
+              orderBy: [
+               { createdAt: Prisma.SortOrder.desc },
+               { id: Prisma.SortOrder.asc },
+              ],
+            }
+          } else {
+            // get newer notifs (no count and tie-breaking for now)
+            return {
+              //take: input.limit,
+              where: { createdAt: { gt: input.cursor.createdAt, } },
+              orderBy: [
+               { createdAt: Prisma.SortOrder.desc },
+              ],
+            }
+          }
+        };
 
-        return await ctx.db.notificationSystem.findUnique({
+        const data = await ctx.db.notificationSystem.findUnique({
           where: {"userId": input.uuid},
           include: {
             favNotifications: notificationIncludeSettings({id: input.cursor.id.favNotifications}),
@@ -375,6 +391,26 @@ export const profileRouter = createTRPCRouter({
             commentNotifications: notificationIncludeSettings({id: input.cursor.id.commentNotifications}),
           },
         });
+
+        const favNotifs = data?.favNotifications ?? []
+        const followNotifs = data?.followNotifications ?? []
+        const commentNotifs = data?.commentNotifications ?? []
+    
+        const multipleNotifTypes: (FavNotification | CommentNotification | FollowNotification)[] = []
+        for(let x of favNotifs)
+            multipleNotifTypes.push(x)
+        for(let y of commentNotifs)
+            multipleNotifTypes.push(y)
+        for(let y of followNotifs)
+            multipleNotifTypes.push(y)
+          
+        multipleNotifTypes.sort((a, b) => { return( Number(b.createdAt) - Number(a.createdAt))})
+        
+        if(input.cursor.mode == "next") {
+          return multipleNotifTypes.slice(0, input.limit)
+        } else {
+          return multipleNotifTypes
+        }
       } else {
         return null;
       }

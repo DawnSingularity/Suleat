@@ -16,6 +16,10 @@ import { Modal } from "./modal";
 import { useRouter } from "next/navigation";
 import { Notification } from "./notification"
 
+const NOTIFS_PER_PAGE = 1;
+
+type MultiNotification = FavNotification | CommentNotification | FollowNotification;
+
 export function Navbar() {
     const auth = useAuth();
     const router = useRouter();
@@ -32,20 +36,85 @@ export function Navbar() {
     if(selfUserQuery?.data?.uuid)
         uuid = selfUserQuery?.data?.uuid
     
-    const allNotifsQuery = api.profile.getUserNotifs.useQuery({uuid: uuid}, {refetchInterval:30000})
-    const favNotifs = allNotifsQuery?.data?.favNotifications ?? []
-    const followNotifs = allNotifsQuery?.data?.followNotifications ?? []
-    const commentNotifs = allNotifsQuery?.data?.commentNotifications ?? []
+    const allNotifsQuery = api.profile.getUserNotifs.useInfiniteQuery(
+        {
+            uuid: uuid,
+            limit: NOTIFS_PER_PAGE + 1, // get 1 extra notification just to check if there is a next page
+        },
+        {
+            staleTime: Infinity,
+            getPreviousPageParam: ((firstPage, allPages) => {
+                for (const page of allPages) {
+                    // find first page with content
+                    if(page && page.length > 0) {
+                        const cursor = {
+                            mode: "prev",
+                            createdAt: page[0]?.createdAt,  // latest (displayed) notif's creation time 
+                        }
+        
+                        return cursor
+                    }
+                }
 
-    const multipleNotifTypes: (FavNotification | CommentNotification | FollowNotification)[] = []
-    for(let x of favNotifs)
-        multipleNotifTypes.push(x)
-    for(let y of commentNotifs)
-        multipleNotifTypes.push(y)
-    for(let y of followNotifs)
-        multipleNotifTypes.push(y)
+                // no pages yet, get first page by sending empty object to server
+                return {};
+            }),
+            getNextPageParam: ((lastPage, allPages) => {
+                if(lastPage != null) {
+                    if(lastPage.length > NOTIFS_PER_PAGE) {
+                        const cursor = {
+                            mode: "next",
+                            createdAt: lastPage[ NOTIFS_PER_PAGE - 1 ]?.createdAt, // earliest (displayed) notif's creation time
+                            id: {
+                                favNotifications: "",
+                                followNotifications: "",
+                                commentNotifications: "",
+                            }
+                        }
+                        
+                        // set tiebreaking
+                        for(const page of allPages ?? []) {
+                            for(const notif of page ?? []) {
+                                switch(notif.category) {
+                                    case "favorite":
+                                        cursor.id.favNotifications = notif.id
+                                        break
+                                    case "follow":
+                                        cursor.id.followNotifications = notif.id
+                                        break
+                                    case "comment":
+                                        cursor.id.commentNotifications = notif.id
+                                        break
+                                }
+                            }
+                        }
+        
+                        return cursor
+                    } else {
+                        // no more pages, tell tanstack by returning undefined
+                        return undefined;
+                    }
+                } else {
+                    // no pages yet, get first page by sending empty object to server
+                    return {};
+                }
+            }),
+        }
+    )
 
-    multipleNotifTypes.sort((a, b) => { return( Number(b.createdAt) - Number(a.createdAt))})
+    // refresh interval
+    // https://stackoverflow.com/questions/65049812/how-to-call-a-function-every-minute-in-a-react-component
+    useEffect(() => {
+      const interval = setInterval(() => { allNotifsQuery.fetchPreviousPage() }, 30000);
+      return () => clearInterval(interval); // This represents the unmount function, in which you need to clear your interval to prevent memory leaks.
+    }, [])
+      
+    
+    const multipleNotifTypes: MultiNotification[] = []
+    for(let x of allNotifsQuery.data?.pages ?? [])
+        for(let y of x?.slice(0, NOTIFS_PER_PAGE) ?? [])
+            multipleNotifTypes.push(y)
+
     const currentNotifDateTime = Number(multipleNotifTypes[0]?.createdAt)
     const [showBlueCircle, setShowBlueCircle] = useState(false)
     const mostRecent = multipleNotifTypes[0]
@@ -160,7 +229,8 @@ export function Navbar() {
             <div className="sm:fixed sm:top-[46px] fixed sm:transform sm:translate-y-2 drop-shadow-md rounded-md z-50 sm:w-[350px] sm:h-5/6 w-screen h-screen sm:right-5 bg-white">
                 <div id="notifTitle" className="text-xl font-bold px-5 mt-5 mb-2 text-[#fc571a]">Notifications</div>
                 <>
-                    {multipleNotifTypes.map((notif) => <Notification notif={notif}/>) /*Do this for all notification */}
+                    {multipleNotifTypes.map((notif) => <Notification key={notif.category + notif.id} notif={notif}/>) /*Do this for all notification */}
+                    {allNotifsQuery.hasNextPage && <button onClick={() => {allNotifsQuery.fetchNextPage()}}>Get more</button>}
                 </>
             </div>
         }
