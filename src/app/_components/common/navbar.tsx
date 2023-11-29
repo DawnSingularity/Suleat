@@ -24,12 +24,60 @@ export function Navbar() {
 
     const [showModal, setModal] = useState(false)
     const [searchKey, setSearchKey] = useState("")
-    const [mostRecentNotif, setMostRecentNotif] = useState(Date.now())
+    const [mostRecentNotif, setMostRecentNotif] = useState(Number(new Date('2000-01-01')))
 
+    // get all notifications for now... (apply infinite scrolling ? ;-;)
+    let uuid = ""
+
+    if(selfUserQuery?.data?.uuid)
+        uuid = selfUserQuery?.data?.uuid
+    
+    const allNotifsQuery = api.profile.getUserNotifs.useQuery({uuid: uuid}, {refetchInterval:30000})
+    const favNotifs = allNotifsQuery?.data?.favNotifications ?? []
+    const followNotifs = allNotifsQuery?.data?.followNotifications ?? []
+    const commentNotifs = allNotifsQuery?.data?.commentNotifications ?? []
+
+    const multipleNotifTypes: (FavNotification | CommentNotification | FollowNotification)[] = []
+    for(let x of favNotifs)
+        multipleNotifTypes.push(x)
+    for(let y of commentNotifs)
+        multipleNotifTypes.push(y)
+    for(let y of followNotifs)
+        multipleNotifTypes.push(y)
+
+    multipleNotifTypes.sort((a, b) => { return( Number(b.createdAt) - Number(a.createdAt))})
+    const currentNotifDateTime = Number(multipleNotifTypes[0]?.createdAt)
+    const [showBlueCircle, setShowBlueCircle] = useState(false)
+    const mostRecent = multipleNotifTypes[0]
+
+    console.log(mostRecent)
+
+    useEffect(() => {
+        if(mostRecentNotif < currentNotifDateTime && !mostRecent?.isViewed) {
+            setShowBlueCircle(!showBlueCircle)
+            setMostRecentNotif(currentNotifDateTime)
+        }
+    })
+
+    const {mutate} = api.profile.updateIsViewedNotif.useMutation({})
     // show notification system
     const [showNotifSystem, setShowNotifSystem] = useState(false);
     const handleNotifBellClick = () => {
         setShowNotifSystem(!showNotifSystem)
+        setShowBlueCircle(false)
+        
+        let type = ""
+        // update isViewed
+        if(mostRecent?.category === "favorite" && "favUserLikerId" in mostRecent) {
+            console.log("REACHED FAV")
+            mutate({mainId: mostRecent.favUserLikerId, secondaryId: mostRecent.favPostLikedId, tertiaryId: mostRecent.userId, type: "favorite"})
+        } else if(mostRecent?.category === "follow" && "followedId" in mostRecent) {
+            console.log("REACHED FOLLOW")
+            mutate({mainId: mostRecent.followedId, secondaryId: mostRecent.followerId, type: "follow"})
+        } else if((mostRecent?.category === "comment" || mostRecent?.category === "reply") && "commentId" in mostRecent) {
+            console.log("REACHED COMMENT")
+            mutate({mainId: mostRecent.commentId, type: "comment"})
+        }
     }
 
     const handleNotifBellClick2 = () => {
@@ -62,42 +110,6 @@ export function Navbar() {
             </div>
         )}/>
     }
-
-
-    
-    const handleUserModalOpen = () => {
-        setModal(!showModal)
-        setShowNotifSystem(!showNotifSystem)
-    }
-
-    // get all notifications for now... (apply infinite scrolling ? ;-;)
-    let uuid = ""
-    
-
-    if(selfUserQuery?.data?.uuid)
-        uuid = selfUserQuery?.data?.uuid
-    
-    const allNotifsQuery = api.profile.getUserNotifs.useQuery({uuid: uuid}, {refetchInterval:30000})
-    const favNotifs = allNotifsQuery?.data?.favNotifications ?? []
-    const followNotifs = allNotifsQuery?.data?.followNotifications ?? []
-    const commentNotifs = allNotifsQuery?.data?.commentNotifications ?? []
-
-    const multipleNotifTypes: (FavNotification | CommentNotification | FollowNotification)[] = []
-    for(let x of favNotifs)
-        multipleNotifTypes.push(x)
-    for(let y of commentNotifs)
-        multipleNotifTypes.push(y)
-    for(let y of followNotifs)
-        multipleNotifTypes.push(y)
-
-    multipleNotifTypes.sort((a, b) => { return( Number(b.createdAt) - Number(a.createdAt))})
-    const currentNotif = multipleNotifTypes[0]
-
-    useEffect(() => {
-        if(mostRecentNotif !== Number(multipleNotifTypes[0]?.createdAt))
-            setMostRecentNotif(Number(multipleNotifTypes[0]?.createdAt))
-    })
-    
 
     return (
       <>
@@ -135,7 +147,7 @@ export function Navbar() {
             <div className="flex flex-row items-center">
                 <div className="items-center justify-center mr-3 sm:mr-5">
                     <FontAwesomeIcon icon={faBell} style={{height: "25px", color: "#fc571a", }} onClick={handleNotifBellClick}/>
-                    {!currentNotif?.isViewed &&
+                    {showBlueCircle &&
                         <div className="absolute rounded-full bg-blue-950 h-2.5 w-2.5 transform -translate-y-7 translate-x-2.5"></div>
                     }
                 </div>

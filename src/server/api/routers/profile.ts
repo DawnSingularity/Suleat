@@ -144,6 +144,15 @@ export const profileRouter = createTRPCRouter({
           }
 
         } else {
+          // if(postLiked) {
+          //   await ctx.db.favNotification.deleteMany({
+          //     where: {
+          //       favUserLikerId: userLiker,
+          //       favPostLikedId: input.postId,
+          //       userId: postLiked.authorId
+          //     }
+          //   }) 
+          // }
           await ctx.db.following.delete({
             where: { 
               userFollowingId_myUserId: { userFollowingId, myUserId }
@@ -340,5 +349,52 @@ export const profileRouter = createTRPCRouter({
             return null;
           }
       }),
+  
+    updateIsViewedNotif: publicProcedure
+    .input(z.object({
+      mainId: z.string(),
+      secondaryId: z.string().optional(),
+      tertiaryId: z.string().optional(),
+      type: z.string()
+    }))
+    .mutation(async({ctx, input}) => {
+      if(input.mainId && input.type) {
+        if(input.type === "favorite" && input.secondaryId && input.tertiaryId) {
+          const response = await ctx.db.favNotification.update({
+            where: {
+              favUserLikerId_favPostLikedId_userId: {
+                favUserLikerId: input.mainId,
+                favPostLikedId: input.secondaryId,
+                userId: input.tertiaryId
+              }
+            },
+            data: {
+              isViewed: true
+            }
+          })
+        } else if(input.type === "comment") {
+          const response = await ctx.db.commentNotification.update({
+            where: {
+              id: Number(input.mainId)
+            },
+            data: {
+              isViewed: true
+            }
+          })
+        } else if(input.type === "follow" && input.secondaryId) {
+          const response = await ctx.db.followNotification.update({
+            where: {
+              followedId_followerId: {
+                followedId: input.mainId,
+                followerId: input.secondaryId
+              }
+            },
+            data: {
+              isViewed: true
+            }
+          })
+        }
+      }
+    })
 });
 
