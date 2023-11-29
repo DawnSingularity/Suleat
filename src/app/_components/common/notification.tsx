@@ -81,17 +81,54 @@ export function Notification({notif}: {notif: FavNotification | CommentNotificat
             )
         }
 
-    } else if(notif.category === "reply") {
+    } else if(notif.category === "reply" && 'commentId' in notif && 'notifyWho' in notif) {
         // handle if-else of notifying post author or comment author here
         action = " replied to your comment: "
         let tempAction2 = " replied to a comment under your post: "
+
+        const userLiker = api.comment.getCommentById.useQuery({commentId: notif.commentId})
+
+        if(userLiker.data && notif.notifyWho === "postAuthor") {
+            return (
+                <>
+                    <Link href={`/post/${userLiker.data.postId}`}>
+                        <div className="flex flex-row w-full h-[70px] hover:brightness-90 bg-white p-5 mb-1 items-center">
+                            <span id ="pfp" className="w-[58px] w- mr-3 flex flex-row items-center object-cover">
+                                <UserIcon user={userLiker?.data.author} width="12" className="self-center" />
+                            </span>
+                            
+                            <div className="w-full">
+                                <span id="text" className="text-sm line-clamp-2 break-all">
+                                    <span className="font-semibold">{userLiker.data?.author.firstName}&nbsp;{userLiker.data?.author.lastName}</span> replied to a comment on your post: {userLiker.data.text}
+                                </span>
+                                <p className="text-[12px] text-gray-400">{dayjs(notif.createdAt).fromNow()}</p>
+                            </div>
+                        </div>
+                    </Link>
+                </>
+            )
+        }
+
+        else if(userLiker.data && notif.notifyWho === "parentCommentAuthor") {
+            return (
+                <>
+                    <Link href={`/post/${userLiker.data.postId}`}>
+                        <div className="flex flex-row w-full h-[70px] hover:brightness-90 bg-white p-5 mb-1 items-center">
+                            <span id ="pfp" className="w-[58px] w- mr-3 flex flex-row items-center object-cover">
+                                <UserIcon user={userLiker?.data.author} width="12" className="self-center" />
+                            </span>
+                            
+                            <div className="w-full">
+                                <span id="text" className="text-sm line-clamp-2 break-all">
+                                    <span className="font-semibold">{userLiker.data?.author.firstName}&nbsp;{userLiker.data?.author.lastName}</span> replied to your comment: {userLiker.data.text}
+                                </span>
+                                <p className="text-[12px] text-gray-400">{dayjs(notif.createdAt).fromNow()}</p>
+                            </div>
+                        </div>
+                    </Link>
+                </>
+            )
+        }
     }
 
-    // return(
-    //     <>
-    //         <div className="w-full h-16 hover:brightness-90 p-5 bg-white mb-1">
-    //             You received a notif from...
-    //         </div>
-    //     </>
-    // )
 }
