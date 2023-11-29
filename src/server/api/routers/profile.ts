@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, userProcedure } from "~/server/api/trpc";
 
@@ -334,21 +335,50 @@ export const profileRouter = createTRPCRouter({
     }),
 
     getUserNotifs: publicProcedure
-    .input(z.object({ uuid: z.string() }))
+    .input(z.object({
+      uuid: z.string(),
+      limit: z.number().default(10),
+      cursor: z.object({
+        createdAt: z.coerce.date().default(() => new Date()),
+        id: z.object({
+          favNotifications: z.string().default(""),
+          followNotifications: z.string().default(""),
+          commentNotifications: z.string().default(""),
+        }).default({}),
+      }).default({})
+    }))
     .query(async ({ctx, input}) => {
-          if(input.uuid != null) {
-            return await ctx.db.notificationSystem.findUnique({
-              where: {"userId": input.uuid},
-              include: { 
-                favNotifications: true, // add more notif types here soon
-                followNotifications: true,
-                commentNotifications: true
-              },
-            });
-          } else {
-            return null;
-          }
-      }),
+      if(input.uuid != null) {
+          // based on post infinite scrolling
+          // NOTE: all types of notifications will share the same createdAt cursor
+         const notificationIncludeSettings = ({id} : {id: string}) => ({
+           take: input.limit,
+           where: {
+             OR: [ {
+                 createdAt: { lt: input.cursor.createdAt, }
+               }, {
+                 createdAt: input.cursor.createdAt,
+                 id: { gt: id, }
+               }, ]
+           },
+           orderBy: [
+             { createdAt: Prisma.SortOrder.desc },
+             { id: Prisma.SortOrder.asc },
+           ],
+         });
+
+        return await ctx.db.notificationSystem.findUnique({
+          where: {"userId": input.uuid},
+          include: {
+            favNotifications: notificationIncludeSettings({id: input.cursor.id.favNotifications}),
+            followNotifications: notificationIncludeSettings({id: input.cursor.id.followNotifications}),
+            commentNotifications: notificationIncludeSettings({id: input.cursor.id.commentNotifications}),
+          },
+        });
+      } else {
+        return null;
+      }
+  }),
   
     updateIsViewedNotif: publicProcedure
     .input(z.object({
