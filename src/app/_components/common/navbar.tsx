@@ -16,7 +16,7 @@ import { Modal } from "./modal";
 import { useRouter } from "next/navigation";
 import { Notification } from "./notification"
 
-const NOTIFS_PER_PAGE = 1;
+const NOTIFS_PER_PAGE = 10;
 
 type MultiNotification = FavNotification | CommentNotification | FollowNotification;
 
@@ -226,11 +226,14 @@ export function Navbar() {
             </div>     
         </nav>
         {showNotifSystem &&
-            <div className="sm:fixed sm:top-[46px] fixed sm:transform sm:translate-y-2 drop-shadow-md rounded-md z-50 sm:w-[350px] sm:h-5/6 w-screen h-screen sm:right-5 bg-white">
+            <div className="overflow-y-scroll sm:fixed sm:top-[46px] fixed sm:transform sm:translate-y-2 drop-shadow-md rounded-md z-50 sm:w-[350px] sm:h-5/6 w-screen h-screen sm:right-5 bg-white">
                 <div id="notifTitle" className="text-xl font-bold px-5 mt-5 mb-2 text-[#fc571a]">Notifications</div>
                 <>
                     {multipleNotifTypes.map((notif) => <Notification key={notif.category + notif.id} notif={notif}/>) /*Do this for all notification */}
-                    {allNotifsQuery.hasNextPage && <button onClick={() => {allNotifsQuery.fetchNextPage()}}>Get more</button>}
+
+                    <div className="text-sky-500 px-5 mb-1 text-sm">
+                        {allNotifsQuery.hasNextPage && <button onClick={() => {allNotifsQuery.fetchNextPage()}}>See more notifications.</button>}
+                    </div>
                 </>
             </div>
         }
