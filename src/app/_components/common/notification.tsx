@@ -8,7 +8,6 @@ dayjs.extend(relativeTime);
 
 export function Notification({notif}: {notif: FavNotification | CommentNotification | FollowNotification}) { // add || to add more types of notifs
 
-    let showComment = false
     let action = ""
     if(notif.category === "favorite" && 'favUserLikerId' in notif) {
         const userLiker = api.profile.getUserById.useQuery({uuid: notif.favUserLikerId})
@@ -57,7 +56,6 @@ export function Notification({notif}: {notif: FavNotification | CommentNotificat
         }
     } else if(notif.category === "comment" && 'commentId' in notif) {
         action = " commented on your post: "
-        showComment = true
         // handle trim comment here
         const userLiker = api.comment.getCommentById.useQuery({commentId: notif.commentId})
         if(userLiker.data) {

@@ -1,28 +1,51 @@
-# Create T3 App
+# Suleat
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+*A social app for sharing food tastes and experiences.*
 
-## What's next? How do I make an app with this?
+## Overview
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+Suleat is a Filipino photo-sharing social networking service. It is primarily catered for people with interests in all things culinary, allowing users to upload photos or sets of photos, be organized by "flavor tags", and be associated with a location via user input. All posts can be seen publicly, and users can browse other users' content by their profile or flavor tags or unique URLs that each post contains. It is Clerk-operated image-centric social networking service that, as of the moment, only operates in English.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## Setup and Access
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### Web / Deployed
 
-## Learn More
+Access the deployed version of the app here:
+```
+https://suleat-test.vercel.app/
+```
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### Local
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+1. Clone this repository
+2. Install dependencies
+```
+npm install
+```
+3. Run a local instance of the app
+```
+npx next dev
+```
+4. Access the app in your browser
+```
+http://localhost:3000/
+```
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## Credits
 
-## How do I deploy this?
+This social networking service is conceptualized and requested by [ARDY UBANOS](https://www.linkedin.com/in/ardy-ubanos/) and developed by Team B of CSSWENG S15 course of De La Salle University (T1 2023-2024).
+### Members
+* [ASPECTO, DON LAUDE ANDRES](https://github.com/Loouudee)
+* [CHUA, HARVEY SHAWN ANG](https://github.com/3liteking148)
+* [DESUCATAN, CRISTAN DANIEL ALONZO](https://github.com/stanpai78)
+* [FETALVERO, KENSHIN GAMBOA](https://github.com/kenshin11514)
+* [JAVELLANA, MAC ANDRE BAGUIORO](https://github.com/DawnSingularity)
+* [LATOSA, JOSE ROMULO NORIEGA](https://github.com/Osulto)
+* [MARCELLANA, PATRICK JAMES TABERNILLA](https://github.com/patrickjamesmarcellana)
+* [TAPIA, JOHN LORENZO NATNAT](https://github.com/tapeau)
+* [VICTORIA, ALFRED EUGENE TAGLE](https://github.com/xlfrxd)
+* [YU, STEVEN AARON AMIN](https://github.com/neveTsyUU)
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+## Acknowledgments
+
+The development team would like to acknowledge and credit the developers of the remarkable external libraries and services that were used in the development of this project.
