@@ -23,16 +23,15 @@ export const commentRouter = createTRPCRouter({
       return sub;
     }),
     
+
     create: userProcedure
     .input(
       z.object({
         text: z.string().min(1).max(10000),
         postId: z.string(),
-      })
-    )
+      }))
     .mutation(async ({ ctx, input }) => {
       if(ctx.auth.userId === null) return;
-
       const comment = await ctx.db.comment.create({
         data: {
           text: input.text,
@@ -69,8 +68,6 @@ export const commentRouter = createTRPCRouter({
           });
         }
       }
-
-      
       return comment;
     }),
 
